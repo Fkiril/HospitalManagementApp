@@ -9,7 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton<FirestoreDbService>(provider =>
 {
     var projectId = "hospitalmanagementapp-7aa23";
-    return new FirestoreDbService(projectId);
+    var jsonFilePath = "D:\\Hk232\\Advanced Programming\\Assignment\\HospitalManagementApp\\HospitalManagementApp\\hospitalmanagementapp-7aa23-firebase-adminsdk-gw6ir-355e13d856.json";
+    var jsonCreadentials = File.ReadAllText(jsonFilePath);
+    return new FirestoreDbService(projectId, jsonCreadentials);
 });
 builder.Services.AddSingleton<PatientContext>();
 

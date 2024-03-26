@@ -50,6 +50,8 @@ namespace HospitalManagementApp.Models
         public string? TreatmentSchedule { get; set; }
         [FirestoreProperty]
         public string? Status { get; set; }
+        [FirestoreProperty]
+        public bool? Edited { get; set; } = true;
     }
 }
 

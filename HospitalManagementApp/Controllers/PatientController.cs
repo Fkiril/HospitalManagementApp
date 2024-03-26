@@ -47,7 +47,7 @@ namespace HospitalManagementApp.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Add(
-            [Bind("Id,docId,Name,Gender,DataOfBirth,Address,PhoneNum,MedicalHistory,TestResult,TreatmentSchedule,Status")] Patient patient)
+            [Bind("Id,docId,Name,Gender,DataOfBirth,Address,PhoneNum,MedicalHistory,TestResult,TreatmentSchedule,Status,Edited")] Patient patient)
         {
             if (ModelState.IsValid)
             {
@@ -79,7 +79,7 @@ namespace HospitalManagementApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(
             int id,
-            [Bind("Id,docId,Name,Gender,DataOfBirth,Address,PhoneNum,MedicalHistory,TestResult,TreatmentSchedule,Status")] Patient patient)
+            [Bind("Id,docId,Name,Gender,DataOfBirth,Address,PhoneNum,MedicalHistory,TestResult,TreatmentSchedule,Status,Edited")] Patient patient)
         {
             if (id != patient.Id)
             {
@@ -104,7 +104,7 @@ namespace HospitalManagementApp.Controllers
                     }
                 }
 
-                return RedirectToAction(nameof(Edit));
+                return RedirectToAction(nameof(Index));
             }
             return View(patient);
         }
@@ -134,10 +134,9 @@ namespace HospitalManagementApp.Controllers
                 .FirstOrDefault(patient => patient.Id == id);
             if (patient != null)
             {
-                PatientContext.PatientList.Remove(patient);
+                _context.Remove(patient);
+                await _context.SaveChangesAsync();
             }
-
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 

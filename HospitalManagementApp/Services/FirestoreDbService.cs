@@ -7,11 +7,12 @@ namespace HospitalManagementApp.Services
     {
         private FirestoreDb _db;
 
-        public FirestoreDbService(string projectId)
+        public FirestoreDbService(string projectId, string jsonCreadentials)
         {
             _db = new FirestoreDbBuilder
             {
                 ProjectId = projectId,
+                JsonCredentials = jsonCreadentials,
                 EmulatorDetection = EmulatorDetection.EmulatorOrProduction
             }.Build();
         }

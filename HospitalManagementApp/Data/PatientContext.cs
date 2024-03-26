@@ -40,7 +40,16 @@ namespace HospitalManagementApp.Data
             QuerySnapshot snapshot = await colRef.GetSnapshotAsync();
 
             List<string> idsInCloud = new List<string>();
+            foreach (DocumentSnapshot docSnapshot in snapshot.Documents)
+            {
+                idsInCloud.Add(docSnapshot.Id);
+            }
             List<string> idsInList = new List<string>();
+            foreach (Patient patient in PatientList)
+            {
+                if (String.IsNullOrEmpty(patient.docId))
+                    idsInList.Add(patient.docId);
+            }
             IEnumerable<string> idsToDelete = idsInCloud.Except(idsInList);
             
             foreach (string id in idsToDelete)
@@ -51,15 +60,17 @@ namespace HospitalManagementApp.Data
 
             foreach (Patient patient in PatientList)
             {
-                patient.DateOfBirth = DateTime.SpecifyKind(patient.DateOfBirth, DateTimeKind.Utc);
+                if (patient.DateOfBirth.Kind != DateTimeKind.Utc) patient.DateOfBirth = DateTime.SpecifyKind(patient.DateOfBirth, DateTimeKind.Utc);
 
                 if (string.IsNullOrEmpty(patient.docId))
                 {
-                    DocumentReference newDocRed = await colRef.AddAsync(patient);
-                    patient.docId = newDocRed.Id;
+                    patient.docId = "patient_" + patient.Id.ToString();
+                    patient.Edited = false;
+                    await colRef.Document(patient.docId).SetAsync(patient);
                 }
 
-                await colRef.Document(patient.docId).SetAsync(patient);
+                if ((bool)(patient.Edited = true)) 
+                    await colRef.Document(patient.docId).SetAsync(patient);
             }
         }
 
@@ -84,10 +95,14 @@ namespace HospitalManagementApp.Data
                     p.TestResult = patient.TestResult;
                     p.TreatmentSchedule = patient.TreatmentSchedule;
                     p.Status = patient.Status;
-
+                    p.Edited = true;
                     break;
                 }
             }
+        }
+        public void Remove(Patient patient)
+        {
+            PatientList.Remove(patient);
         }
     }
 }

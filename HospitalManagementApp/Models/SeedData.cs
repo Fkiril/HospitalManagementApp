@@ -21,7 +21,6 @@ namespace HospitalManagementApp.Models
                 new Patient
                 {
                     Id = 1,
-                    docId = "",
                     Name = "KiriL",
                     Gender = Gender.Male,
                     DateOfBirth = new DateTime(2003,8,9,0,0,0, DateTimeKind.Utc),
@@ -35,7 +34,6 @@ namespace HospitalManagementApp.Models
                 new Patient
                 {
                     Id = 2,
-                    docId = "",
                     Name = "Violet",
                     Gender = Gender.Female,
                     DateOfBirth = new DateTime(2003,3,3,0,0,0, DateTimeKind.Utc),
@@ -50,7 +48,8 @@ namespace HospitalManagementApp.Models
 
             foreach (var patient in patients)
             {
-                await colRef.AddAsync(patient);
+                await colRef.Document("patient_" + patient.Id.ToString()).SetAsync(patient);
+
             }
         }
     }

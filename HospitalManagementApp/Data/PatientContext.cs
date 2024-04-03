@@ -3,17 +3,18 @@ using Google.Api.Gax;
 using Google.Cloud.Firestore;
 using HospitalManagementApp.Models;
 using HospitalManagementApp.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace HospitalManagementApp.Data
 {
-    public class PatientContext
+    public class PatientContext 
     {
         public readonly FirestoreDb _firestoreDb;
         public static ICollection<Patient> PatientList { get; private set; } = default!;
-        public PatientContext(FirestoreDbService firestoreDbService)
+        public PatientContext(FirestoreDbService firestoreDbService, ICollection<Patient>? patientList = null)
         {
             _firestoreDb = firestoreDbService.GetFirestoreDb();
-            PatientList = new List<Patient>();
+            PatientList = (patientList != null)? patientList : [];
         }
 
         public async Task InitializePatientListFromFirestore()
@@ -22,9 +23,7 @@ namespace HospitalManagementApp.Data
             {
                 return;
             }
-            Console.WriteLine("Initial PatientList!");
-            Query patientsQuery = _firestoreDb.Collection("Patient");
-            QuerySnapshot snapshotQuery = await patientsQuery.GetSnapshotAsync();
+            QuerySnapshot snapshotQuery = await _firestoreDb.Collection("Patient").GetSnapshotAsync();
 
             foreach (DocumentSnapshot docSnapshot in snapshotQuery.Documents)
             {
@@ -39,8 +38,17 @@ namespace HospitalManagementApp.Data
             CollectionReference colRef = _firestoreDb.Collection("Patient");
             QuerySnapshot snapshot = await colRef.GetSnapshotAsync();
 
-            List<string> idsInCloud = new List<string>();
-            List<string> idsInList = new List<string>();
+            List<string> idsInCloud = [];
+            foreach (DocumentSnapshot docSnapshot in snapshot.Documents)
+            {
+                idsInCloud.Add(docSnapshot.Id);
+            }
+            List<string> idsInList = [];
+            foreach (Patient patient in PatientList)
+            {
+                if (String.IsNullOrEmpty(patient.docId))
+                    idsInList.Add(patient.docId);
+            }
             IEnumerable<string> idsToDelete = idsInCloud.Except(idsInList);
             
             foreach (string id in idsToDelete)
@@ -72,7 +80,7 @@ namespace HospitalManagementApp.Data
         {
             foreach (var p in PatientList)
             {
-                if (p.Id == patient.Id)
+                if (p.docId == patient.docId)
                 {
                     p.Id = patient.Id;
                     p.Name = patient.Name;

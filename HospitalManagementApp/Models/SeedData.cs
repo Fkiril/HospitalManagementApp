@@ -53,6 +53,33 @@ namespace HospitalManagementApp.Models
                 await colRef.AddAsync(patient);
             }
         }
+
+        public static async void InitializeApplicationUserData(FirestoreDb firestoreDb)
+        {
+            CollectionReference colRef = firestoreDb.Collection("ApplicationUser");
+            QuerySnapshot snapshots = await colRef.GetSnapshotAsync();
+            if (snapshots.Documents.Any())
+            {
+                return;
+            }
+
+            var users = new List<ApplicationUser>
+            {
+                new ApplicationUser
+                {
+                    Id = "1",
+                    UserName = "KiriL",
+                    Email = "abc.gmail.com",
+                    Password = "abcdef123",
+                    Role = "admin"
+                }
+            };
+
+            foreach (var user in users)
+            {
+                await colRef.Document("applicationuser_" + user.Id).SetAsync(user);
+            }
+        }
     }
 }
     

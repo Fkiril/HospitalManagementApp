@@ -26,6 +26,7 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                     </ul>
+                    <partial name="_LoginPartial" />
                 </div>
             </div>
         </nav>
@@ -45,5 +46,33 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-analytics.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyA9uJ4iVaI4z0iVDVsFWPbvrK1KOfxfjSU",
+            authDomain: "hospitalmanagementapp-7aa23.firebaseapp.com",
+            projectId: "hospitalmanagementapp-7aa23",
+            storageBucket: "hospitalmanagementapp-7aa23.appspot.com",
+            messagingSenderId: "478988309505",
+            appId: "1:478988309505:web:d0eded0163ead85b1a9c00",
+            measurementId: "G-RWNHDKX988"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+    </script>
+
+    <system.webServer>
+        <security>
+            <authentication>
+                <anonymousAuthentication enabled="true" />
+                <windowsAuthentication enabled="false" />
+            </authentication>
+        </security>
+    </system.webServer>
+
 </body>
 </html>

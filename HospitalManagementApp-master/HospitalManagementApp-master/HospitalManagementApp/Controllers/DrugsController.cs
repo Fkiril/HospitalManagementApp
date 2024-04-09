@@ -2,6 +2,7 @@
 using Google.Cloud.Firestore;
 using HospitalManagementApp.Data;
 using HospitalManagementApp.Models;
+using HospitalManagementApp.Services;
 
 
 namespace HospitalManagementApp.Controllers
@@ -13,6 +14,20 @@ namespace HospitalManagementApp.Controllers
         {
             _context = context;
         }
+
+        public IActionResult Search(string SearchingString)
+        {
+            if (SearchingString == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                var alldrug = DrugsContext.DrugsList.Where(n => n.Name.Contains(SearchingString)).ToList();
+                return View(alldrug);
+            }
+        }
+
 
         public async Task<IActionResult> Index()
         {
@@ -106,38 +121,44 @@ namespace HospitalManagementApp.Controllers
             return View(drugs);
         }
 
-        public IActionResult Remove(int? id)
+
+        public async Task<IActionResult> Remove(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var drug = DrugsContext.DrugsList
-                .FirstOrDefault(m => m.Id == id);
+            var drug = DrugsContext.DrugsList.FirstOrDefault(m => m.Id == id);
             if (drug == null)
             {
                 return NotFound();
             }
-            return View(drug);
+
+            await _context.DeleteAsync(drug.docId); 
+
+            return RedirectToAction(nameof(Index));
         }
+
 
         [HttpPost, ActionName("Remove")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RemoveConfirmed(int id)
         {
-            var drug = DrugsContext.DrugsList
-                .FirstOrDefault(drug => drug.Id == id);
+            var drug = DrugsContext.DrugsList.FirstOrDefault(drug => drug.Id == id);
             if (drug != null)
             {
                 DrugsContext.DrugsList.Remove(drug);
+                await _context.DeleteAsync(drug.docId); 
+
+                await _context.SaveChangesAsync(); 
+
+                return RedirectToAction(nameof(Index)); 
             }
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return NotFound();
         }
-
-
+        
         private bool DrugsExists(int id)
         {
             return DrugsContext.DrugsList.Any(drugs => drugs.Id == id);

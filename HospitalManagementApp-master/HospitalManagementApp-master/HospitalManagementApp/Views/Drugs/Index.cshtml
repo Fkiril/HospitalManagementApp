@@ -9,6 +9,18 @@
     <p>
         <a asp-action="Add">Add new drugs</a>
     </p>
+    <a href="/Prescription/Add">Add a new prescription</a>
+
+    @using (Html.BeginForm("Search","Drugs",FormMethod.Get)){
+        <p>
+            Find Drug: @Html.TextBox("SearchingString",ViewBag.CurrentFilter as string)
+            <input type="submit" value="Search" />
+        </p>
+
+    }
+
+
+
     <table class="table">
         <thead>
             <tr>

@@ -2,10 +2,12 @@
 using Google.Cloud.Firestore;
 using HospitalManagementApp.Data;
 using HospitalManagementApp.Models;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace HospitalManagementApp.Controllers
 {
+    //[Authorize(Roles = "Admin")]
     public class PatientController : Controller
     {
         public readonly PatientContext _context;
@@ -95,7 +97,8 @@ namespace HospitalManagementApp.Controllers
                 }
                 catch (Exception)
                 {
-                    if (!PatientExists((int)patient.Id)) {
+                    if (!PatientExists((int)patient.Id))
+                    {
                         return NotFound();
                     }
                     else

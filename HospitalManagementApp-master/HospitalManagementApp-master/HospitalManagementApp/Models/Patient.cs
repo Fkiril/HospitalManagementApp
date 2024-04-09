@@ -11,11 +11,11 @@ namespace HospitalManagementApp.Models
         Other
     }
 
-    [FirestoreData]    
+    [FirestoreData]
     public class Patient
     {
         [FirestoreProperty]
-        [Required, Range(1,9999)]
+        [Required, Range(1, 9999)]
         public int? Id { get; set; }
 
         [FirestoreProperty]
@@ -27,7 +27,7 @@ namespace HospitalManagementApp.Models
 
         [FirestoreProperty]
         [Required]
-        public Gender? Gender {  get; set; }
+        public Gender? Gender { get; set; }
 
         [FirestoreProperty]
         [Display(Name = "Date Of Birth")]
@@ -52,4 +52,3 @@ namespace HospitalManagementApp.Models
         public string? Status { get; set; }
     }
 }
-

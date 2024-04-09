@@ -101,6 +101,28 @@ namespace HospitalManagementApp.Models
             }
         }
 
+        public static async void InitializePrescriptionData(FirestoreDb firestoreDb)
+        {
+            CollectionReference colRef = firestoreDb.Collection("Prescription");
+
+            QuerySnapshot snapshots = await colRef.GetSnapshotAsync();
+            if (snapshots.Documents.Any())
+            {
+                return;
+            }
+
+            var prescriptions = new List<Prescription>
+            {
+               
+                
+            };
+
+            foreach (var prescription in prescriptions)
+            {
+                await colRef.AddAsync(prescription);
+            }
+        }
+
     }
 }
     

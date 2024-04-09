@@ -67,25 +67,31 @@ namespace HospitalManagementApp.Data
 
         public async Task DeleteAsync(string id)
         {
-            DocumentReference docRef = _firestoreDb.Collection("drugs").Document(id);
-            DocumentSnapshot snapshot = await docRef.GetSnapshotAsync();
-            if (snapshot.Exists)
+            try
             {
-                await docRef.DeleteAsync();
-                Drugs drugsToRemove = DrugsList.FirstOrDefault(drugs => drugs.docId == id);
-                if (drugsToRemove != null)
+                DocumentReference docRef = _firestoreDb.Collection("drugs").Document(id);
+                DocumentSnapshot snapshot = await docRef.GetSnapshotAsync();
+                if (snapshot.Exists)
                 {
-                    DrugsList.Remove(drugsToRemove);
+                    await docRef.DeleteAsync();
+
+                    Drugs drugsToRemove = DrugsList.FirstOrDefault(drugs => drugs.docId == id);
+                    if (drugsToRemove != null)
+                    {
+                        DrugsList.Remove(drugsToRemove);
+                    }
                 }
+                else
+                {
+                    Console.WriteLine($"Document with ID {id} does not exist in Firestore.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error deleting document: {ex.Message}");
             }
         }
 
-
-
-        public void Remove(Drugs drug)
-        {
-            DrugsList.Remove(drug);
-        }
 
         public void Add(Drugs drugs)
         {

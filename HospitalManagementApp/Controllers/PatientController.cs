@@ -1,13 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Google.Cloud.Firestore;
 using HospitalManagementApp.Data;
 using HospitalManagementApp.Models;
 using Microsoft.AspNetCore.Authorization;
+using HospitalManagementApp.Models.PatientViewModel;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 
 namespace HospitalManagementApp.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin", AuthenticationSchemes = "Cookies")]
     public class PatientController : Controller
     {
         public readonly PatientContext _context;
@@ -48,8 +49,7 @@ namespace HospitalManagementApp.Controllers
         //POST: Patient/Add
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Add(
-            [Bind("Id,docId,Name,Gender,DataOfBirth,Address,PhoneNum,MedicalHistory,TestResult,TreatmentSchedule,Status")] Patient patient)
+        public async Task<IActionResult> Add (Patient patient)
         {
             if (ModelState.IsValid)
             {
@@ -74,6 +74,7 @@ namespace HospitalManagementApp.Controllers
             {
                 return NotFound();
             }
+
             return View(patient);
         }
         //POST: Patient/Edit/3
@@ -81,7 +82,7 @@ namespace HospitalManagementApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(
             int id,
-            [Bind("Id,docId,Name,Gender,DataOfBirth,Address,PhoneNum,MedicalHistory,TestResult,TreatmentSchedule,Status")] Patient patient)
+            Patient patient)
         {
             if (id != patient.Id)
             {
@@ -106,7 +107,7 @@ namespace HospitalManagementApp.Controllers
                     }
                 }
 
-                return RedirectToAction(nameof(Edit));
+                return RedirectToAction(nameof(Index));
             }
             return View(patient);
         }
@@ -146,6 +147,93 @@ namespace HospitalManagementApp.Controllers
         private bool PatientExists(int id)
         {
             return PatientContext.PatientList.Any(patient => patient.Id == id);
+        }
+
+
+        public IActionResult TreatmentScheduleManager(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var patient = PatientContext.PatientList
+                .FirstOrDefault(m => m.Id == id);
+            if (patient == null)
+            {
+                return NotFound();
+            }
+
+            return View(patient);
+        }
+        public IActionResult AddSchedule(int id)
+        {
+            var patient = PatientContext.PatientList
+                .FirstOrDefault(m => m.Id == id);
+            if (patient == null)
+            {
+                return NotFound();
+            }
+
+            var StaffIdList = new List<int> { 1, 2, 3 };
+            ViewBag.StaffIdList = new SelectList(StaffIdList);
+            ViewBag.PatientId = id;
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddSchedule(int patientId, Treatment newTreatment)
+        {
+            Console.WriteLine("AddSchedule post");
+            
+            var patient = PatientContext.PatientList
+                .FirstOrDefault(m => m.Id == patientId);
+            if (patient == null)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                if (newTreatment == null)
+                {
+                    return BadRequest();
+                }
+
+                Console.WriteLine("Add a new schedule for patient: " + patientId);
+                if (patient.TreatmentSchedule != null)
+                {
+                    patient.TreatmentSchedule.Add(newTreatment);
+                }
+                else
+                {
+                    patient.TreatmentSchedule = new List<Treatment> { newTreatment};
+                }
+
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(TreatmentScheduleManager), new {id = patientId});
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult EditSchedule(int? id)
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> EditSchedule(int id, Treatment treatment)
+        {
+            return View();
+        }
+
+        public IActionResult DeleteSchedule(int? id)
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> DeleScheduleConfirmed(int id)
+        {
+            return View();
         }
     }
 }

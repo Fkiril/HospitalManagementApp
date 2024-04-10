@@ -8,6 +8,7 @@ namespace HospitalManagementApp.Models
     {
         public static async void InitializePatientData(FirestoreDb firestoreDb)
         {
+            Console.WriteLine("InitializePatientData");
             CollectionReference colRef = firestoreDb.Collection("Patient");
 
             QuerySnapshot snapshots = await colRef.GetSnapshotAsync();
@@ -21,36 +22,54 @@ namespace HospitalManagementApp.Models
                 new Patient
                 {
                     Id = 1,
-                    docId = "",
                     Name = "KiriL",
                     Gender = Gender.Male,
-                    DateOfBirth = new DateTime(2003,8,9,0,0,0, DateTimeKind.Utc),
+                    DateOfBirth = "09/08/2003",
                     Address = "abc",
                     PhoneNum = "0769421007",
                     MedicalHistory = "abc",
                     TestResult = "abc",
-                    TreatmentSchedule = "abc",
-                    Status = "abc"
+                    StaffId = new List<int> {1, 2},
+                    TreatmentSchedule = new List<Treatment>
+                    {
+                        new Treatment
+                        {
+                            Id = 1,
+                            Date = "09/04/2024",
+                            StartTime = "10:00",
+                            EndTime = "12:00",
+                        }
+                    },
+                    Status = Status.Ill
                 },
                 new Patient
                 {
                     Id = 2,
-                    docId = "",
                     Name = "Violet",
                     Gender = Gender.Female,
-                    DateOfBirth = new DateTime(2003,3,3,0,0,0, DateTimeKind.Utc),
+                    DateOfBirth = "03/03/2003",
                     Address = "abc",
                     PhoneNum = "0969185801",
                     MedicalHistory = "abc",
                     TestResult = "abc",
-                    TreatmentSchedule = "abc",
-                    Status = "abc"
+                    StaffId = new List<int> {3, 4},
+                    TreatmentSchedule = new List<Treatment>
+                    {
+                        new Treatment
+                        {
+                            Id = 1,
+                            Date = "10/04/2024",
+                            StartTime = "08:00",
+                            EndTime = "12:00",
+                        }
+                    },
+                    Status = Status.Ill
                 }
             };
 
             foreach (var patient in patients)
             {
-                await colRef.AddAsync(patient);
+                await colRef.Document("patient_" + patient.Id).SetAsync(patient);
             }
         }
 
@@ -71,7 +90,7 @@ namespace HospitalManagementApp.Models
                     UserName = "KiriL",
                     Email = "abc.gmail.com",
                     Password = "abcdef123",
-                    Role = "admin"
+                    Role = "Admin"
                 }
             };
 

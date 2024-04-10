@@ -16,9 +16,10 @@ namespace HospitalManagementApp.Data
             _firestoreDb = firestoreDbService.GetFirestoreDb();
             PatientList = (patientList != null)? patientList : [];
         }
-
+        private string docId = "patient_";
         public async Task InitializePatientListFromFirestore()
         {
+            Console.WriteLine("InitializePatientListFromFirestore");
             if (PatientList.Count != 0)
             {
                 return;
@@ -28,13 +29,13 @@ namespace HospitalManagementApp.Data
             foreach (DocumentSnapshot docSnapshot in snapshotQuery.Documents)
             {
                 Patient patient = docSnapshot.ConvertTo<Patient>();
-                patient.docId = docSnapshot.Id;
 
                 PatientList.Add(patient);
             }
         }
         public async Task SaveChangesAsync()
         {
+            Console.WriteLine("SaveChangesAsync");
             CollectionReference colRef = _firestoreDb.Collection("Patient");
             QuerySnapshot snapshot = await colRef.GetSnapshotAsync();
 
@@ -46,8 +47,8 @@ namespace HospitalManagementApp.Data
             List<string> idsInList = [];
             foreach (Patient patient in PatientList)
             {
-                if (String.IsNullOrEmpty(patient.docId))
-                    idsInList.Add(patient.docId);
+                if (patient != null)
+                    idsInList.Add("patient_" + patient.Id);
             }
             IEnumerable<string> idsToDelete = idsInCloud.Except(idsInList);
             
@@ -59,15 +60,7 @@ namespace HospitalManagementApp.Data
 
             foreach (Patient patient in PatientList)
             {
-                patient.DateOfBirth = DateTime.SpecifyKind(patient.DateOfBirth, DateTimeKind.Utc);
-
-                if (string.IsNullOrEmpty(patient.docId))
-                {
-                    DocumentReference newDocRed = await colRef.AddAsync(patient);
-                    patient.docId = newDocRed.Id;
-                }
-
-                await colRef.Document(patient.docId).SetAsync(patient);
+                await colRef.Document("patient_" + patient.Id).SetAsync(patient);
             }
         }
 
@@ -80,7 +73,7 @@ namespace HospitalManagementApp.Data
         {
             foreach (var p in PatientList)
             {
-                if (p.docId == patient.docId)
+                if (p.Id == patient.Id)
                 {
                     p.Id = patient.Id;
                     p.Name = patient.Name;

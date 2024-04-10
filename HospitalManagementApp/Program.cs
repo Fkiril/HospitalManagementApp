@@ -42,10 +42,10 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var firestoreDbService = scope.ServiceProvider.GetService<FirestoreDbService>();
-    if (firestoreDbService != null )
+    if (firestoreDbService != null)
     {
         SeedData.InitializePatientData(firestoreDbService.GetFirestoreDb());
-        SeedData.InitializeApplicationUserData(firestoreDbService.GetFirestoreDb());
+        //SeedData.InitializeApplicationUserData(firestoreDbService.GetFirestoreDb());
     }
 }
 

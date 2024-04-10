@@ -8,7 +8,7 @@ namespace HospitalManagementApp.Models
     public class ApplicationUser : IdentityUser
     {
         [FirestoreProperty]
-        public override string? Id { get; set; }
+        public override string Id { get; set; }
 
         [FirestoreProperty]
         [PersonalData]

@@ -1,0 +1,42 @@
+﻿@model IEnumerable<HospitalManagementApp.Models.Prescription>
+
+@{
+    ViewData["Title"] = "Prescriptions";
+}
+
+<h1>Prescriptions</h1>
+@if (Model == null)
+{
+    <p>No prescriptions found.</p>
+}
+else{
+<table class="table">
+    <thead>
+        <tr>
+            <th>Prescription ID</th>
+            <th>Patient ID</th>
+            <th>Drug</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(model => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.IdOfPatient)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.Drug)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.Description)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+}

@@ -145,9 +145,10 @@ namespace HospitalManagementApp.Controllers
             return NotFound();
         }
 
-        public async Task<IActionResult> GetPrescriptions(int patientId)
+        [HttpGet, ActionName("GetPrescriptions")]
+        public async Task<IActionResult> GetPrescriptions(int Id)
         {
-            var prescriptions = await _context.GetPrescriptionsForPatientAsync(patientId);
+            var prescriptions = await _context.GetPrescriptionsForPatientAsync(Id);
             return View(prescriptions);
         }
         private bool PrescriptionExists(int id)

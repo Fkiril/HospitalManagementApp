@@ -90,10 +90,10 @@ namespace HospitalManagementApp.Data
             }
         }
 
-        public async Task<IEnumerable<Prescription>> GetPrescriptionsForPatientAsync(int patientId)
+        public async Task<IEnumerable<Prescription>> GetPrescriptionsForPatientAsync(int Id)
         {
-            CollectionReference prescriptionsCollection = _firestoreDb.Collection("prescriptions");
-            Query query = prescriptionsCollection.WhereEqualTo("IdOfPatient", patientId);
+            CollectionReference prescriptionsCollection = _firestoreDb.Collection("Prescription");
+            Query query = prescriptionsCollection.WhereEqualTo("IdOfPatient", Id);
             QuerySnapshot snapshot = await query.GetSnapshotAsync();
 
             List<Prescription> prescriptions = new List<Prescription>();

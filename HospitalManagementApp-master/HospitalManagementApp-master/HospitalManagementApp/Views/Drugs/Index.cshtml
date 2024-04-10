@@ -1,4 +1,5 @@
 @model ICollection<HospitalManagementApp.Models.Drugs>
+@using HospitalManagementApp.Controllers
 
     @{
     ViewData["Title"] = "Index";
@@ -10,6 +11,10 @@
         <a asp-action="Add">Add new drugs</a>
     </p>
     <a href="/Prescription/Add">Add a new prescription</a>
+
+<a asp-controller="Prescription" asp-action="GetPrescriptions" asp-route-Id="@Model.FirstOrDefault().Id">Get Prescriptions</a>
+
+
 
     @using (Html.BeginForm("Search","Drugs",FormMethod.Get)){
         <p>

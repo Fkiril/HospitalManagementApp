@@ -44,7 +44,7 @@
                         @schedule.EndTime
                     </td>
                     <td>
-                        <a asp-action="EditSchedule" asp-route-id="@schedule.Id" >Edit schedule</a>
+                        <a asp-action="EditSchedule" asp-route-id="@schedule.Id" asp-route-patientId="@Model.Id" >Edit schedule</a>
                         <a asp-action="DeleteSchedule" asp-route-id="@schedule.Id" >Delete schedule</a>
                     </td>
                 </tr>

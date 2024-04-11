@@ -59,6 +59,8 @@ namespace HospitalManagementApp.Models
 
         [FirestoreProperty]
         public Status? Status { get; set; }
+
+        public bool? changed { get; set; }
     }
 
     public class Treatment

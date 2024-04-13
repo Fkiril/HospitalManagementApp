@@ -59,7 +59,7 @@ namespace HospitalManagementApp.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Add(
-            [Bind("Id,docId,Name,HisUse,Expiry,Status")] Drugs drugs)
+            [Bind("Id,docId,Name,HisUse,Expiry,Status,Quantity,ReceiptDay")] Drugs drugs)
         {
             if (ModelState.IsValid)
             {
@@ -90,7 +90,7 @@ namespace HospitalManagementApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(
             int id,
-            [Bind("Id,docId,Name,HisUse,Expiry,Status")] Drugs drugs)
+            [Bind("Id,docId,Name,HisUse,Expiry,Status,Quantity,ReceiptDay")] Drugs drugs)
         {
             if (id != drugs.Id)
             {
@@ -165,3 +165,5 @@ namespace HospitalManagementApp.Controllers
         }
     }
 }
+
+

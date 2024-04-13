@@ -73,6 +73,8 @@ namespace HospitalManagementApp.Models
                     Name = "Ketamine",
                     Expiry = 90,
                     HisUse = 27,
+                    Quantity = 10,
+                    ReceiptDay = new DateTime(2023,10,17,12,0,0,DateTimeKind.Utc),
                     Status = Status.Used
                 },
                 new Drugs
@@ -82,6 +84,8 @@ namespace HospitalManagementApp.Models
                     Name = "Halothane",
                     Expiry = 10,
                     HisUse = 18,
+                    Quantity = 3,
+                    ReceiptDay = new DateTime(2023,2,8,12,0,0,DateTimeKind.Utc),
                     Status = Status.Old
                 },
                 new Drugs
@@ -91,6 +95,8 @@ namespace HospitalManagementApp.Models
                     Name = "Lidocaine",
                     Expiry = 60,
                     HisUse = 0,
+                    Quantity = 2,
+                    ReceiptDay = new DateTime(2023,12,10,12,0,0,DateTimeKind.Utc),
                     Status = Status.New
                 }
             };

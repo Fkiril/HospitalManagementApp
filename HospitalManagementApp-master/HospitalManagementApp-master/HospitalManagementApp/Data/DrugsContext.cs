@@ -53,7 +53,7 @@ namespace HospitalManagementApp.Data
 
             foreach (Drugs drug in DrugsList)
             {
-
+                drug.ReceiptDay = DateTime.SpecifyKind(drug.ReceiptDay, DateTimeKind.Utc);
                 if (string.IsNullOrEmpty(drug.docId))
                 {
                     DocumentReference newDocRed = await colRef.AddAsync(drug);
@@ -109,6 +109,7 @@ namespace HospitalManagementApp.Data
                     p.HisUse = drugs.HisUse;
                     p.Status = drugs.Status;
                     p.Expiry = drugs.Expiry;
+                    p.Quantity = drugs.Quantity;
 
                     break;
                 }
@@ -116,3 +117,5 @@ namespace HospitalManagementApp.Data
         }
     }
 }
+
+

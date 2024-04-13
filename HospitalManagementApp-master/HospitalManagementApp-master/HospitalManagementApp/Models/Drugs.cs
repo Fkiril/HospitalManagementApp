@@ -26,6 +26,15 @@ namespace HospitalManagementApp.Models
         public int? HisUse { get; set; }
 
         [FirestoreProperty]
+        [Required, Range(0, 9999)]
+        public int? Quantity { get; set; }
+
+        [FirestoreProperty]
+        [Display(Name = "Receipt Of Day")]
+        [DataType(DataType.DateTime)]
+        public DateTime ReceiptDay { get; set; }
+
+        [FirestoreProperty]
         [Required, Range(1, 9999)]
         public int? Expiry { get; set; }
 
@@ -37,3 +46,5 @@ namespace HospitalManagementApp.Models
         public Status? Status { get; set; }
     }
 }
+
+

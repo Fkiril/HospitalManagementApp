@@ -14,6 +14,21 @@ namespace HospitalManagementApp.Controllers
             _context = context;
         }
 
+        public IActionResult Search(int? searchingId)
+        {
+            if (!searchingId.HasValue)
+            {
+                return RedirectToAction(nameof(List));
+            }
+            else
+            {
+                var prescriptions = PrescriptionContext.PrescriptionList.Where(p => p.IdOfPatient == searchingId).ToList();
+
+                return View(prescriptions);
+            }
+        }
+
+
         public async Task<IActionResult> List()
         {
             await _context.InitializePrescriptionListFromFirestore();

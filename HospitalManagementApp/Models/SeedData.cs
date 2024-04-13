@@ -29,9 +29,9 @@ namespace HospitalManagementApp.Models
                     PhoneNum = "0769421007",
                     MedicalHistory = "abc",
                     TestResult = "abc",
-                    StaffId = new List<int> {1, 2},
-                    TreatmentSchedule = new List<Treatment>
-                    {
+                    StaffId = [1, 2],
+                    TreatmentSchedule =
+                    [
                         new Treatment
                         {
                             Id = 1,
@@ -39,7 +39,7 @@ namespace HospitalManagementApp.Models
                             StartTime = "10:00",
                             EndTime = "12:00",
                         }
-                    },
+                    ],
                     Status = Status.Ill
                 },
                 new Patient
@@ -52,9 +52,9 @@ namespace HospitalManagementApp.Models
                     PhoneNum = "0969185801",
                     MedicalHistory = "abc",
                     TestResult = "abc",
-                    StaffId = new List<int> {3, 4},
-                    TreatmentSchedule = new List<Treatment>
-                    {
+                    StaffId = [3, 4],
+                    TreatmentSchedule =
+                    [
                         new Treatment
                         {
                             Id = 1,
@@ -62,7 +62,7 @@ namespace HospitalManagementApp.Models
                             StartTime = "08:00",
                             EndTime = "12:00",
                         }
-                    },
+                    ],
                     Status = Status.Ill
                 }
             };

@@ -56,6 +56,19 @@ namespace HospitalManagementApp.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            else
+            {
+                foreach (var modelStateKey in ModelState.Keys)
+                {
+                    var modelStateVal = ModelState[modelStateKey];
+                    if (modelStateVal != null) foreach (var error in modelStateVal.Errors)
+                        {
+                            var errorMessage = error.ErrorMessage;
+                            var exception = error.Exception;
+                            throw new Exception(errorMessage, exception);
+                        }
+                }
+            }
             return View();
         }
 
@@ -105,6 +118,19 @@ namespace HospitalManagementApp.Controllers
                 }
 
                 return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                foreach (var modelStateKey in ModelState.Keys)
+                {
+                    var modelStateVal = ModelState[modelStateKey];
+                    if (modelStateVal != null) foreach (var error in modelStateVal.Errors)
+                    {
+                        var errorMessage = error.ErrorMessage;
+                        var exception = error.Exception;
+                        throw new Exception(errorMessage, exception);
+                    }
+                }
             }
             return View(patient);
         }
@@ -198,6 +224,19 @@ namespace HospitalManagementApp.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(TreatmentScheduleManager), new {id = patientId});
             }
+            else
+            {
+                foreach (var modelStateKey in ModelState.Keys)
+                {
+                    var modelStateVal = ModelState[modelStateKey];
+                    if (modelStateVal != null) foreach (var error in modelStateVal.Errors)
+                        {
+                            var errorMessage = error.ErrorMessage;
+                            var exception = error.Exception;
+                            throw new Exception(errorMessage, exception);
+                        }
+                }
+            }
             return RedirectToAction(nameof(Index));
         }
 
@@ -205,11 +244,11 @@ namespace HospitalManagementApp.Controllers
         {
             var patient = PatientContext.PatientList
                 .FirstOrDefault(m => m.Id == patientId);
-            if (patient == null || patient.TreatmentSchedule == null || patient.TreatmentSchedule.FirstOrDefault(s => s.Id == id) == null)
+            if (patient == null || patient.TreatmentSchedule == null || patient.TreatmentSchedule.First(s => s.Id == id) == null)
             {
                 return NotFound();
             }
-            var treatment = patient.TreatmentSchedule.FirstOrDefault(s => s.Id == id);
+            var treatment = patient.TreatmentSchedule.First(s => s.Id == id);
 
             ViewBag.patientId = patientId;
 
@@ -220,7 +259,7 @@ namespace HospitalManagementApp.Controllers
         {
             var patient = PatientContext.PatientList
                 .FirstOrDefault(m => m.Id == patientId);
-            if (patient == null || patient.TreatmentSchedule == null || patient.TreatmentSchedule.FirstOrDefault(s => s.Id == id) == null)
+            if (patient == null || id != treatment.Id)
             {
                 return NotFound();
             }
@@ -231,6 +270,19 @@ namespace HospitalManagementApp.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(TreatmentScheduleManager), new { id = patientId });
             }
+            else
+            {
+                foreach (var modelStateKey in ModelState.Keys)
+                {
+                    var modelStateVal = ModelState[modelStateKey];
+                    if (modelStateVal != null) foreach (var error in modelStateVal.Errors)
+                        {
+                            var errorMessage = error.ErrorMessage;
+                            var exception = error.Exception;
+                            throw new Exception(errorMessage, exception);
+                        }
+                }
+            }
             return RedirectToAction(nameof(Index));
         }
 
@@ -238,22 +290,22 @@ namespace HospitalManagementApp.Controllers
         {
             var patient = PatientContext.PatientList
                 .FirstOrDefault(m => m.Id == patientId);
-            if (patient == null || patient.TreatmentSchedule == null || patient.TreatmentSchedule.FirstOrDefault(s => s.Id == id) == null)
+            if (patient == null || patient.TreatmentSchedule == null || patient.TreatmentSchedule.First(s => s.Id == id) == null)
             {
                 return NotFound();
             }
-            var treatment = patient.TreatmentSchedule.FirstOrDefault(s => s.Id == id);
+            var treatment = patient.TreatmentSchedule.First(s => s.Id == id);
 
             ViewBag.patientId = patientId;
 
             return View(treatment);
         }
-        [HttpPost]
+        [HttpPost, ActionName("DeleteSchedule")]
         public async Task<IActionResult> DeleScheduleConfirmed(int id, int patientId)
         {
             var patient = PatientContext.PatientList
                 .FirstOrDefault(m => m.Id == patientId);
-            if (patient == null || patient.TreatmentSchedule == null || patient.TreatmentSchedule.FirstOrDefault(s => s.Id == id) == null)
+            if (patient == null)
             {
                 return NotFound();
             }
@@ -263,6 +315,19 @@ namespace HospitalManagementApp.Controllers
                 _context.DeleteTreatmentSchedule(patient, id);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(TreatmentScheduleManager), new { id = patientId });
+            }
+            else
+            {
+                foreach (var modelStateKey in ModelState.Keys)
+                {
+                    var modelStateVal = ModelState[modelStateKey];
+                    if (modelStateVal != null) foreach (var error in modelStateVal.Errors)
+                        {
+                            var errorMessage = error.ErrorMessage;
+                            var exception = error.Exception;
+                            throw new Exception(errorMessage, exception);
+                        }
+                }
             }
             return RedirectToAction(nameof(Index));
         }

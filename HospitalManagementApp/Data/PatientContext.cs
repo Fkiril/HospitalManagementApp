@@ -16,7 +16,10 @@ namespace HospitalManagementApp.Data
             _firestoreDb = firestoreDbService.GetFirestoreDb();
             PatientList = (patientList != null)? patientList : [];
         }
+
+        private string colName = "Patient";
         private string docId = "patient_";
+
         public async Task InitializePatientListFromFirestore()
         {
             Console.WriteLine("InitializePatientListFromFirestore");
@@ -24,19 +27,19 @@ namespace HospitalManagementApp.Data
             {
                 return;
             }
-            QuerySnapshot snapshotQuery = await _firestoreDb.Collection("Patient").GetSnapshotAsync();
+            QuerySnapshot snapshotQuery = await _firestoreDb.Collection(colName).GetSnapshotAsync();
 
             foreach (DocumentSnapshot docSnapshot in snapshotQuery.Documents)
             {
                 Patient patient = docSnapshot.ConvertTo<Patient>();
-                patient.changed = false;
+                patient.Changed = false;
                 PatientList.Add(patient);
             }
         }
         public async Task SaveChangesAsync()
         {
             Console.WriteLine("SaveChangesAsync");
-            CollectionReference colRef = _firestoreDb.Collection("Patient");
+            CollectionReference colRef = _firestoreDb.Collection(colName);
             QuerySnapshot snapshot = await colRef.GetSnapshotAsync();
 
             List<string> idsInCloud = [];
@@ -48,7 +51,7 @@ namespace HospitalManagementApp.Data
             foreach (Patient patient in PatientList)
             {
                 if (patient != null)
-                    idsInList.Add("patient_" + patient.Id);
+                    idsInList.Add(docId + patient.Id);
             }
             IEnumerable<string> idsToDelete = idsInCloud.Except(idsInList);
             
@@ -60,17 +63,17 @@ namespace HospitalManagementApp.Data
 
             foreach (Patient patient in PatientList)
             {
-                if (patient.changed == true)
+                if (patient.Changed == true)
                 {
-                    await colRef.Document("patient_" + patient.Id).SetAsync(patient);
-                    patient.changed = false;
+                    await colRef.Document(docId + patient.Id).SetAsync(patient);
+                    patient.Changed = false;
                 }
             }
         }
 
         public void Add(Patient patient)
         {
-            patient.changed = true;
+            patient.Changed = true;
             PatientList.Add(patient);
         }
         public void Update(Patient patient)
@@ -79,18 +82,17 @@ namespace HospitalManagementApp.Data
             {
                 if (p.Id == patient.Id)
                 {
-                    p.Id = patient.Id;
-                    p.Name = patient.Name;
-                    p.Gender = patient.Gender;
-                    p.DateOfBirth = patient.DateOfBirth;
-                    p.Address = patient.Address;
-                    p.PhoneNum = patient.PhoneNum;
-                    p.MedicalHistory = patient.MedicalHistory;
-                    p.TestResult = patient.TestResult;
-                    p.TreatmentSchedule = patient.TreatmentSchedule;
-                    p.Status = patient.Status;
+                    if (patient.Name != null) p.Name = patient.Name;
+                    if (patient.Gender != null) p.Gender = patient.Gender;
+                    if (patient.DateOfBirth != null) p.DateOfBirth = patient.DateOfBirth;
+                    if (patient.Address != null) p.Address = patient.Address;
+                    if (patient.PhoneNum != null) p.PhoneNum = patient.PhoneNum;
+                    if (patient.MedicalHistory != null) p.MedicalHistory = patient.MedicalHistory;
+                    if (patient.TestResult != null) p.TestResult = patient.TestResult;
+                    if (patient.TreatmentSchedule != null) p.TreatmentSchedule = patient.TreatmentSchedule;
+                    if (patient.Status != null) p.Status = patient.Status;
 
-                    p.changed = true;
+                    p.Changed = true;
                     break;
                 }
             }
@@ -98,27 +100,19 @@ namespace HospitalManagementApp.Data
 
         public void AddTreatmentSchedule(Patient patient, Treatment newTreatment)
         {
-            if (patient == null)
-            {
-                throw new ArgumentNullException("patient param can be null!");
-            }
+            ArgumentNullException.ThrowIfNull(patient, nameof(patient));
 
-            if (patient.TreatmentSchedule == null)
-            {
-                patient.TreatmentSchedule = new List<Treatment>();
-            }
+            patient.TreatmentSchedule ??= [];
 
             patient.TreatmentSchedule.Add(newTreatment);
             
-            patient.changed = true;
+            patient.Changed = true;
         }
 
         public void UpdateTreatmentSchedule(Patient patient, int id,  Treatment treatment)
         {
-            if (patient == null || treatment == null)
-            {
-                throw new ArgumentNullException("Parameters can be null!");
-            }
+            ArgumentNullException.ThrowIfNull(patient, nameof(patient));
+            ArgumentNullException.ThrowIfNull(treatment, nameof(treatment));
 
             if (patient.TreatmentSchedule == null)
             {
@@ -127,7 +121,7 @@ namespace HospitalManagementApp.Data
 
             if (patient.TreatmentSchedule.First(x => x.Id == id) == null)
             {
-                throw new ResourceMismatchException("There are not any schedule that have the same id!");
+                throw new Exception("There are not any schedule that have the same id!");
             }
 
             var curTreatment = patient.TreatmentSchedule.First(x =>x.Id == id);
@@ -135,28 +129,28 @@ namespace HospitalManagementApp.Data
             curTreatment.StartTime = treatment.StartTime;
             curTreatment.EndTime = treatment.EndTime;
 
-            patient.changed = true;
+            patient.Changed = true;
         }
 
         public void DeleteTreatmentSchedule(Patient patient, int id)
         {
-            if (patient == null)
-            {
-                throw new ArgumentNullException("patient parameter can be null!");
-            }
+            ArgumentNullException.ThrowIfNull(patient, nameof(patient));
+
             if (patient.TreatmentSchedule == null)
             {
                 throw new Exception("Treatment Schedule list of this patient is empty!");
             }
             if (patient.TreatmentSchedule.First(x => x.Id == id) == null)
             {
-                throw new ResourceMismatchException("There are not any schedule that have the same id!");
+                throw new Exception("There are not any schedule that have the same id!");
             }
 
             var treatment = patient.TreatmentSchedule.First(x => x.Id == id);
             patient.TreatmentSchedule.Remove(treatment);
 
-            patient.changed = true;
+            patient.Changed = true;
         }
+
+
     }
 }

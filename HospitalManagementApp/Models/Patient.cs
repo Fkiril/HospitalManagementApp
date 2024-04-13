@@ -54,13 +54,12 @@ namespace HospitalManagementApp.Models
         public List<Treatment>? TreatmentSchedule { get; set; }
 
         [FirestoreProperty]
-        [Required]
         public List<int>? StaffId { get; set; }
 
         [FirestoreProperty]
         public Status? Status { get; set; }
 
-        public bool? changed { get; set; }
+        public bool? Changed { get; set; }
     }
 
     public class Treatment
@@ -92,42 +91,32 @@ namespace HospitalManagementApp.Models
         {
             return new Dictionary<string, object>
             {
-                { "Date", value.Date ?? new object() },
-                { "StartTime", value.StartTime ?? new object() },
-                { "EndTime", value.EndTime ?? new object() }
+                { "Date", value.Date?? new object() },
+                { "StartTime", value.StartTime?? new object() },
+                { "EndTime", value.EndTime?? new object() },
+                { "Id", value.Id?? new object() }
             };
         }
         public Treatment TreatmentFromFirestore(object value)
         {
-            var dict = value as Dictionary<string, object>;
-            if (dict == null)
-            {
-                throw new ArgumentException("Expected a dictionary");
-            }
-
+            var dict = value as Dictionary<string, object> ?? throw new ArgumentException("Expected a dictionary");
             return new Treatment
             {
-                Date = (string)(dict["Date"]),
-                StartTime = (string)(dict["StartTime"]),
-                EndTime = (string)(dict["EndTime"])
+                Date = (string)dict["Date"],
+                StartTime = (string)dict["StartTime"],
+                EndTime = (string)dict["EndTime"],
+                Id = (int?)(long)dict["Id"]
             };
         }
 
         public object ToFirestore(List<Treatment> value)
         {
-            Console.WriteLine("TreatmentList ToFirestore");
             return value.Select(t => TreatmentToFirestore(t)).ToList();
         }
 
         public List<Treatment> FromFirestore(object value)
         {
-            Console.WriteLine("TreatmentList FromFirestore");
-            var list = value as List<object>;
-            if (list == null)
-            {
-                throw new ArgumentException("Expected a list");
-            }
-
+            var list = value as List<object> ?? throw new ArgumentException("Expected a list");
             return list.Select(o => TreatmentFromFirestore(o)).ToList();
         }
     }

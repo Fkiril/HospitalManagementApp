@@ -8,22 +8,25 @@ namespace HospitalManagementApp.Models
     public class ApplicationUser : IdentityUser
     {
         [FirestoreProperty]
+        [Required]
         public override string Id { get; set; }
 
         [FirestoreProperty]
-        [PersonalData]
-        public override string? UserName { get; set; }
+        [PersonalData, Required]
+        public override string UserName { get; set; }
 
         [FirestoreProperty]
         [DataType(DataType.EmailAddress)]
-        [PersonalData]
-        public override string? Email { get; set; }
+        [PersonalData, Required]
+        public override string Email { get; set; }
 
         [FirestoreProperty]
         [DataType(DataType.Password)]
-        public string? Password { get; set; }
+        [PersonalData, Required]
+        public string Password { get; set; }
 
         [FirestoreProperty]
-        public string? Role { get; set; }
+        [Required]
+        public string Role { get; set; }
     }
 }

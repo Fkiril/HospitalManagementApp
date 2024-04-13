@@ -11,20 +11,22 @@ namespace HospitalManagementApp.Data
     public class ApplicationUserContext
     {
         public readonly FirestoreDb _firestoreDb;
-        public static string collectionName = "ApplicationUser";
         public ApplicationUserContext(FirestoreDbService firestoreDbService)
         {
             _firestoreDb = firestoreDbService.GetFirestoreDb();
         }
 
+        private string colName = "ApplicationUser";
+        private string docId = "applicationuser_";
+
         public CollectionReference GetCollectionReference()
         {
-            return _firestoreDb.Collection(collectionName);
+            return _firestoreDb.Collection(colName);
         }
 
         public DocumentReference GetDocumentReferenceWithId(string id)
         {
-            return _firestoreDb.Collection(collectionName).Document("applicationuser_" + id);
+            return _firestoreDb.Collection(colName).Document(docId + id);
         }
 
         public async Task AddUserAsync(ApplicationUser user)

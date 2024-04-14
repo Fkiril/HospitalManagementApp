@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Google.Cloud.Firestore;
 using HospitalManagementApp.Data;
 using HospitalManagementApp.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 
 namespace HospitalManagementApp.Controllers
 {
+    [Authorize(Roles = "Admin", AuthenticationSchemes = "Cookies")]
     public class EquipmentController : Controller
     {
         public readonly EquipmentContext _context;
@@ -46,8 +48,7 @@ namespace HospitalManagementApp.Controllers
         //POST: Equipment/Add
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Add(
-            [Bind("Id,docId,Name,Description,Status,Schedule,Edited")] Equipment equipment)
+        public async Task<IActionResult> Add(Equipment equipment)
         {
             if (ModelState.IsValid)
             {
@@ -77,9 +78,7 @@ namespace HospitalManagementApp.Controllers
         //POST: Equipment/Edit/3
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(
-            int id,
-            [Bind("Id,docId,Name,Description,Status,Schedule,Edited")] Equipment equipment)
+        public async Task<IActionResult> Edit(int id, Equipment equipment)
         {
             if (id != equipment.Id)
             {

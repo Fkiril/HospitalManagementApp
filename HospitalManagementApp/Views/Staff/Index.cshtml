@@ -45,9 +45,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.FirstOrDefault().WorkSchedule)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FirstOrDefault().Status)
-            </th>
             <th></th>
         </tr>
     </thead>
@@ -90,15 +87,17 @@
                     <a asp-action="Calendar" asp-route-id="@item.Id">Calendar</a>
                 </td>
                 <td>
-                    @Html.DisplayFor(model => item.Status)
-                </td>
-                <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                     <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
+                    <a asp-action="ShowPatient" asp-route-id="@item.Id">ShowPatient</a>
                 </td>
             </tr>
         }
     </tbody>
     
 </table>
+
+<p>
+    <a asp-action="CreateCalendar">Create calendar for all staff</a>
+</p>

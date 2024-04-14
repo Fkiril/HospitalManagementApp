@@ -2,6 +2,12 @@ using Microsoft.AspNetCore.Mvc;
 using Google.Cloud.Firestore;
 using HospitalManagementApp.Data;
 using HospitalManagementApp.Models;
+using System;
+using System.Linq;
+using System.Linq.Expressions;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Google.Api;
 
 
 namespace HospitalManagementApp.Controllers
@@ -46,8 +52,7 @@ namespace HospitalManagementApp.Controllers
         //POST: Staff/Add
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Add(
-            [Bind("Id,patList,Name,Gender,HealthCareStaff,DataOfBirth,Email,PhoneNum,Degree,Speacialist,Department,WorkSchedule,Status")] Staff staff)
+        public async Task<IActionResult> Add( Staff staff)
         {
             if (ModelState.IsValid)
             {
@@ -77,9 +82,7 @@ namespace HospitalManagementApp.Controllers
         //POST: Staff/Edit/3
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(
-            int id,
-            [Bind("Id,patList,Name,Gender,HealthCareStaff,DataOfBirth,Email,PhoneNum,Degree,Speacialist,Department,WorkSchedule,Status")] Staff staff)
+        public async Task<IActionResult> Edit( int id, Staff staff)
         {
             if (id != staff.Id)
             {
@@ -142,13 +145,32 @@ namespace HospitalManagementApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public IActionResult ShowPatient(int id)
+        {
+
+            var staff = StaffContext.StaffList
+                  .FirstOrDefault(staff => staff.Id == id);
+            if (staff != null)
+            {
+                var patList = PatientContext.PatientList.Where(patient => patient.StaffId is not null).ToList();
+                var patListNotNull = patList.Where(patient => patient.StaffId.Contains(id)).ToList();
+                if (patListNotNull == null) return View(staff);
+                else return View(patListNotNull);
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+
         private bool StaffExists(int id)
         {
             return StaffContext.StaffList.Any(staff => staff.Id == id);
         }
     
         //GET: Staff/Calendar/3
-        public IActionResult Calendar(int? id)
+        public IActionResult Calendar(int id)
         {
             if (id == null)
             {
@@ -167,9 +189,7 @@ namespace HospitalManagementApp.Controllers
         //POST: Staff/Calendar/3
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Calendar(
-            int id,
-            [Bind("Id,patList,Name,Gender,HealthCareStaff,DataOfBirth,Email,PhoneNum,Degree,Speacialist,Department,WorkSchedule,Status")] Staff staff)
+        public async Task<IActionResult> Calendar (int id,Staff staff)
         {
             if (id != staff.Id)
             {
@@ -198,6 +218,31 @@ namespace HospitalManagementApp.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(staff);
+        }
+    
+        public IActionResult CreateCalendar()
+        {
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateCalendar(Staff staff)
+        {
+            if (staff.WorkSchedule == String.Empty)
+            {
+                _context.CreateCalendar();
+                return Calendar(staff.Id);
+            }
+
+            if (ModelState.IsValid)
+            {
+                _context.CreateCalendar();
+                _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

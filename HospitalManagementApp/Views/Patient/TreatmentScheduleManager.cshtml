@@ -1,0 +1,59 @@
+﻿@model HospitalManagementApp.Models.Patient
+
+@{
+    ViewData["Title"] = "Treatment schedule manager";
+}
+
+<h4>Patient's treatment schedules</h4>
+
+<hr />
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <strong>Schedule Id</strong>
+            </th>
+            <th>
+                <strong>Date</strong>
+            </th>
+            <th>
+                <strong>Start time</strong>
+            </th>
+            <th>
+                <strong>End time</strong>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.TreatmentSchedule != null)
+        {
+            @foreach (var schedule in Model.TreatmentSchedule)
+            {
+                <tr>
+                    <td>
+                        @schedule.Id
+                    </td>
+                    <td>
+                        @schedule.Date
+                    </td>
+                    <td>
+                        @schedule.StartTime
+                    </td>
+                    <td>
+                        @schedule.EndTime
+                    </td>
+                    <td>
+                        <a asp-action="EditSchedule" asp-route-id="@schedule.Id" asp-route-patientId="@Model.Id" >Edit schedule</a>
+                        <a asp-action="DeleteSchedule" asp-route-id="@schedule.Id" >Delete schedule</a>
+                    </td>
+                </tr>
+            }
+        }
+        <tr>
+            <td>
+                <a asp-action="AddSchedule" asp-route-id="@Model.Id" >Add new schedule</a>
+            </td>
+        </tr>
+    </tbody>
+</table>

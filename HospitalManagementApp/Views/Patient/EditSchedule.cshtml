@@ -1,0 +1,42 @@
+﻿@model HospitalManagementApp.Models.Treatment
+@{
+    ViewData["Title"] = "EditSchedule";
+}
+
+<h3>Edit patient's treatment schedule</h3>
+<br />
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="EditSchedule" method="post" asp-route-patientId="@ViewBag.PatientId" asp-route-treatment="@Model">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="@Model.Id" class="control-label"></label>
+                <input asp-for="@Model.Id" class="form-control" />
+                <span asp-validation-for="@Model.Id" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Date" class="control-label"></label>
+                <input asp-for="@Model.Date" class="form-control" />
+                <span asp-validation-for="@Model.Date" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.StartTime" class="control-label"></label>
+                <input asp-for="@Model.StartTime" class="form-control" />
+                <span asp-validation-for="@Model.StartTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.EndTime" class="control-label"></label>
+                <input asp-for="@Model.EndTime" class="form-control" />
+                <span asp-validation-for="@Model.EndTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Edit" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="TreatmentScheduleManager" asp-route-id="@ViewBag.patientId">Back to treatment schedule manager</a>
+</div>

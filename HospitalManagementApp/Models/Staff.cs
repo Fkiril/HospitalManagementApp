@@ -17,37 +17,10 @@ namespace HospitalManagementApp.Models
     [FirestoreData]
     public class Staff
     {
-        public static string CreateCalendar()
-        {
-            Random random = new Random();
-            string result = "";
-            string[] week = new string[] { "a2", "b2", "a3", "b3", "a4", "b4", "a5", "b5", "a6", "b6", "a7", "b7", "a8", "b8" };
-
-            foreach (string day in week)
-            {
-                int ranNum = random.Next(0, 2);
-                if(ranNum == 0)
-                {
-                    result += day + ' ' + "Off" ;
-                }
-                else
-                {
-                    result += day + ' ' + "Work" ;
-                }
-            }
-
-            return result;
-        }
-
+        
         [FirestoreProperty]
-        [Required, Range(1, 9999)]
-        public int? Id { get; set; }
-
-        [FirestoreProperty]
-        public string? patList { get; set; } = string.Empty;
-
-        //[FirestoreProperty]
-        //public List<Patient>? patList { get; set; } = new List<Patient>();
+        [Key,Required, Range(1, 9999)]
+        public int Id { get; set; }
 
         [FirestoreProperty]
         [Required, StringLength(60, MinimumLength = 3)]
@@ -63,8 +36,8 @@ namespace HospitalManagementApp.Models
 
         [FirestoreProperty]
         [Display(Name = "Date Of Birth")]
-        [DataType(DataType.DateTime)]
-        public DateTime DateOfBirth { get; set; }
+        [RegularExpression(@"^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[012])/[0-9]{4}$", ErrorMessage = "Invalid date format. Please use the format dd/mm/yyyy.")]
+        public string? DateOfBirth { get; set; }
 
         [FirestoreProperty]
         public string? Email { get; set; }
@@ -81,8 +54,9 @@ namespace HospitalManagementApp.Models
         [FirestoreProperty]
         public string? Department { get; set; }
         [FirestoreProperty]
-        public string? WorkSchedule { get; set; }
-        [FirestoreProperty]
-        public string? Status { get; set; }
+        public string? WorkSchedule { get; set; } = String.Empty;
+
+        public bool? changed { get; set; }
+
     }
 }

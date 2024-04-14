@@ -110,6 +110,8 @@ namespace HospitalManagementApp.Data
                     p.Status = drugs.Status;
                     p.Expiry = drugs.Expiry;
                     p.Quantity = drugs.Quantity;
+                    p.ReceiptDay = drugs.ReceiptDay;
+
 
                     break;
                 }

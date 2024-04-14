@@ -1,9 +1,6 @@
-﻿using Google.Api;
-using Google.Api.Gax;
-using Google.Cloud.Firestore;
+﻿using Google.Cloud.Firestore;
 using HospitalManagementApp.Models;
 using HospitalManagementApp.Services;
-using Microsoft.EntityFrameworkCore;
 
 namespace HospitalManagementApp.Data
 {
@@ -151,6 +148,14 @@ namespace HospitalManagementApp.Data
             patient.Changed = true;
         }
 
+        public void SetTestResult(Patient patient, string? newTestResult)
+        {
+            ArgumentNullException.ThrowIfNull(patient, nameof(patient));
 
+            if (PatientList.Contains(patient))
+            {
+                PatientList.First(p => p.Id == patient.Id).TestResult = newTestResult;
+            }
+        }
     }
 }

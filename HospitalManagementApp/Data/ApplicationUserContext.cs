@@ -1,10 +1,6 @@
 ﻿using Google.Cloud.Firestore;
 using HospitalManagementApp.Models;
 using HospitalManagementApp.Services;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 
 namespace HospitalManagementApp.Data
 {
@@ -16,8 +12,8 @@ namespace HospitalManagementApp.Data
             _firestoreDb = firestoreDbService.GetFirestoreDb();
         }
 
-        private string colName = "ApplicationUser";
-        private string docId = "applicationuser_";
+        private const string colName = "ApplicationUser";
+        private const string docId = "applicationuser_";
 
         public CollectionReference GetCollectionReference()
         {
@@ -35,7 +31,7 @@ namespace HospitalManagementApp.Data
             {
                 await GetDocumentReferenceWithId(user.Id).SetAsync(user).ConfigureAwait(false);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 Console.Write("Can not add new data into FirestoreDb");
             }
@@ -47,7 +43,7 @@ namespace HospitalManagementApp.Data
             {
                 await GetDocumentReferenceWithId(user.Id).DeleteAsync().ConfigureAwait(false);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 Console.Write("Can not delete data from FirestoreDb");
             }
@@ -59,7 +55,7 @@ namespace HospitalManagementApp.Data
             {
                 await GetDocumentReferenceWithId(user.Id).SetAsync(user).ConfigureAwait(false);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 Console.Write("Can not update data in FirestoreDb");
             }
@@ -71,7 +67,7 @@ namespace HospitalManagementApp.Data
             QuerySnapshot query = await colRef.GetSnapshotAsync();
             var docQuery = query.Documents.FirstOrDefault(doc => doc.GetValue<string>("Id") == id);
 
-            ApplicationUser user = new ApplicationUser();
+            ApplicationUser user = new();
 
             if (docQuery != null)
             {
@@ -87,7 +83,7 @@ namespace HospitalManagementApp.Data
             QuerySnapshot query = await colRef.GetSnapshotAsync();
             var docQuery = query.Documents.FirstOrDefault(doc => doc.GetValue<string>("Email") ==  email);
 
-            ApplicationUser user = new ApplicationUser();
+            ApplicationUser user = new();
 
             if (docQuery != null)
             {

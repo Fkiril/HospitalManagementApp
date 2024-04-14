@@ -2,7 +2,6 @@
 using HospitalManagementApp.Data;
 using HospitalManagementApp.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 
 namespace HospitalManagementApp.Controllers

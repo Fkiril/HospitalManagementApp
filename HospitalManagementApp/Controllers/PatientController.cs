@@ -53,6 +53,7 @@ namespace HospitalManagementApp.Controllers
             {
                 _context.Add(patient);
                 await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
             else
@@ -202,7 +203,7 @@ namespace HospitalManagementApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddSchedule(int patientId, Treatment newTreatment)
+        public async Task<IActionResult> AddSchedule(int patientId, TreatmentScheduleEle newTreatment)
         {
             var patient = PatientContext.PatientList
                 .FirstOrDefault(m => m.Id == patientId);
@@ -254,7 +255,7 @@ namespace HospitalManagementApp.Controllers
             return View(treatment);
         }
         [HttpPost]
-        public async Task<IActionResult> EditSchedule(int id, int patientId, Treatment treatment)
+        public async Task<IActionResult> EditSchedule(int id, int patientId, TreatmentScheduleEle treatment)
         {
             var patient = PatientContext.PatientList
                 .FirstOrDefault(m => m.Id == patientId);

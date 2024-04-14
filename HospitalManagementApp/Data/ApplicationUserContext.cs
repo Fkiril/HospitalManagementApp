@@ -25,15 +25,27 @@ namespace HospitalManagementApp.Data
             return _firestoreDb.Collection(colName).Document(docId + id);
         }
 
+        public async Task<bool> IsIdUnique(string id)
+        {
+            QuerySnapshot query = await _firestoreDb.Collection(colName).WhereEqualTo("Id", id).GetSnapshotAsync();
+            return !(query.Count > 0);
+        }
         public async Task AddUserAsync(ApplicationUser user)
         {
-            try
+            if (await IsIdUnique(user.Id))
             {
-                await GetDocumentReferenceWithId(user.Id).SetAsync(user).ConfigureAwait(false);
+                try
+                {
+                    await GetDocumentReferenceWithId(user.Id).SetAsync(user).ConfigureAwait(false);
+                }
+                catch (Exception)
+                {
+                    Console.Write("Can not add new data into FirestoreDb");
+                }
             }
-            catch (Exception)
+            else
             {
-                Console.Write("Can not add new data into FirestoreDb");
+                throw new Exception("Id is not unique!");
             }
         }
 

@@ -1,7 +1,7 @@
 ﻿@model HospitalManagementApp.Models.Patient
 
 @{
-    ViewData["Title"] = "Treatment schedule manager";
+    ViewData["Title"] = "TreatmentScheduleEle schedule manager";
 }
 
 <h4>Patient's treatment schedules</h4>
@@ -28,7 +28,7 @@
     <tbody>
         @if (Model.TreatmentSchedule != null)
         {
-            @foreach (var schedule in Model.TreatmentSchedule)
+            foreach (var schedule in Model.TreatmentSchedule)
             {
                 <tr>
                     <td>

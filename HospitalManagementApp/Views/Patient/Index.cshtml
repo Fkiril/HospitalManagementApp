@@ -82,13 +82,25 @@
                     @Html.DisplayFor(model => item.PhoneNum)
                 </td>
                 <td>
-                    @Html.DisplayFor(model => item.MedicalHistory)
+                    @if (item.MedicalHistory != null)
+                    {
+                        <ul>
+                            @foreach (var ele in item.MedicalHistory)
+                            {
+                                <li>
+                                    <strong>Disease:</strong> @ele.Disease<br />
+                                    <strong>StartDate:</strong> @ele.StartDate<br />
+                                    <strong>EndDate:</strong> @ele.EndDate<br />
+                                </li>
+                            }
+                        </ul>
+                    }
                 </td>
                 <td>
                     @Html.DisplayFor(model => item.TestResult)
                 </td>
                 <td>
-                    @Html.Raw(string.Join(", ", item.StaffId))
+                    @if(item.StaffId is not null) @Html.Raw(string.Join(", ", item.StaffId))
                 </td>
                 <td>
                     @if (item.TreatmentSchedule != null)

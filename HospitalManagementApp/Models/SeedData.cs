@@ -32,7 +32,7 @@ namespace HospitalManagementApp.Models
                     StaffId = [1, 2],
                     TreatmentSchedule =
                     [
-                        new Treatment
+                        new TreatmentScheduleEle
                         {
                             Id = 1,
                             Date = "09/04/2024",
@@ -55,7 +55,7 @@ namespace HospitalManagementApp.Models
                     StaffId = [3, 4],
                     TreatmentSchedule =
                     [
-                        new Treatment
+                        new TreatmentScheduleEle
                         {
                             Id = 1,
                             Date = "10/04/2024",

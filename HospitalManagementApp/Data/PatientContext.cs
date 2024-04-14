@@ -8,18 +8,18 @@ namespace HospitalManagementApp.Data
     {
         public readonly FirestoreDb _firestoreDb;
         public static ICollection<Patient> PatientList { get; private set; } = default!;
+        //public readonly StaffContext _staffContext;
         public PatientContext(FirestoreDbService firestoreDbService, ICollection<Patient>? patientList = null)
         {
             _firestoreDb = firestoreDbService.GetFirestoreDb();
             PatientList = (patientList != null)? patientList : [];
         }
 
-        private string colName = "Patient";
-        private string docId = "patient_";
+        private const string colName = "Patient";
+        private const string docId = "patient_";
 
         public async Task InitializePatientListFromFirestore()
         {
-            Console.WriteLine("InitializePatientListFromFirestore");
             if (PatientList.Count != 0)
             {
                 return;
@@ -35,7 +35,6 @@ namespace HospitalManagementApp.Data
         }
         public async Task SaveChangesAsync()
         {
-            Console.WriteLine("SaveChangesAsync");
             CollectionReference colRef = _firestoreDb.Collection(colName);
             QuerySnapshot snapshot = await colRef.GetSnapshotAsync();
 
@@ -68,10 +67,28 @@ namespace HospitalManagementApp.Data
             }
         }
 
+        public bool IsIdUnique(int? id)
+        {
+            foreach (var patient in PatientList)
+            {
+                if (id != null && patient.Id == id)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
         public void Add(Patient patient)
         {
-            patient.Changed = true;
-            PatientList.Add(patient);
+            if (IsIdUnique(patient.Id))
+            {
+                patient.Changed = true;
+                PatientList.Add(patient);
+            }
+            else
+            {
+                throw new Exception("Id is not unique!");
+            }
         }
         public void Update(Patient patient)
         {
@@ -95,25 +112,34 @@ namespace HospitalManagementApp.Data
             }
         }
 
-        public void AddTreatmentSchedule(Patient patient, Treatment newTreatment)
+        public void AddTreatmentSchedule(Patient patient, TreatmentScheduleEle newTreatment)
         {
             ArgumentNullException.ThrowIfNull(patient, nameof(patient));
+            ArgumentNullException.ThrowIfNull(newTreatment, nameof(newTreatment));
 
             patient.TreatmentSchedule ??= [];
+
+            foreach (var treatment in patient.TreatmentSchedule)
+            {
+                if (treatment.Id == newTreatment.Id)
+                {
+                    throw new ArgumentException("Id is not unique!");
+                }
+            }
 
             patient.TreatmentSchedule.Add(newTreatment);
             
             patient.Changed = true;
         }
 
-        public void UpdateTreatmentSchedule(Patient patient, int id,  Treatment treatment)
+        public void UpdateTreatmentSchedule(Patient patient, int id,  TreatmentScheduleEle treatment)
         {
             ArgumentNullException.ThrowIfNull(patient, nameof(patient));
             ArgumentNullException.ThrowIfNull(treatment, nameof(treatment));
 
             if (patient.TreatmentSchedule == null)
             {
-                throw new Exception("Treatment Schedule list of this patient is empty!");
+                throw new Exception("TreatmentScheduleEle Schedule list of this patient is empty!");
             }
 
             if (patient.TreatmentSchedule.First(x => x.Id == id) == null)
@@ -135,7 +161,7 @@ namespace HospitalManagementApp.Data
 
             if (patient.TreatmentSchedule == null)
             {
-                throw new Exception("Treatment Schedule list of this patient is empty!");
+                throw new Exception("TreatmentScheduleEle Schedule list of this patient is empty!");
             }
             if (patient.TreatmentSchedule.First(x => x.Id == id) == null)
             {
@@ -148,14 +174,39 @@ namespace HospitalManagementApp.Data
             patient.Changed = true;
         }
 
-        public void SetTestResult(Patient patient, string? newTestResult)
+        public void SetTestResult(int patientId, string? newTestResult)
         {
-            ArgumentNullException.ThrowIfNull(patient, nameof(patient));
+            Patient patient = PatientList.First(x => x.Id == patientId) ?? throw new Exception("Patient is not found!");
+            patient.TestResult = newTestResult;
+            patient.Changed = true;
+        }
 
-            if (PatientList.Contains(patient))
+        public void SetStaffId(int patientId, List<int> staffIds)
+        {
+            Patient patient = PatientList.First(x => x.Id == patientId) ?? throw new Exception("Patient is not found!");
+            foreach (var id in staffIds)
             {
-                PatientList.First(p => p.Id == patient.Id).TestResult = newTestResult;
+                // if (_staffContext.???) 
+                // {
+                //      throw new Exception();
+                // }
             }
+            patient.StaffId = staffIds;
+            patient.Changed = true;
+        }
+
+        public void AddMedicalHistory(int patientId, MedicalHistoryEle medicalHistoryEle)
+        {
+            Patient patient = PatientList.First(x => x.Id == patientId) ?? throw new Exception("Patient is not found!");
+            if (patient.MedicalHistory != null)
+            {
+                patient.MedicalHistory.Add(medicalHistoryEle);
+            }
+            else
+            {
+                patient.MedicalHistory = new List<MedicalHistoryEle> { medicalHistoryEle };
+            }
+            patient.Changed = true;
         }
     }
 }

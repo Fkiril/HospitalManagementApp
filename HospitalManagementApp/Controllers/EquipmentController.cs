@@ -73,6 +73,7 @@ namespace HospitalManagementApp.Controllers
             {
                 return NotFound();
             }
+
             return View(equipment);
         }
         //POST: Equipment/Edit/3
@@ -94,7 +95,8 @@ namespace HospitalManagementApp.Controllers
                 }
                 catch (Exception)
                 {
-                    if (!EquipmentExists((int)equipment.Id)) {
+                    if (!EquipmentExists((int)equipment.Id))
+                    {
                         return NotFound();
                     }
                     else
@@ -133,15 +135,137 @@ namespace HospitalManagementApp.Controllers
                 .FirstOrDefault(equipment => equipment.Id == id);
             if (equipment != null)
             {
-                _context.Remove(equipment);
-                await _context.SaveChangesAsync();
+                EquipmentContext.EquipmentList.Remove(equipment);
             }
+
+            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool EquipmentExists(int id)
         {
             return EquipmentContext.EquipmentList.Any(equipment => equipment.Id == id);
+        }
+
+
+        public IActionResult TreatmentScheduleManager(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var equipment = EquipmentContext.EquipmentList
+                .FirstOrDefault(m => m.Id == id);
+            if (equipment == null)
+            {
+                return NotFound();
+            }
+
+            return View(equipment);
+        }
+        public IActionResult AddSchedule(int id)
+        {
+            var equipment = EquipmentContext.EquipmentList
+                .FirstOrDefault(m => m.Id == id);
+            if (equipment == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.EquipmentId = id;
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddSchedule(int equipmentId, Treatment newTreatment)
+        {
+            var equipment = EquipmentContext.EquipmentList
+                .FirstOrDefault(m => m.Id == equipmentId);
+            if (equipment == null)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                if (newTreatment == null)
+                {
+                    return BadRequest();
+                }
+
+                _context.AddTreatmentSchedule(equipment, newTreatment);
+
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(TreatmentScheduleManager), new { id = equipmentId });
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult EditSchedule(int? id, int equipmentId)
+        {
+            var equipment = EquipmentContext.EquipmentList
+                .FirstOrDefault(m => m.Id == equipmentId);
+            if (equipment == null || equipment.TreatmentSchedule == null || equipment.TreatmentSchedule.FirstOrDefault(s => s.Id == id) == null)
+            {
+                return NotFound();
+            }
+            var treatment = equipment.TreatmentSchedule.FirstOrDefault(s => s.Id == id);
+
+            ViewBag.equipmentId = equipmentId;
+
+            return View(treatment);
+        }
+        [HttpPost]
+        public async Task<IActionResult> EditSchedule(int id, int equipmentId, Treatment treatment)
+        {
+            var equipment = EquipmentContext.EquipmentList
+                .FirstOrDefault(m => m.Id == equipmentId);
+            if (equipment == null || equipment.TreatmentSchedule == null || equipment.TreatmentSchedule.FirstOrDefault(s => s.Id == id) == null)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                _context.UpdateTreatmentSchedule(equipment, id, treatment);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(TreatmentScheduleManager), new { id = equipmentId });
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult DeleteSchedule(int? id, int equipmentId)
+        {
+            var equipment = EquipmentContext.EquipmentList
+                .FirstOrDefault(m => m.Id == equipmentId);
+            if (equipment == null || equipment.TreatmentSchedule == null || equipment.TreatmentSchedule.FirstOrDefault(s => s.Id == id) == null)
+            {
+                return NotFound();
+            }
+            var treatment = equipment.TreatmentSchedule.FirstOrDefault(s => s.Id == id);
+
+            ViewBag.equipmentId = equipmentId;
+
+            return View(treatment);
+        }
+        [HttpPost]
+        public async Task<IActionResult> DeleScheduleConfirmed(int id, int equipmentId)
+        {
+            var equipment = EquipmentContext.EquipmentList
+                .FirstOrDefault(m => m.Id == equipmentId);
+            if (equipment == null || equipment.TreatmentSchedule == null || equipment.TreatmentSchedule.FirstOrDefault(s => s.Id == id) == null)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                _context.DeleteTreatmentSchedule(equipment, id);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(TreatmentScheduleManager), new { id = equipmentId });
+            }
+            return RedirectToAction(nameof(Index));
         }
     }
 }

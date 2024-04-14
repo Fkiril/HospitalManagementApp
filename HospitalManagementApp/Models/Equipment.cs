@@ -1,29 +1,21 @@
 using Google.Cloud.Firestore;
+using Microsoft.CodeAnalysis.Elfie.Diagnostics;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.CompilerServices;
 
 namespace HospitalManagementApp.Models
 {
-    public enum EquipmentStatus
-    {
-        isFree,
-        isUsing,
-        isFixing
-    }
-
     [FirestoreData]
     public class Equipment
     {
         [FirestoreProperty]
-        public static int? Total { get; set; } = 0;
+        public static int? Total { get; set; }
+        [FirestoreProperty]
+        public static int? FreeEquipment { get; set; }
 
         [FirestoreProperty]
         [Required, Range(1, 9999)]
         public int? Id { get; set; }
-
-        // for doc
-        [FirestoreProperty]
-        public string? docId { get; set; } = string.Empty;
 
         [FirestoreProperty]
         [Required, StringLength(60, MinimumLength = 3)]
@@ -34,10 +26,10 @@ namespace HospitalManagementApp.Models
         public string? Description { get; set; }
 
         [FirestoreProperty]
-        public EquipmentStatus? Status { get; set; } = EquipmentStatus.isFree;
+        public bool? IsAvailable { get; set; } = true;
 
-        [FirestoreProperty(ConverterType = typeof(TreatmentListConverter))]
-        public List<Treatment>? Schedule { get; set; }
+        [FirestoreProperty]
+        public List<String>? History { get; set; }
 
         // note for checking if anything have changed
         [FirestoreProperty]

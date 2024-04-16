@@ -54,9 +54,8 @@ namespace HospitalManagementApp.Models
         [FirestoreProperty]
         public string? Department { get; set; }
         [FirestoreProperty]
-        public string? WorkSchedule { get; set; } = String.Empty;
+        public string[]? WorkSchedule { get; set; }
 
         public bool? changed { get; set; }
-
     }
 }

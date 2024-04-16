@@ -99,46 +99,46 @@ namespace HospitalManagementApp.Data
         public void CreateCalendar()
         {
             Random random = new Random();
+            int n = 7;
 
-            string[] week = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
             string[] shift = ["morning", "afternoon", "evening"];
             //department have two doctor
-            for(var i = 0; i < 7; i++)
+            for(var i = 0; i < n; i++)
             {
                 foreach ( Staff staff in StaffList)
                 {
-                    if(staff.WorkSchedule == String.Empty)
+                    if(staff.WorkSchedule == null)
                     {
-                        staff.WorkSchedule = "";
+                        staff.WorkSchedule = new string[n];
                         int randomNumber = random.Next(0, 2);
                         //setting shift
 
-                        staff.WorkSchedule += week[i] + ' ' + shift[randomNumber];
+                        staff.WorkSchedule[i] = shift[randomNumber];
                         int other = 1 - randomNumber;
                         var specialList = StaffList.Where(s => s.Specialist == staff.Specialist && s != staff).ToList();
 
                         Staff staff1 = specialList[0];
-                        staff1.WorkSchedule = "";
+                        staff1.WorkSchedule = new string[n];
                         if(specialList.Count >= 2)
                         {
                             Staff staff2 = specialList[1];
-                            staff2.WorkSchedule = "";
+                            staff2.WorkSchedule = new string[n];
 
                             //setting calendar for staff1 and staff2
                             if(randomNumber == 0)
                             {
-                                staff1.WorkSchedule += week[i] + ' ' + shift[other];
-                                staff2.WorkSchedule += week[i] + ' ' + shift[2];
+                                staff1.WorkSchedule[i] = shift[other];
+                                staff2.WorkSchedule[i] = shift[2];
                             }
                             else
                             {
-                                staff1.WorkSchedule += week[i] + ' ' + shift[2];
-                                staff2.WorkSchedule += week[i] + ' ' + shift[other];
+                                staff1.WorkSchedule[i] =  shift[2];
+                                staff2.WorkSchedule[i] = shift[other];
                             }
                         }
                         else
                         {
-                            staff1.WorkSchedule += week[i] + ' ' + shift[other];
+                            staff1.WorkSchedule[i] = shift[other];
                         }
                         
                     }

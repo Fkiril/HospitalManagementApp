@@ -145,23 +145,23 @@ namespace HospitalManagementApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult ShowPatient(int id)
-        {
+        //public IActionResult ShowPatient(int id)
+        //{
 
-            var staff = StaffContext.StaffList
-                  .FirstOrDefault(staff => staff.Id == id);
-            if (staff != null)
-            {
-                var patList = PatientContext.PatientList.Where(patient => patient.StaffId is not null).ToList();
-                var patListNotNull = patList.Where(patient => patient.StaffId.Contains(id)).ToList();
-                if (patListNotNull == null) return View(staff);
-                else return View(patListNotNull);
-            }
-            else
-            {
-                return NotFound();
-            }
-        }
+        //    var staff = StaffContext.StaffList
+        //          .FirstOrDefault(staff => staff.Id == id);
+        //    if (staff != null)
+        //    {
+        //        var patList = PatientContext.PatientList.Where(patient => patient.StaffId is not null).ToList();
+        //        var patListNotNull = patList.Where(patient => patient.StaffId.Contains(id)).ToList();
+        //        if (patListNotNull == null) return View(staff);
+        //        else return View(patListNotNull);
+        //    }
+        //    else
+        //    {
+        //        return NotFound();
+        //    }
+        //}
 
 
         private bool StaffExists(int id)
@@ -222,27 +222,16 @@ namespace HospitalManagementApp.Controllers
     
         public IActionResult CreateCalendar()
         {
-            return RedirectToAction(nameof(Index));
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateCalendar(Staff staff)
-        {
-            if (staff.WorkSchedule == String.Empty)
-            {
-                _context.CreateCalendar();
-                return Calendar(staff.Id);
-            }
 
             if (ModelState.IsValid)
             {
                 _context.CreateCalendar();
-                _context.SaveChangesAsync();
+                _ = _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
 
             return RedirectToAction(nameof(Index));
         }
+
     }
 }

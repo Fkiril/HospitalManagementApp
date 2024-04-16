@@ -87,9 +87,9 @@
                 <td>
                     @Html.DisplayFor(model => item.TestResult)
                 </td>
-                <td>
+                @* <td>
                     @Html.Raw(string.Join(", ", item.StaffId))
-                </td>
+                </td> *@
                 <td>
                     @if (item.TreatmentSchedule != null)
                     {

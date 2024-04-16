@@ -98,7 +98,8 @@ namespace HospitalManagementApp.Models
                     PhoneNum = "0769421007",
                     Degree = "abc",
                     Specialist = "abc",
-                    Department = "abc"
+                    Department = "abc",
+                    WorkSchedule = null
                 },
                 new Staff
                 {
@@ -111,7 +112,8 @@ namespace HospitalManagementApp.Models
                     PhoneNum = "0987654312",
                     Degree = "abc",
                     Specialist = "abc",
-                    Department = "abc"
+                    Department = "abc",
+                    WorkSchedule = null
                 },
                 new Staff
                 {
@@ -124,7 +126,8 @@ namespace HospitalManagementApp.Models
                     PhoneNum = "0231456978",
                     Degree = "abc",
                     Specialist = "abc",
-                    Department = "abc"
+                    Department = "abc",
+                    WorkSchedule = null
                 }
             };
 

@@ -27,18 +27,18 @@ const c8 = document.getElementById('c8');
 
 function morning(element1, element2, element3) {
     element1.innerText = "Work";
-    element2.innerText = "Rest";
-    element3.innerText = "Rest";
+    element2.innerText = "";
+    element3.innerText = "";
 }
 function afternoon(element1, element2, element3) {
     element1.innerText = "Work";
-    element2.innerText = "Rest";
-    element3.innerText = "Rest";
+    element2.innerText = "";
+    element3.innerText = "";
 }
 function evening(element1, element2, element3) {
     element1.innerText = "Work";
-    element2.innerText = "Rest";
-    element3.innerText = "Rest";
+    element2.innerText = "";
+    element3.innerText = "";
 }
 
 function day(text, element1, element2, element3) {

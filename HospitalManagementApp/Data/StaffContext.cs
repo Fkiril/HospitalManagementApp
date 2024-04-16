@@ -96,43 +96,68 @@ namespace HospitalManagementApp.Data
                 }
             }
         }
+
+        public void DateInWeek(Staff staff)
+        {
+            //add 7 day in week
+            DateTime today = DateTime.Today;
+            int currentDayOfWeek = (int)today.DayOfWeek;
+            DateTime sunday = today.AddDays(-currentDayOfWeek);
+            DateTime monday = sunday.AddDays(1);
+
+            // If we started on Sunday, we should actually have gone *back*
+            // 6 days instead of forward 1...
+            if (currentDayOfWeek == 0)
+            {
+                monday = monday.AddDays(-7);
+            }
+
+            var dates = Enumerable.Range(0, 7).Select(days => monday.AddDays(days)).ToList();
+
+            if (staff.WorkSchedule == null) staff.WorkSchedule = new Calendar();
+            for(int i = 0; i < 7; i++) 
+            {
+                staff.WorkSchedule.Date.Add(dates[i].ToString("dd/mm/yyyy"));
+            }
+        }
+
         public void CreateCalendar()
         {
             Random random = new Random();
             int n = 7;
 
-            string[] shift = ["morning", "afternoon", "evening"];
-            //department have two doctor
-            for(var i = 0; i < n; i++)
+            foreach (Staff staff in StaffList)
             {
-                foreach ( Staff staff in StaffList)
+                if (staff.WorkSchedule == null)
                 {
-                    if(staff.WorkSchedule == null)
-                    {
-                        staff.WorkSchedule = new string[n];
-                        int randomNumber = random.Next(0, 2);
-                        //setting shift
+                    staff.WorkSchedule = new Calendar();
+                    DateInWeek(staff);
 
-                        staff.WorkSchedule[i] = shift[randomNumber];
-                        int other = 1 - randomNumber;
+                    for (int i = 0; i < n; i++)
+                    {
+
+                        //add shift
+                        int randomNumber = random.Next(0, 2);
+                        staff.WorkSchedule.DayofWeek;
+                    int other = 1 - randomNumber;
                         var specialList = StaffList.Where(s => s.Specialist == staff.Specialist && s != staff).ToList();
 
                         Staff staff1 = specialList[0];
-                        staff1.WorkSchedule = new string[n];
-                        if(specialList.Count >= 2)
+                        DateInWeek(staff1);
+                        if (specialList.Count >= 2)
                         {
                             Staff staff2 = specialList[1];
-                            staff2.WorkSchedule = new string[n];
+                            DateInWeek(staff2);
 
                             //setting calendar for staff1 and staff2
-                            if(randomNumber == 0)
+                            if (randomNumber == 0)
                             {
                                 staff1.WorkSchedule[i] = shift[other];
                                 staff2.WorkSchedule[i] = shift[2];
                             }
                             else
                             {
-                                staff1.WorkSchedule[i] =  shift[2];
+                                staff1.WorkSchedule[i] = shift[2];
                                 staff2.WorkSchedule[i] = shift[other];
                             }
                         }
@@ -140,12 +165,9 @@ namespace HospitalManagementApp.Data
                         {
                             staff1.WorkSchedule[i] = shift[other];
                         }
-                        
                     }
-                    else  continue;
                 }
             }
-
         }
     }
 }

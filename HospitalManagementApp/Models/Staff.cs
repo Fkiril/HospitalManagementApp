@@ -12,7 +12,12 @@ namespace HospitalManagementApp.Models
         Nurse,
         SupportStaff
     }
-
+    public enum Shift
+    {
+        Morning,
+        Afternoon,
+        Evening
+    }
 
     [FirestoreData]
     public class Staff
@@ -54,8 +59,74 @@ namespace HospitalManagementApp.Models
         [FirestoreProperty]
         public string? Department { get; set; }
         [FirestoreProperty]
-        public string[]? WorkSchedule { get; set; }
+        public Calendar? WorkSchedule { get; set; }
 
         public bool? changed { get; set; }
     }
+
+
+    public class Calendar
+    {
+        [FirestoreProperty]
+        [Required]
+        [RegularExpression(@"^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[012])/[0-9]{4}$", ErrorMessage = "Invalid date format. Please use the format dd/mm/yyyy.")]
+        public List<string>? Date { get; set; }
+
+        [FirestoreProperty]
+        [Required]
+        public List<Shift>? DayofWeek { get; set; }
+
+        public Calendar()
+        {
+            Date = new List<string>(7);
+            DayofWeek = new List<Shift>(7);
+        }
+    }
+
+    public class CalendarListConverter : IFirestoreConverter<List<Calendar>>
+    {
+        public object CalendarToFirestore(Calendar value)
+        {
+            return new Dictionary<string, object>
+            {
+                { "Date", value.Date ?? new object() },
+                { "DayofWeek", value.DayofWeek ?? new object() }
+            };
+        }
+
+        public Calendar CalendarFromFirestore(object value)
+        {
+            var dict = value as Dictionary<string, object>;
+            if (dict == null)
+            {
+                throw new ArgumentException("Expected a dictionary");
+            }
+
+            return new Calendar
+            {
+                Date = (List<string>)(dict["Date"]),
+                DayofWeek = (List<Shift>) (dict["DayofWeek"])
+            };
+        }
+
+        public List<Calendar> FromFirestore(object value)
+        {
+            Console.WriteLine("CalendarList FromFirestore");
+            var list = value as List<object>;
+            if (list == null)
+            {
+                throw new ArgumentException("Expected a list");
+            }
+
+            return list.Select(o => CalendarFromFirestore(o)).ToList();
+        }
+
+        public object ToFirestore(List<Calendar> value)
+        {
+            Console.WriteLine("Calendar ToFirestore");
+            return value.Select(c => CalendarToFirestore(c)).ToList();
+        }
+
+    }
+
 }

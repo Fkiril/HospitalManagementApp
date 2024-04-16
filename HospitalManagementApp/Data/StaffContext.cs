@@ -142,11 +142,13 @@ namespace HospitalManagementApp.Data
                         var specialList = StaffList.Where(s => s.Specialist == staff.Specialist && s != staff).ToList();
 
                         Staff staff1 = specialList[0];
+                        staff1.changed = true;
                         DateInWeek(staff1);
                         if (specialList.Count >= 2)
                         {
                             Staff staff2 = specialList[1];
                             DateInWeek(staff2);
+                            staff2.changed = true;
 
                             //setting calendar for staff1 and staff2
                             if (randomNumber == 0)
@@ -165,6 +167,7 @@ namespace HospitalManagementApp.Data
                             staff1.WorkSchedule.DayofWeek[i] = (Shift)other;
                         }
                     }
+                    staff.changed = true;
                 }
                 else continue;
             }

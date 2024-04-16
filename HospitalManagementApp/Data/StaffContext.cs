@@ -135,11 +135,10 @@ namespace HospitalManagementApp.Data
 
                     for (int i = 0; i < n; i++)
                     {
-
                         //add shift
                         int randomNumber = random.Next(0, 2);
-                        staff.WorkSchedule.DayofWeek;
-                    int other = 1 - randomNumber;
+                        staff.WorkSchedule.DayofWeek[i] = (Shift)randomNumber;
+                        int other = 1 - randomNumber;
                         var specialList = StaffList.Where(s => s.Specialist == staff.Specialist && s != staff).ToList();
 
                         Staff staff1 = specialList[0];
@@ -152,21 +151,22 @@ namespace HospitalManagementApp.Data
                             //setting calendar for staff1 and staff2
                             if (randomNumber == 0)
                             {
-                                staff1.WorkSchedule[i] = shift[other];
-                                staff2.WorkSchedule[i] = shift[2];
+                                staff1.WorkSchedule.DayofWeek[i] = (Shift)other;
+                                staff2.WorkSchedule.DayofWeek[i] = (Shift)2;
                             }
                             else
                             {
-                                staff1.WorkSchedule[i] = shift[2];
-                                staff2.WorkSchedule[i] = shift[other];
+                                staff1.WorkSchedule.DayofWeek[i] = (Shift)2;
+                                staff2.WorkSchedule.DayofWeek[i] = (Shift)other;
                             }
                         }
                         else
                         {
-                            staff1.WorkSchedule[i] = shift[other];
+                            staff1.WorkSchedule.DayofWeek[i] = (Shift)other;
                         }
                     }
                 }
+                else continue;
             }
         }
     }

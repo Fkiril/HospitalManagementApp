@@ -3,6 +3,7 @@ using Google.Api.Gax;
 using Google.Cloud.Firestore;
 using HospitalManagementApp.Models;
 using HospitalManagementApp.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace HospitalManagementApp.Data
 {
@@ -10,48 +11,46 @@ namespace HospitalManagementApp.Data
     {
         public readonly FirestoreDb _firestoreDb;
         public static ICollection<Equipment> EquipmentList { get; private set; } = default!;
-        public EquipmentContext(FirestoreDbService firestoreDbService)
+        public EquipmentContext(FirestoreDbService firestoreDbService, ICollection<Equipment>? equipmentList = null)
         {
             _firestoreDb = firestoreDbService.GetFirestoreDb();
-            EquipmentList = new List<Equipment>();
+            EquipmentList = (equipmentList != null) ? equipmentList : [];
         }
-
         public async Task InitializeEquipmentListFromFirestore()
         {
+            Console.WriteLine("InitializeEquipmentListFromFirestore");
             if (EquipmentList.Count != 0)
             {
                 return;
             }
-            Console.WriteLine("Initial EquipmentList!");
-            Query equipmentsQuery = _firestoreDb.Collection("Equipment");
-            QuerySnapshot snapshotQuery = await equipmentsQuery.GetSnapshotAsync();
+            QuerySnapshot snapshotQuery = await _firestoreDb.Collection("Equipment").GetSnapshotAsync();
 
             foreach (DocumentSnapshot docSnapshot in snapshotQuery.Documents)
             {
                 Equipment equipment = docSnapshot.ConvertTo<Equipment>();
-                equipment.docId = docSnapshot.Id;
-
+                equipment.changed = false;
                 EquipmentList.Add(equipment);
             }
         }
         public async Task SaveChangesAsync()
         {
+            Console.WriteLine("SaveChangesAsync");
             CollectionReference colRef = _firestoreDb.Collection("Equipment");
             QuerySnapshot snapshot = await colRef.GetSnapshotAsync();
 
-            List<string> idsInCloud = new List<string>();
+            List<string> idsInCloud = [];
             foreach (DocumentSnapshot docSnapshot in snapshot.Documents)
             {
                 idsInCloud.Add(docSnapshot.Id);
             }
-            List<string> idsInList = new List<string>();
+            List<string> idsInList = [];
             foreach (Equipment equipment in EquipmentList)
             {
-                if (String.IsNullOrEmpty(equipment.docId))
-                    idsInList.Add(equipment.docId);
+                if (equipment != null)
+                    idsInList.Add("equipment_" + equipment.Id);
             }
             IEnumerable<string> idsToDelete = idsInCloud.Except(idsInList);
-            
+
             foreach (string id in idsToDelete)
             {
                 DocumentReference docRef = colRef.Document(id);
@@ -60,21 +59,17 @@ namespace HospitalManagementApp.Data
 
             foreach (Equipment equipment in EquipmentList)
             {
-                if (string.IsNullOrEmpty(equipment.docId))
+                if (equipment.changed == true)
                 {
-                    equipment.docId = "equipment_" + equipment.Id.ToString();
-                    equipment.Edited = false;
-                    await colRef.Document(equipment.docId).SetAsync(equipment);
+                    await colRef.Document("equipment_" + equipment.Id).SetAsync(equipment);
+                    equipment.changed = false;
                 }
-
-                if ((bool)(equipment.Edited = true)) 
-                    await colRef.Document(equipment.docId).SetAsync(equipment);
             }
         }
 
         public void Add(Equipment equipment)
         {
-            
+            equipment.changed = true;
             EquipmentList.Add(equipment);
         }
         public void Update(Equipment equipment)
@@ -84,18 +79,17 @@ namespace HospitalManagementApp.Data
                 if (p.Id == equipment.Id)
                 {
                     p.Id = equipment.Id;
+                    p.docId = equipment.docId;
                     p.Name = equipment.Name;
                     p.Description = equipment.Description;
-                    p.Status = equipment.Status;
-                    p.Schedule = equipment.Schedule;
-                    p.Edited = true;
+                    p.IsAvailable = equipment.IsAvailable;
+                    p.UsingUntil = equipment.UsingUntil;
+                    p.History = equipment.History;
+
+                    p.changed = true;
                     break;
                 }
             }
-        }
-        public void Remove(Equipment equipment)
-        {
-            EquipmentList.Remove(equipment);
         }
     }
 }

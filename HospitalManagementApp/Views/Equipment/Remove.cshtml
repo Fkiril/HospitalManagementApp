@@ -30,16 +30,22 @@
             @Html.DisplayFor(model => model.Description)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Status)
+            @Html.DisplayNameFor(model => model.IsAvailable)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Status)
+            @Html.DisplayFor(model => model.IsAvailable)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Schedule)
+            @Html.DisplayNameFor(model => model.UsingUntil)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Schedule)
+            @Html.DisplayFor(model => model.UsingUntil)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.History)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.History)
         </dd>
     </dl>
 

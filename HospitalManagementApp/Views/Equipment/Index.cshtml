@@ -26,11 +26,11 @@
             </th>
             <th>
                 @* @Html.DisplayNameFor(model => model.FirstOrDefault().Status) *@
-                <strong>Status</strong>
+                <strong>Availability</strong>
             </th>
             <th>
                 @* @Html.DisplayNameFor(model => model.FirstOrDefault().Schedule) *@
-                <strong>Schedule</strong>
+                <strong>UsingUntil</strong>
             </th>
             <th></th>
         </tr>
@@ -50,22 +50,10 @@
                     @Html.DisplayFor(model => item.Description)
                 </td>
                 <td>
-                    @Html.DisplayFor(model => item.Status)
+                    @Html.DisplayFor(model => item.IsAvailable)
                 </td>
                 <td>
-                    @if (item.Schedule != null)
-                    {
-                        <ul>
-                            @foreach (var schedule in item.Schedule)
-                            {
-                                <li>
-                                    <strong>Date:</strong> @schedule.Date<br />
-                                    <strong>StartTime:</strong> @schedule.StartTime<br />
-                                    <strong>EndTime:</strong> @schedule.EndTime<br />
-                                </li>
-                            }
-                        </ul>
-                    }
+                    @Html.DisplayFor(model => item.UsingUntil)
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

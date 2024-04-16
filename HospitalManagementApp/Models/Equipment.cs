@@ -18,6 +18,9 @@ namespace HospitalManagementApp.Models
         public int? Id { get; set; }
 
         [FirestoreProperty]
+        public string? docId { get; set; } = "";
+
+        [FirestoreProperty]
         [Required, StringLength(60, MinimumLength = 3)]
         public string? Name { get; set; }
 
@@ -29,11 +32,14 @@ namespace HospitalManagementApp.Models
         public bool? IsAvailable { get; set; } = true;
 
         [FirestoreProperty]
-        public List<String>? History { get; set; }
+        public DateTime? UsingUntil { get; set; } = null;
+
+        [FirestoreProperty]
+        public List<String>? History { get; set; } = null;
 
         // note for checking if anything have changed
         [FirestoreProperty]
-        public bool? Edited { get; set; } = true;
+        public bool? changed { get; set; } = true;
     }
 }
 

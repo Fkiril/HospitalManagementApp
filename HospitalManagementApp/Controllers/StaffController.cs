@@ -220,13 +220,13 @@ namespace HospitalManagementApp.Controllers
             return View(staff);
         }
     
-        public IActionResult CreateCalendar()
+        public async Task<IActionResult> CreateCalendar()
         {
 
             if (ModelState.IsValid)
             {
                 _context.CreateCalendar();
-                _ = _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
 

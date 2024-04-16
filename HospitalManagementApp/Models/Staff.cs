@@ -85,13 +85,19 @@ namespace HospitalManagementApp.Models
 
     public class CalendarListConverter : IFirestoreConverter<List<Calendar>>
     {
-        public object CalendarToFirestore(Calendar value)
+        public List<object> CalendarToFirestore(Calendar value)
         {
-            return new Dictionary<string, object>
+            List<object> ls = new List<object>();
+            for (int i = 0; i < 7; i++)
             {
-                { "Date", value.Date ?? new object() },
-                { "DayofWeek", value.DayofWeek ?? new object() }
-            };
+                object o = new Dictionary<string, object>()
+                {
+                    { "Date", value.Date[i] ?? new object() },
+                    { "DayofWeek", value.DayofWeek[i].ToString() ?? new object() }
+                };
+                ls.Add(o);
+            }
+            return ls;
         }
 
         public Calendar CalendarFromFirestore(object value)

@@ -1,12 +1,12 @@
 ﻿@model HospitalManagementApp.Models.Staff
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Remove";
 }
 
-<h1>Remove</h1>
+<h1>Delete</h1>
 
-<h3>Are you sure you want to remove this staff?</h3>
+<h3>Are you sure you want to remove this staff's information?</h3>
 <div>
     <h4>Staff</h4>
     <hr />
@@ -60,26 +60,20 @@
             @Html.DisplayFor(model => model.Degree)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Specialist)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Specialist)
-        </dd>
-        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Department)
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Department)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.WorkSchedule)
+            @Html.DisplayNameFor(model => model.Specialist)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.WorkSchedule)
+            @Html.DisplayFor(model => model.Specialist)
         </dd>
     </dl>
 
-    <form asp-action="Remove" method="post">
+    <form asp-action="Remove">
         <input type="hidden" asp-for="Id" />
         <input type="submit" value="Remove" class="btn btn-danger" /> |
         <a asp-action="Index">Back to List</a>

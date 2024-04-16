@@ -122,7 +122,7 @@ namespace HospitalManagementApp.Controllers
             }
 
             var staff = StaffContext.StaffList
-                .FirstOrDefault(m => m.Id == id);
+                .FirstOrDefault(s => s.Id == id);
             if (staff == null)
             {
                 return NotFound();
@@ -135,7 +135,7 @@ namespace HospitalManagementApp.Controllers
         public async Task<IActionResult> RemoveConfirmed(int id)
         {
             var staff = StaffContext.StaffList
-                  .FirstOrDefault(staff => staff.Id == id);
+                .FirstOrDefault(staff => staff.Id == id);
             if (staff != null)
             {
                 StaffContext.StaffList.Remove(staff);
@@ -145,23 +145,26 @@ namespace HospitalManagementApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        //public IActionResult ShowPatient(int id)
-        //{
-
-        //    var staff = StaffContext.StaffList
-        //          .FirstOrDefault(staff => staff.Id == id);
-        //    if (staff != null)
-        //    {
-        //        var patList = PatientContext.PatientList.Where(patient => patient.StaffId is not null).ToList();
-        //        var patListNotNull = patList.Where(patient => patient.StaffId.Contains(id)).ToList();
-        //        if (patListNotNull == null) return View(staff);
-        //        else return View(patListNotNull);
-        //    }
-        //    else
-        //    {
-        //        return NotFound();
-        //    }
-        //}
+        public IActionResult ShowPatient(int? id)
+        {
+            if(id == null)
+            {
+                return NotFound();
+            }
+            var staff = StaffContext.StaffList
+                  .FirstOrDefault(staff => staff.Id == id);
+            if (staff != null)
+            {
+                var patListNN = PatientContext.PatientList.Where(patient => patient.StaffId is not null).ToList();
+                var patList = patListNN.Where(predicate: patient => patient.StaffId.Contains(id)).ToList();
+                if (patListNN == null) return View(staff);
+                else return View(patListNN);
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
 
 
         private bool StaffExists(int id)

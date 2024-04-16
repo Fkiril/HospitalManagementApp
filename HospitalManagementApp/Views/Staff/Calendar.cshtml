@@ -20,7 +20,10 @@
             @Html.DisplayFor(model => model.Name)
         </p>
         <p class="col-sm-10" id="cal" style="color:white">
-            @Html.Raw(string.Join(" ", Model.WorkSchedule))
+            @string.Join(", ", Model.WorkSchedule.Date)
+        </p>
+        <p class="col-sm-10" id="cal" style="color:white">
+            @string.Join(", ", Model.WorkSchedule.DayofWeek)
         </p>
     </table>
     
@@ -36,6 +39,16 @@
                     <th>Friday</th>
                     <th>Saturday</th>
                     <th>Sunday</th>
+                </tr>
+                <tr>
+                    <th></th>
+                    <th>day1</th>
+                    <th>day2</th>
+                    <th>day3</th>
+                    <th>day4</th>
+                    <th>day5</th>
+                    <th>day6</th>
+                    <th>day7</th>
                 </tr>
             </thead>
             <tbody>

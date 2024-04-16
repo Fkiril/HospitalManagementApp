@@ -3,6 +3,7 @@ using Google.Api.Gax;
 using Google.Cloud.Firestore;
 using HospitalManagementApp.Models;
 using HospitalManagementApp.Services;
+using Microsoft.AspNetCore.Http.HttpResults;
 using System;
 
 namespace HospitalManagementApp.Data
@@ -171,6 +172,22 @@ namespace HospitalManagementApp.Data
                 }
                 else continue;
             }
+        }
+    
+        public Calendar GetCalendar(int id)
+        {
+            foreach(Staff staff in StaffList)
+            {
+                if(staff.Id == id )
+                {
+                    if(staff.WorkSchedule == null)
+                    {
+                        throw new ArgumentException("Not have calendar");
+                    }
+                    else return staff.WorkSchedule;
+                } 
+            }
+            throw new ArgumentException("Not found staff");
         }
     }
 }

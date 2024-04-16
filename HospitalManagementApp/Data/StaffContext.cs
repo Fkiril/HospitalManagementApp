@@ -5,6 +5,7 @@ using HospitalManagementApp.Models;
 using HospitalManagementApp.Services;
 using Microsoft.AspNetCore.Http.HttpResults;
 using System;
+using System.Linq;
 
 namespace HospitalManagementApp.Data
 {
@@ -116,9 +117,12 @@ namespace HospitalManagementApp.Data
             var dates = Enumerable.Range(0, 7).Select(days => monday.AddDays(days)).ToList();
 
             if (staff.WorkSchedule == null) staff.WorkSchedule = new Calendar();
-            for(int i = 0; i < 7; i++) 
+            if(staff.WorkSchedule.Date.Count == 0)
             {
-                staff.WorkSchedule.Date.Add(dates[i].ToString("dd/mm/yyyy"));
+                for (int i = 0; i < 7; i++)
+                {
+                    staff.WorkSchedule.Date.Add(dates[i].ToString("dd/MM/yyyy"));
+                }
             }
         }
 
@@ -138,7 +142,7 @@ namespace HospitalManagementApp.Data
                     {
                         //add shift
                         int randomNumber = random.Next(0, 2);
-                        staff.WorkSchedule.DayofWeek[i] = (Shift)randomNumber;
+                        staff.WorkSchedule.DayofWeek.Add( (Shift)randomNumber);
                         int other = 1 - randomNumber;
                         var specialList = StaffList.Where(s => s.Specialist == staff.Specialist && s != staff).ToList();
 
@@ -154,18 +158,18 @@ namespace HospitalManagementApp.Data
                             //setting calendar for staff1 and staff2
                             if (randomNumber == 0)
                             {
-                                staff1.WorkSchedule.DayofWeek[i] = (Shift)other;
-                                staff2.WorkSchedule.DayofWeek[i] = (Shift)2;
+                                staff1.WorkSchedule.DayofWeek.Add( (Shift)other);
+                                staff2.WorkSchedule.DayofWeek.Add((Shift)2);
                             }
                             else
                             {
-                                staff1.WorkSchedule.DayofWeek[i] = (Shift)2;
-                                staff2.WorkSchedule.DayofWeek[i] = (Shift)other;
+                                staff1.WorkSchedule.DayofWeek.Add((Shift)2);
+                                staff2.WorkSchedule.DayofWeek.Add((Shift)other);
                             }
                         }
                         else
                         {
-                            staff1.WorkSchedule.DayofWeek[i] = (Shift)other;
+                            staff1.WorkSchedule.DayofWeek.Add((Shift)other);
                         }
                     }
                     staff.changed = true;
@@ -182,7 +186,7 @@ namespace HospitalManagementApp.Data
                 {
                     if(staff.WorkSchedule == null)
                     {
-                        throw new ArgumentException("Not have calendar");
+                        throw new ArgumentException("No calendar");
                     }
                     else return staff.WorkSchedule;
                 } 

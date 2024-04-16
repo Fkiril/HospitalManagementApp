@@ -78,8 +78,8 @@ namespace HospitalManagementApp.Models
 
         public Calendar()
         {
-            Date = new List<string>(7);
-            DayofWeek = new List<Shift>(7);
+            Date = new List<string>();
+            DayofWeek = new List<Shift>();
         }
     }
 

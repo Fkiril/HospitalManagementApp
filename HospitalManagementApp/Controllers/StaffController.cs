@@ -172,16 +172,16 @@ namespace HospitalManagementApp.Controllers
         //GET: Staff/Calendar/3
         public IActionResult Calendar(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var staff = StaffContext.StaffList
                 .FirstOrDefault(staff => staff.Id == id);
             if (staff == null)
             {
                 return NotFound();
+            }
+            else
+            {
+                if (staff.WorkSchedule == null)
+                    throw new Exception("No calendar");
             }
             return View(staff);
         }

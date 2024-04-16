@@ -180,18 +180,13 @@ namespace HospitalManagementApp.Data
     
         public Calendar GetCalendar(int id)
         {
-            foreach(Staff staff in StaffList)
+            Staff staff = StaffList.FirstOrDefault(s => s.Id == id);
+
+            if (staff == null)
             {
-                if(staff.Id == id )
-                {
-                    if(staff.WorkSchedule == null)
-                    {
-                        throw new ArgumentException("No calendar");
-                    }
-                    else return staff.WorkSchedule;
-                } 
+                throw new ArgumentException("Not found");
             }
-            throw new ArgumentException("Not found staff");
+            else return staff.WorkSchedule;
         }
     }
 }

@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Google.Cloud.Firestore;
-using HospitalManagementApp.Data;
+﻿using HospitalManagementApp.Data;
 using HospitalManagementApp.Models;
+using Microsoft.AspNetCore.Mvc;
 
 
 namespace HospitalManagementApp.Controllers
@@ -9,9 +8,11 @@ namespace HospitalManagementApp.Controllers
     public class PrescriptionController : Controller
     {
         public readonly PrescriptionContext _context;
-        public PrescriptionController(PrescriptionContext context)
+        public readonly DrugsContext _drugContext;
+        public PrescriptionController(PrescriptionContext context, DrugsContext drugContext)
         {
             _context = context;
+            _drugContext = drugContext;
         }
 
         public IActionResult Search(int? searchingId)
@@ -51,9 +52,10 @@ namespace HospitalManagementApp.Controllers
             return View(prescription);
         }
 
-        public IActionResult Add()
+        public async Task<IActionResult> Add()
         {
-            return View();
+            Prescription pers = new Prescription();
+            return View(pers);
         }
 
         [HttpPost]
@@ -63,12 +65,38 @@ namespace HospitalManagementApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(prescription);
-                await _context.SaveChangesAsync();
-                //return RedirectToAction(nameof(List));
-                return View();
+                await _context.InitializePrescriptionListFromFirestore();
+                if (_context.FindById(prescription.Id ?? -1) != null)
+                {
+                    TempData["error"] = "This Prescription Id is existed";
+                }
+                else
+                {
+                    _context.Add(prescription);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction("AddDetail", new { presId = prescription.Id });
+                }
             }
             return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AddDetail(int presId)
+        {
+            ViewData["PrescriptionId"] = presId;
+            ViewData["ListDrug"] = await _drugContext.GetAll();
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddDetail(DrugInfo model)
+        {
+            Drugs drug = await _drugContext.FindById(model.IdOfDrug ?? -1);
+            model.NameOfDrug = drug.Name;
+            await _context.AddDetail(model);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("AddDetail", new { presId = model.PresId });
         }
 
         public IActionResult Edit(int? id)

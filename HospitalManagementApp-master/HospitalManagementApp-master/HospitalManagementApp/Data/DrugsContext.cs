@@ -1,9 +1,6 @@
-﻿using Google.Api;
-using Google.Api.Gax;
-using Google.Cloud.Firestore;
+﻿using Google.Cloud.Firestore;
 using HospitalManagementApp.Models;
 using HospitalManagementApp.Services;
-using Microsoft.AspNetCore.Mvc;
 
 namespace HospitalManagementApp.Data
 {
@@ -95,16 +92,15 @@ namespace HospitalManagementApp.Data
 
         public void Add(Drugs drugs)
         {
-
             DrugsList.Add(drugs);
         }
         public void Update(Drugs drugs)
         {
             foreach (var p in DrugsList)
             {
-                if (p.Id == drugs.Id)
+                if (p.IdOfDrug == drugs.IdOfDrug)
                 {
-                    p.Id = drugs.Id;
+                    p.IdOfDrug = drugs.IdOfDrug;
                     p.Name = drugs.Name;
                     p.HisUse = drugs.HisUse;
                     p.Status = drugs.Status;
@@ -116,6 +112,33 @@ namespace HospitalManagementApp.Data
                     break;
                 }
             }
+        }
+
+        public async Task<List<Drugs>> GetAll()
+        {
+            List<Drugs> listDrug = new List<Drugs>();
+            Query drugsQuery = _firestoreDb.Collection("drugs");
+            QuerySnapshot snapshotQuery = await drugsQuery.GetSnapshotAsync();
+
+            foreach (DocumentSnapshot docSnapshot in snapshotQuery.Documents)
+            {
+                Drugs drug = docSnapshot.ConvertTo<Drugs>();
+                drug.docId = docSnapshot.Id;
+                listDrug.Add(drug);
+            }
+            return listDrug;
+        }
+
+        public async Task<Drugs> FindById(int id)
+        {
+            Drugs drug = null;
+            await InitializeDrugsListFromFirestore();
+            foreach (Drugs d in DrugsList)
+            {
+                if (d.IdOfDrug == id)
+                    drug = d;
+            }
+            return drug;
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using Google.Cloud.Firestore;
 using System.ComponentModel.DataAnnotations;
-using System.Runtime.CompilerServices;
 
 namespace HospitalManagementApp.Models
 {
@@ -20,12 +19,42 @@ namespace HospitalManagementApp.Models
         public string? docId { get; set; } = string.Empty;
 
         [FirestoreProperty]
-        [Required, StringLength(60, MinimumLength = 3)]
-        public string? Drug { get; set; }
+        public List<DrugInfo>? Drug { get; set; }
 
         [FirestoreProperty]
         [Required, StringLength(500, MinimumLength = 3)]
         public string? Description { get; set; }
 
     }
+
+    [FirestoreData]
+    public class DrugInfo
+    {
+        [FirestoreProperty]
+        [Required, Range(1, 9999)]
+        public int? IdOfDrug { get; set; }
+
+        [FirestoreProperty]
+        public int Quantity { get; set; }
+
+        [FirestoreProperty]
+        [Required, Range(1, 9999)]
+        public int? PresId { get; set; }
+
+        [FirestoreProperty]
+        [Required, StringLength(500, MinimumLength = 1)]
+        public string? NameOfDrug { get; set; }
+
+        [FirestoreProperty]
+        [Required, Range(1, 9999)]
+        public int? NumberOfDrug { get; set; }
+
+        [FirestoreProperty]
+        public string? docId { get; set; } = string.Empty;
+
+    }
+
+
+
+
 }

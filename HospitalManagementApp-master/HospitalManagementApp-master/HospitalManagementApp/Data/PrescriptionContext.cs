@@ -1,9 +1,6 @@
-﻿using Google.Api;
-using Google.Api.Gax;
-using Google.Cloud.Firestore;
+﻿using Google.Cloud.Firestore;
 using HospitalManagementApp.Models;
 using HospitalManagementApp.Services;
-using Microsoft.AspNetCore.Mvc;
 namespace HospitalManagementApp.Data
 {
     public class PrescriptionContext
@@ -16,50 +13,63 @@ namespace HospitalManagementApp.Data
             PrescriptionList = new List<Prescription>();
         }
 
+
         public async Task InitializePrescriptionListFromFirestore()
         {
             if (PrescriptionList.Count != 0)
             {
                 return;
             }
-            Console.WriteLine("Initial PrescriptionList!");
-            Query drugsQuery = _firestoreDb.Collection("Prescription");
-            QuerySnapshot snapshotQuery = await drugsQuery.GetSnapshotAsync();
 
+            Query prescriptionsQuery = _firestoreDb.Collection("Prescription");
+            QuerySnapshot snapshot = await prescriptionsQuery.GetSnapshotAsync();
 
-            foreach (DocumentSnapshot docSnapshot in snapshotQuery.Documents)
+            foreach (DocumentSnapshot documentSnapshot in snapshot.Documents)
             {
-                Prescription prescription = docSnapshot.ConvertTo<Prescription>();
-                prescription.docId = docSnapshot.Id;
+                Prescription prescription = documentSnapshot.ConvertTo<Prescription>();
+                prescription.docId = documentSnapshot.Id;
+
+                // Gán docId cho mỗi đối tượng DrugInfo trong danh sách
+                if (prescription.Drug != null)
+                {
+                    foreach (var drugInfo in prescription.Drug)
+                    {
+                        drugInfo.docId = documentSnapshot.Id;
+                    }
+                }
 
                 PrescriptionList.Add(prescription);
             }
         }
+
+
+
         public async Task SaveChangesAsync()
         {
             CollectionReference colRef = _firestoreDb.Collection("Prescription");
             QuerySnapshot snapshot = await colRef.GetSnapshotAsync();
 
-            List<string> idsInCloud = new List<string>();
-            List<string> idsInList = new List<string>();
-            IEnumerable<string> idsToDelete = idsInCloud.Except(idsInList);
-
-            foreach (string id in idsToDelete)
+            // Xóa các tài liệu không còn tồn tại trong PrescriptionList
+            foreach (DocumentSnapshot docSnapshot in snapshot.Documents)
             {
-                DocumentReference docRef = colRef.Document(id);
-                await docRef.DeleteAsync();
+                string id = docSnapshot.Id;
+                if (!PrescriptionList.Any(prescription => prescription.docId == id))
+                {
+                    await colRef.Document(id).DeleteAsync();
+                }
             }
 
             foreach (Prescription prescription in PrescriptionList)
             {
-
                 if (string.IsNullOrEmpty(prescription.docId))
                 {
-                    DocumentReference newDocRed = await colRef.AddAsync(prescription);
-                    prescription.docId = newDocRed.Id;
+                    DocumentReference newDocRef = await colRef.AddAsync(prescription);
+                    prescription.docId = newDocRef.Id;
                 }
-
-                await colRef.Document(prescription.docId).SetAsync(prescription);
+                else
+                {
+                    await colRef.Document(prescription.docId).SetAsync(prescription);
+                }
             }
         }
 
@@ -90,6 +100,7 @@ namespace HospitalManagementApp.Data
             }
         }
 
+
         public async Task<IEnumerable<Prescription>> GetPrescriptionsForPatientAsync(int Id)
         {
             CollectionReference prescriptionsCollection = _firestoreDb.Collection("Prescription");
@@ -108,7 +119,6 @@ namespace HospitalManagementApp.Data
             return prescriptions;
         }
 
-
         public void Add(Prescription prescription)
         {
 
@@ -125,6 +135,43 @@ namespace HospitalManagementApp.Data
                     p.Drug = prescription.Drug;
                     p.Description = prescription.Description;
 
+                    break;
+                }
+            }
+        }
+        public Prescription FindById(int id)
+        {
+            foreach (var p in PrescriptionList)
+            {
+                if (p.Id == id)
+                    return p;
+            }
+            return null;
+        }
+        public async Task AddDetail(DrugInfo model)
+        {
+            await InitializePrescriptionListFromFirestore();
+            foreach (var p in PrescriptionList)
+            {
+                if (p.Id == model.PresId)
+                {
+                    bool checkExist = false;
+                    if (p.Drug != null && p.Drug.Count > 0)
+                    {
+                        foreach (var d in p.Drug)
+                        {
+                            if (d.IdOfDrug == model.IdOfDrug)
+                            {
+                                d.Quantity += model.Quantity;
+                                checkExist = true;
+                            }
+                        }
+                    }
+                    else
+                        p.Drug = new List<DrugInfo>();
+
+                    if (!checkExist)
+                        p.Drug.Add(model);
                     break;
                 }
             }

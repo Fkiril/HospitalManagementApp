@@ -1,5 +1,7 @@
 ﻿using Google.Api.Gax;
 using Google.Cloud.Firestore;
+using HospitalManagementApp.Models;
+using System;
 
 namespace HospitalManagementApp.Services
 {

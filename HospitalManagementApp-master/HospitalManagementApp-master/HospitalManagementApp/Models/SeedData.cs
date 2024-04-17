@@ -68,7 +68,7 @@ namespace HospitalManagementApp.Models
             {
                 new Drugs
                 {
-                    Id = 20,
+                    IdOfDrug = 20,
                     docId = "",
                     Name = "Ketamine",
                     Expiry = 90,
@@ -79,7 +79,7 @@ namespace HospitalManagementApp.Models
                 },
                 new Drugs
                 {
-                    Id = 108,
+                    IdOfDrug = 108,
                     docId = "",
                     Name = "Halothane",
                     Expiry = 10,
@@ -90,7 +90,7 @@ namespace HospitalManagementApp.Models
                 },
                 new Drugs
                 {
-                    Id = 1,
+                    IdOfDrug = 1,
                     docId = "",
                     Name = "Lidocaine",
                     Expiry = 60,
@@ -119,8 +119,38 @@ namespace HospitalManagementApp.Models
 
             var prescriptions = new List<Prescription>
             {
-               
-                
+                new Prescription {
+                    Id = 2,
+                    IdOfPatient = 2,
+                    docId = "",
+                    Description = "1 time for a day (1 time include 1 atropine and 2 lidocaine) use for 2 days , remember eat before drink drugs",
+                    Drug = new List<DrugInfo>
+                    {
+                        new DrugInfo
+                        {
+                            NameOfDrug ="Halothane",
+                            NumberOfDrug = 1,
+                            docId = ""
+                        }
+                    }
+                },
+
+                new Prescription {
+                    Id = 1,
+                    IdOfPatient = 3,
+                    docId = "",
+                    Description = "1 time for a day (1 time include 1 atropine and 2 lidocaine)",
+                    Drug = new List<DrugInfo>
+                    {
+                        new DrugInfo
+                        {
+                            NameOfDrug = "Ketamine",
+                            NumberOfDrug = 2,
+                            docId = ""
+                        }
+                    }
+                }
+
             };
 
             foreach (var prescription in prescriptions)

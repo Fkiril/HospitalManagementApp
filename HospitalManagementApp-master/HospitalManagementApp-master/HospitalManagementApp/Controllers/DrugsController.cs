@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Google.Cloud.Firestore;
-using HospitalManagementApp.Data;
+﻿using HospitalManagementApp.Data;
 using HospitalManagementApp.Models;
-using HospitalManagementApp.Services;
+using Microsoft.AspNetCore.Mvc;
 
 
 namespace HospitalManagementApp.Controllers
@@ -28,7 +26,6 @@ namespace HospitalManagementApp.Controllers
             }
         }
 
-
         public async Task<IActionResult> Index()
         {
             await _context.InitializeDrugsListFromFirestore();
@@ -42,7 +39,7 @@ namespace HospitalManagementApp.Controllers
                 return NotFound();
             }
 
-            var drugs = DrugsContext.DrugsList.FirstOrDefault(drugs => drugs.Id == id);
+            var drugs = DrugsContext.DrugsList.FirstOrDefault(drugs => drugs.IdOfDrug == id);
             if (drugs == null)
             {
                 return NotFound();
@@ -59,16 +56,34 @@ namespace HospitalManagementApp.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Add(
-            [Bind("Id,docId,Name,HisUse,Expiry,Status,Quantity,ReceiptDay")] Drugs drugs)
+            [Bind("IdOfDrug,docId,Name,HisUse,Expiry,Status,Quantity,ReceiptDay")] Drugs drugs)
         {
             if (ModelState.IsValid)
             {
+                if (IsIdOfDrugExists(drugs.IdOfDrug))
+                {
+                    // Nếu IdOfDrug đã tồn tại, hiển thị thông báo lỗi
+                    ModelState.AddModelError(string.Empty, "IdOfDrug already exists.");
+                    return View(drugs);
+                }
                 _context.Add(drugs);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View();
         }
+
+        private bool IsIdOfDrugExists(int? idOfDrug)
+        {
+            if (idOfDrug == null)
+            {
+                return false;
+            }
+
+            var existingIds = DrugsContext.DrugsList.Select(d => d.IdOfDrug);
+            return existingIds.Contains(idOfDrug);
+        }
+
 
         public IActionResult Edit(int? id)
         {
@@ -78,7 +93,7 @@ namespace HospitalManagementApp.Controllers
             }
 
             var drugs = DrugsContext.DrugsList
-                .FirstOrDefault(drugs => drugs.Id == id);
+                .FirstOrDefault(drugs => drugs.IdOfDrug == id);
             if (drugs == null)
             {
                 return NotFound();
@@ -90,9 +105,9 @@ namespace HospitalManagementApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(
             int id,
-            [Bind("Id,docId,Name,HisUse,Expiry,Status,Quantity,ReceiptDay")] Drugs drugs)
+            [Bind("IdOfDrug,docId,Name,HisUse,Expiry,Status,Quantity,ReceiptDay")] Drugs drugs)
         {
-            if (id != drugs.Id)
+            if (id != drugs.IdOfDrug)
             {
                 return NotFound();
             }
@@ -106,7 +121,7 @@ namespace HospitalManagementApp.Controllers
                 }
                 catch (Exception)
                 {
-                    if (!DrugsExists((int)drugs.Id))
+                    if (!DrugsExists((int)drugs.IdOfDrug))
                     {
                         return NotFound();
                     }
@@ -129,13 +144,13 @@ namespace HospitalManagementApp.Controllers
                 return NotFound();
             }
 
-            var drug = DrugsContext.DrugsList.FirstOrDefault(m => m.Id == id);
+            var drug = DrugsContext.DrugsList.FirstOrDefault(m => m.IdOfDrug == id);
             if (drug == null)
             {
                 return NotFound();
             }
 
-            await _context.DeleteAsync(drug.docId); 
+            await _context.DeleteAsync(drug.docId);
 
             return RedirectToAction(nameof(Index));
         }
@@ -145,23 +160,23 @@ namespace HospitalManagementApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RemoveConfirmed(int id)
         {
-            var drug = DrugsContext.DrugsList.FirstOrDefault(drug => drug.Id == id);
+            var drug = DrugsContext.DrugsList.FirstOrDefault(drug => drug.IdOfDrug == id);
             if (drug != null)
             {
                 DrugsContext.DrugsList.Remove(drug);
-                await _context.DeleteAsync(drug.docId); 
+                await _context.DeleteAsync(drug.docId);
 
-                await _context.SaveChangesAsync(); 
+                await _context.SaveChangesAsync();
 
-                return RedirectToAction(nameof(Index)); 
+                return RedirectToAction(nameof(Index));
             }
 
             return NotFound();
         }
-        
+
         private bool DrugsExists(int id)
         {
-            return DrugsContext.DrugsList.Any(drugs => drugs.Id == id);
+            return DrugsContext.DrugsList.Any(drugs => drugs.IdOfDrug == id);
         }
     }
 }

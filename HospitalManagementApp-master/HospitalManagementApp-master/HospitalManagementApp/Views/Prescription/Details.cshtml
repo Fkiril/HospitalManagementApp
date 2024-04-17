@@ -28,7 +28,18 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Drug)
+            @if(Model.Drug != null && Model.Drug.Count > 0)
+            {
+                <div style="margin-left: 20px;">
+                    @foreach(DrugInfo dr in Model.Drug)
+                    {
+                        <div>
+                            <span style="font-style: bold;">Name Drug: @dr.NameOfDrug</span> |
+                            <span>Quantity: @dr.Quantity</span>
+                        </div>
+                    }
+                </div>
+            }
         </dd>
 
         <dt>

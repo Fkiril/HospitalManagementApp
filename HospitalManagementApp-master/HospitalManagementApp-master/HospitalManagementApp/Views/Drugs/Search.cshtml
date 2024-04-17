@@ -26,7 +26,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.FirstOrDefault().Id)
+                @Html.DisplayNameFor(model => model.FirstOrDefault().IdOfDrug)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.FirstOrDefault().Name)
@@ -55,7 +55,7 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(model => item.Id)
+                    @Html.DisplayFor(model => item.IdOfDrug)
                 </td>
                 <td>
                     @Html.DisplayFor(model => item.Name)
@@ -76,9 +76,9 @@
                     @Html.DisplayFor(model => item.ReceiptDay)
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Remove" asp-route-id="@item.Id">Delete</a>
+                    <a asp-action="Edit" asp-route-id="@item.IdOfDrug">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.IdOfDrug">Details</a> |
+                    <a asp-action="Remove" asp-route-id="@item.IdOfDrug">Delete</a>
                 </td>
             </tr>
         }

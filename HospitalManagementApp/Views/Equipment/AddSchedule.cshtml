@@ -1,27 +1,34 @@
 ﻿@model HospitalManagementApp.Models.Equipment
+
 @{
-    ViewData["Title"] = "Equipment Schedule";
+    ViewData["Title"] = "AddSchedule";
 }
 
-<h3>Add a new equipment's schedule</h3>
-<br />
+<h1>Add equipment's schedule</h1>
 
+<h4>Schedule</h4>
+<hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="AddSchedule" method="post" asp-route-equipmentId="@ViewBag.EquipmentId">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <form asp-action="AddSchedule" method="post">
             <div class="form-group">
-                <label asp-for="@Model.Id" class="control-label"></label>
-                <input asp-for="@Model.Id" class="form-control" />
-                <span asp-validation-for="@Model.Id" class="text-danger"></span>
+                <label asp-for="newSchedule">New Schedule:</label>
+                <input asp-for="newSchedule"/>
+                <span asp-validation-for="newSchedule" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Add" class="btn btn-primary" />
+                <input type="submit" value="Edit" class="btn btn-primary" />
             </div>
         </form>
     </div>
-</div> 
+</div>
 
 <div>
-    <a asp-action="Index" asp-route-id="@ViewBag.patientId">Back to menu</a>
+    <a asp-action="Index">Back to List</a>
 </div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

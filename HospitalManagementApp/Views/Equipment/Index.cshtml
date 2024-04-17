@@ -30,7 +30,7 @@
             </th>
             <th>
                 @* @Html.DisplayNameFor(model => model.FirstOrDefault().Schedule) *@
-                <strong>UsingUntil</strong>
+                <strong>Using Until</strong>
             </th>
             <th></th>
         </tr>
@@ -50,7 +50,13 @@
                     @Html.DisplayFor(model => item.Description)
                 </td>
                 <td>
-                    @Html.DisplayFor(model => item.IsAvailable)
+                    @if (item.IsAvailable == true) {
+                        @:Free
+                    }
+                    else
+                    {
+                        @:Used
+                    }
                 </td>
                 <td>
                     @Html.DisplayFor(model => item.UsingUntil)
@@ -58,6 +64,7 @@
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                     <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="AddSchedule" asp-route-id="@item.Id">Add Schedule</a> |
                     <a asp-action="Remove" asp-route-id="@item.Id">Remove</a> |
                 </td>
             </tr>

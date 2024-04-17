@@ -31,7 +31,7 @@ namespace HospitalManagementApp.Controllers
                 return NotFound();
             }
 
-            var equipment = EquipmentContext.EquipmentList.FirstOrDefault(equipment => equipment.Id == id);
+            var equipment = EquipmentContext.EquipmentList.FirstOrDefault(m => m.Id == id);
             if (equipment == null)
             {
                 return NotFound();
@@ -132,7 +132,7 @@ namespace HospitalManagementApp.Controllers
         public async Task<IActionResult> RemoveConfirmed(int id)
         {
             var equipment = EquipmentContext.EquipmentList
-                .FirstOrDefault(equipment => equipment.Id == id);
+                .FirstOrDefault(m => m.Id == id);
             if (equipment != null)
             {
                 EquipmentContext.EquipmentList.Remove(equipment);
@@ -144,7 +144,43 @@ namespace HospitalManagementApp.Controllers
 
         private bool EquipmentExists(int id)
         {
-            return EquipmentContext.EquipmentList.Any(equipment => equipment.Id == id);
+            return EquipmentContext.EquipmentList.Any(m => m.Id == id);
+        }
+
+        public IActionResult AddSchedule(int? id)
+        {
+            var equipment = EquipmentContext.EquipmentList
+                .FirstOrDefault(m => m.Id == id);
+            if (equipment == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.EquipmentId = id;
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddSchedule(int equipmentId, Treatment newTreatment)
+        {
+            var equipment = EquipmentContext.EquipmentList
+                .FirstOrDefault(m => m.Id == equipmentId);
+            if (equipment == null)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                if (newTreatment == null)
+                {
+                    return BadRequest();
+                }
+
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index), new { id = equipmentId });
+            }
+            return RedirectToAction(nameof(Index));
         }
     }
 }

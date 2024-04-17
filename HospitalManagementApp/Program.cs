@@ -18,6 +18,8 @@ builder.Services.AddSingleton<PatientContext>();
 
 builder.Services.AddSingleton<ApplicationUserContext>();
 
+builder.Services.AddSingleton<EquipmentContext>();
+
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
         .AddCookie(options =>
         {

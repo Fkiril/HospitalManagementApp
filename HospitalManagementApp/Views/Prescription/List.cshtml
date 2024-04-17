@@ -1,0 +1,65 @@
+﻿@model ICollection<HospitalManagementApp.Models.Prescription>
+
+@{
+    ViewData["Title"] = "List";
+}
+
+<h1>List of Prescription</h1>
+
+<p>
+    <a asp-action="Add">Add new prescription</a>
+</p>
+<div>
+    <a asp-controller="Drugs" asp-action="Index">Back to Drugs</a>
+</div>
+@using (Html.BeginForm("Search", "Prescription", FormMethod.Get))
+{
+    <p>
+        Find Prescription: @Html.TextBox("SearchingId", ViewBag.CurrentFilter as int?)
+        <input type="submit" value="Search" />
+    </p>
+}
+
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().IdOfPatient)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Drug)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Description)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(model => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.IdOfPatient)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.Description)
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Remove" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>

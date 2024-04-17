@@ -1,0 +1,91 @@
+@model ICollection<HospitalManagementApp.Models.Drugs>
+@using HospitalManagementApp.Controllers
+
+    @{
+    ViewData["Title"] = "Index";
+    }
+
+    <h1>Drugs Management</h1>
+
+    <p>
+        <a asp-action="Add">Add new drugs</a>
+    </p>
+    <a href="/Prescription/Add">Add a new prescription</a>
+
+<a asp-controller="Prescription" asp-action="GetPrescriptions" asp-route-Id="@Model.FirstOrDefault().IdOfDrug">Get Prescriptions</a>
+
+
+
+    @using (Html.BeginForm("Search","Drugs",FormMethod.Get)){
+        <p>
+            Find Drug: @Html.TextBox("SearchingString",ViewBag.CurrentFilter as string)
+            <input type="submit" value="Search" />
+        </p>
+
+    }
+
+
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().IdOfDrug)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().Expiry)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().HisUse)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().Status)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().Quantity)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().ReceiptDay)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(model => item.IdOfDrug)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.Expiry)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.HisUse)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.Quantity)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.ReceiptDay)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.IdOfDrug">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.IdOfDrug">Details</a> |
+                    <a asp-action="Remove" asp-route-id="@item.IdOfDrug">Delete</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+
+    </table>

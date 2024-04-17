@@ -43,7 +43,7 @@ namespace HospitalManagementApp.Models
         [FirestoreProperty]
         [RegularExpression(@"^0\d{9}$"), StringLength(10)]
         public string? PhoneNum { get; set; }
-
+            
         // Need some classes to implement these field
         [FirestoreProperty(ConverterType = typeof(MedicalHistoryConverter))]
         public List<MedicalHistoryEle>? MedicalHistory { get; set; }
@@ -52,6 +52,9 @@ namespace HospitalManagementApp.Models
 
         [FirestoreProperty(ConverterType = typeof(TreatmentScheduleConverter))]
         public List<TreatmentScheduleEle>? TreatmentSchedule { get; set; }
+
+        //[FirestoreProperty]
+        //public Prescription? Prescription { get; set; }
 
         [FirestoreProperty]
         public List<int>? StaffId { get; set; }

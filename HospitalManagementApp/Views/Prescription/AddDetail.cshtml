@@ -1,0 +1,48 @@
+﻿@model DrugInfo
+@{
+    ViewData["Title"] = "AddDetail";
+    int presId = ViewBag.PrescriptionId;
+}
+
+<h1>Add Detail Prescription</h1>
+
+<div>
+    <a asp-controller="Prescription" asp-action="Add">Back to Add Prescription</a>
+</div>
+<div>
+    <a asp-action="List">List of Prescriptions</a>
+</div>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <h3>Prescription Drug </h3>
+        <form method="post" asp-action="AddDetail">
+            <div class="form-group">
+                <label asp-for="PresId" class="control-label">Prescription Id</label>
+                <input asp-for="PresId" class="form-control" readonly value="@presId" />
+                <span asp-validation-for="PresId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IdOfDrug" class="control-label">Drug</label>
+                <select class="form-select" name="IdOfDrug">
+                    @foreach (Drugs dr in ViewBag.ListDrug)
+                    {
+                        <option value="@dr.IdOfDrug">
+                            @dr.Name
+                        </option>
+                    }
+                </select>
+                <span asp-validation-for="IdOfDrug" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Quantity" class="control-label">Quantity</label>
+                <input name="Quantity" class="form-control" />
+                <span asp-validation-for="Quantity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+

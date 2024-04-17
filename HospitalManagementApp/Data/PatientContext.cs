@@ -104,7 +104,7 @@ namespace HospitalManagementApp.Data
                     if (patient.MedicalHistory != null) p.MedicalHistory = patient.MedicalHistory;
                     if (patient.TestResult != null) p.TestResult = patient.TestResult;
                     if (patient.TreatmentSchedule != null) p.TreatmentSchedule = patient.TreatmentSchedule;
-                    if (patient.Status != null) p.Status = patient.Status;
+                    if (patient.Status is not null) p.Status = patient.Status;
 
                     p.Changed = true;
                     break;
@@ -174,7 +174,7 @@ namespace HospitalManagementApp.Data
             patient.Changed = true;
         }
 
-        public void SetTestResult(int patientId, string? newTestResult)
+        public void SetTestResult(int patientId, TestResult? newTestResult)
         {
             Patient patient = PatientList.First(x => x.Id == patientId) ?? throw new Exception("Patient is not found!");
             patient.TestResult = newTestResult;
@@ -208,5 +208,7 @@ namespace HospitalManagementApp.Data
             }
             patient.Changed = true;
         }
+
+
     }
 }

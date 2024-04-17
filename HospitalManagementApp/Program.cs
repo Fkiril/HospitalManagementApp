@@ -18,6 +18,10 @@ builder.Services.AddSingleton<PatientContext>();
 
 builder.Services.AddSingleton<ApplicationUserContext>();
 
+builder.Services.AddSingleton<DrugsContext>();
+
+builder.Services.AddSingleton<PrescriptionContext>();
+
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
         .AddCookie(options =>
         {

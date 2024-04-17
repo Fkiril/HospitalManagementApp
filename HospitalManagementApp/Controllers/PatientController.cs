@@ -331,5 +331,6 @@ namespace HospitalManagementApp.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
+
     }
 }

@@ -85,52 +85,29 @@ namespace HospitalManagementApp.Models
 
     public class CalendarListConverter : IFirestoreConverter<Calendar>
     {
-        public List<object> CalendarToFirestore(Calendar value)
-        {
-            List<object> ls = new List<object>();
-            for (int i = 0; i < 7; i++)
-            {
-                object o = new Dictionary<string, object>()
-                {
-                    { "Date", value.Date[i] ?? new object() },
-                    { "DayofWeek", value.DayofWeek[i].ToString() ?? new object() }
-                };
-                ls.Add(o);
-            }
-            return ls;
-        }
-
-        public Calendar CalendarFromFirestore(object value)
-        {
-            var dict = value as Dictionary<string, object>;
-            if (dict == null)
-            {
-                throw new ArgumentException("Expected a dictionary");
-            }
-
-            return new Calendar
-            {
-                Date = (List<string>)(dict["Date"]),
-                DayofWeek = (List<Shift>) (dict["DayofWeek"])
-            };
-        }
-
+        
         public Calendar FromFirestore(object value)
         {
-            Console.WriteLine("CalendarList FromFirestore");
-            var list = value as List<object>;
-            if (list == null)
             {
-                throw new ArgumentException("Expected a list");
+                if (value == null) return null;
+                Dictionary<string, object>? dict = value as Dictionary<string, object>;
+                if (dict == null) return null;
+                return new Calendar
+                {
+                    Date = (List<string>)dict["Date"],
+                    DayofWeek = (List<Shift>)dict["DayofWeek"]
+                };
             }
-
-            return CalendarFromFirestore(list);
         }
 
         public object ToFirestore(Calendar value)
         {
             Console.WriteLine("Calendar ToFirestore");
-            return CalendarToFirestore(value);
+            return new Dictionary<string, object>
+            {
+                { "Date",value.Date },
+                { "DayofWeek",value.DayofWeek }
+            };
         }
 
     }

@@ -3,6 +3,8 @@ using Google.Api.Gax;
 using Google.Cloud.Firestore;
 using HospitalManagementApp.Models;
 using HospitalManagementApp.Services;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace HospitalManagementApp.Data
 {
@@ -156,6 +158,17 @@ namespace HospitalManagementApp.Data
             patient.TreatmentSchedule.Remove(treatment);
 
             patient.changed = true;
+        }
+
+        public static List<Patient>? findPatient(int staffId)
+        {
+            List<Patient> result = new List<Patient>();
+            foreach (Patient patient in PatientContext.PatientList)
+            {
+                result.Add(patient);
+            }
+            if (result.Count == 0) return null;
+            else return result;
         }
     }
 }

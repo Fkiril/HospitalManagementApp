@@ -1,10 +1,12 @@
 ﻿using HospitalManagementApp.Data;
 using HospitalManagementApp.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 
 namespace HospitalManagementApp.Controllers
 {
+    [Authorize(Roles = "Admin, Doctor", AuthenticationSchemes = "Cookies")]
     public class PrescriptionController : Controller
     {
         public readonly PrescriptionContext _context;

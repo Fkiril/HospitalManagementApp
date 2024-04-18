@@ -1,6 +1,8 @@
 ﻿using Google.Cloud.Firestore;
 using HospitalManagementApp.Models;
 using HospitalManagementApp.Services;
+using NuGet.Versioning;
+using System.Globalization;
 
 namespace HospitalManagementApp.Data
 {
@@ -8,11 +10,15 @@ namespace HospitalManagementApp.Data
     {
         public readonly FirestoreDb _firestoreDb;
         public static ICollection<Patient> PatientList { get; private set; } = default!;
-        //public readonly StaffContext _staffContext;
-        public PatientContext(FirestoreDbService firestoreDbService, ICollection<Patient>? patientList = null)
+        public readonly StaffContext _staffContext;
+        public PatientContext(
+            FirestoreDbService firestoreDbService,
+            ICollection<Patient>? patientList,
+            StaffContext staffContext)
         {
             _firestoreDb = firestoreDbService.GetFirestoreDb();
-            PatientList = (patientList != null)? patientList : [];
+            PatientList = patientList ?? ([]);
+            _staffContext = staffContext;
         }
 
         private const string colName = "Patient";
@@ -204,11 +210,75 @@ namespace HospitalManagementApp.Data
             }
             else
             {
-                patient.MedicalHistory = new List<MedicalHistoryEle> { medicalHistoryEle };
+                patient.MedicalHistory = [medicalHistoryEle];
             }
             patient.Changed = true;
         }
 
+        // a function to add new treatment schedule for patient
+        // It's depended on work schedules of the dotor that take care of the patient
+        public void AddTreatmentSchedule(int patientId, TreatmentScheduleEle scheduel)
+        {
+            Patient patient = PatientList.First(x => x.Id == patientId) ?? throw new Exception("Patient is not found!");
+                
+            
+            if (patient.TreatmentSchedule != null)
+            {
+                patient.TreatmentSchedule.Add(scheduel);
+            }
+            else
+            {
+                patient.TreatmentSchedule = [scheduel];
+            }
+            patient.Changed = true;
+        }
 
+        public bool IsTreatmentScheduleFix(int patientId, int scheduleId)
+        {
+            Patient patient = PatientList.First(x => x.Id == patientId) ?? throw new Exception("Patient is not found!");
+            if (patient.StaffId is null) throw new Exception("Patient is not depending on any staffs!");
+
+            if (patient.TreatmentSchedule is null) throw new Exception("Patient does not have any treatment schedules!");
+
+            TreatmentScheduleEle schedule = patient.TreatmentSchedule.First(x => x.Id == scheduleId);
+            if (schedule != null) throw new Exception("Can not define any treatment schedule!");
+
+            Models.Calendar docSchedule = _staffContext.GetCalendar(patient.StaffId);
+            
+            if (docSchedule != null) return false;
+            else
+            {
+                var pDate = DateTime.ParseExact(schedule.Date, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                var dStartDate = DateTime.ParseExact(docSchedule.Date[0], "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                var dEndDate = DateTime.ParseExact(docSchedule.Date[7], "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                
+                if (pDate <  dStartDate || pDate > dEndDate) return false;
+                
+                for (int idx = 0; idx < 7; idx++)
+                {
+                    if (docSchedule.Date[idx] == schedule.Date)
+                    {
+                        switch (docSchedule.DayofWeek[idx])
+                        {
+                            case Shift.Morning: //07:00 -> 14:00
+                                {
+                                    break;
+                                }
+
+                            case Shift.Afternoon: //14:00 -> 22:00
+                                {
+                                    break;
+                                }
+                            case Shift.Evening: //22:00 -> 07:00
+                                {
+                                    break;
+                                }
+                        }
+                    }
+                }
+            }
+
+            return true;
+        }
     }
 }

@@ -13,46 +13,27 @@
     <thead>
         <tr>
             <th>
-                @* @Html.DisplayNameFor(model => model.FirstOrDefault().Id) *@
                 <strong>Id number</strong>
             </th>
             <th>
-                @* @Html.DisplayNameFor(model => model.FirstOrDefault().Name) *@
                 <strong>Full name</strong>
             </th>
             <th>
-                @* @Html.DisplayNameFor(model => model.FirstOrDefault().Gender) *@
                 <strong>Gender</strong>
             </th>
             <th>
-                @* @Html.DisplayNameFor(model => model.FirstOrDefault().DateOfBirth) *@
                 <strong>Date of birth</strong>
             </th>
             <th>
-                @* @Html.DisplayNameFor(model => model.FirstOrDefault().Address) *@
                 <strong>Address</strong>
             </th>
             <th>
-                @* @Html.DisplayNameFor(model => model.FirstOrDefault().PhoneNum) *@
                 <strong>Phone number</strong>
-            </th>
-            <th>
-                @* @Html.DisplayNameFor(model => model.FirstOrDefault().MedicalHistory) *@
-                <strong>Medical history</strong>
-            </th>
-            <th>
-                @* @Html.DisplayNameFor(model => model.FirstOrDefault().TestResult) *@
-                <strong>Test result</strong>
             </th>
             <th>
                 <strong>Staff Id</strong>
             </th>
             <th>
-                @* @Html.DisplayNameFor(model => model.FirstOrDefault().TreatmentSchedule) *@
-                <strong>Treatment schedule</strong>
-            </th>
-            <th>
-                @* @Html.DisplayNameFor(model => model.FirstOrDefault().Status) *@
                 <strong>Status</strong>
             </th>
             <th></th>
@@ -82,40 +63,7 @@
                     @Html.DisplayFor(model => item.PhoneNum)
                 </td>
                 <td>
-                    @if (item.MedicalHistory != null)
-                    {
-                        <ul>
-                            @foreach (var ele in item.MedicalHistory)
-                            {
-                                <li>
-                                    <strong>Disease:</strong> @ele.Disease<br />
-                                    <strong>StartDate:</strong> @ele.StartDate<br />
-                                    <strong>EndDate:</strong> @ele.EndDate<br />
-                                </li>
-                            }
-                        </ul>
-                    }
-                </td>
-                <td>
-                    @Html.DisplayFor(model => item.TestResult)
-                </td>
-                <td>
                     @if(item.StaffId is not null) @Html.Raw(string.Join(", ", item.StaffId))
-                </td>
-                <td>
-                    @if (item.TreatmentSchedule != null)
-                    {
-                        <ul>
-                            @foreach (var treatment in item.TreatmentSchedule)
-                            {
-                                <li>
-                                    <strong>Date:</strong> @treatment.Date<br />
-                                    <strong>StartTime:</strong> @treatment.StartTime<br />
-                                    <strong>EndTime:</strong> @treatment.EndTime<br />
-                                </li>
-                            }
-                        </ul>
-                    }
                 </td>
                 <td>
                     @Html.DisplayFor(model => item.Status)
@@ -125,6 +73,7 @@
                     <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                     <a asp-action="Remove" asp-route-id="@item.Id">Remove</a> |
                     <a asp-action="TreatmentScheduleManager" asp-route-id="@item.Id" >Manage treatment schedule</a>
+                    <a asp-controller=“Prescription” asp-action=“GetPrescriptions” asp-route-Id=@item.Id>Get prescription</a>
                 </td>
             </tr>
         }

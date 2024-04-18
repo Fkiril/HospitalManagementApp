@@ -27,8 +27,8 @@ namespace HospitalManagementApp.Models
                     DateOfBirth = "09/08/2003",
                     Address = "abc",
                     PhoneNum = "0769421007",
-                    MedicalHistory = "abc",
-                    TestResult = "abc",
+                    MedicalHistory = null,
+                    TestResult = null,
                     StaffId = [1, 2],
                     TreatmentSchedule =
                     [
@@ -40,7 +40,7 @@ namespace HospitalManagementApp.Models
                             EndTime = "12:00",
                         }
                     ],
-                    Status = Status.Ill
+                    Status = PatientStatus.Ill
                 },
                 new Patient
                 {
@@ -50,8 +50,8 @@ namespace HospitalManagementApp.Models
                     DateOfBirth = "03/03/2003",
                     Address = "abc",
                     PhoneNum = "0969185801",
-                    MedicalHistory = "abc",
-                    TestResult = "abc",
+                    MedicalHistory = null,
+                    TestResult = null,
                     StaffId = [3, 4],
                     TreatmentSchedule =
                     [
@@ -63,7 +63,7 @@ namespace HospitalManagementApp.Models
                             EndTime = "12:00",
                         }
                     ],
-                    Status = Status.Ill
+                    Status = PatientStatus.Ill
                 }
             };
 

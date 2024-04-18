@@ -180,16 +180,19 @@ namespace HospitalManagementApp.Data
                 else continue;
             }
         }
-    
-        public Calendar GetCalendar(int id)
-        {
-            Staff staff = StaffList.FirstOrDefault(s => s.Id == id);
 
-            if (staff == null)
+        public Calendar? GetCalendar(List<int> staffId)
+        {
+            foreach (int id in staffId)
             {
-                throw new ArgumentException("Not found");
+                Staff staff = StaffList.FirstOrDefault(s => s.Id == id);
+                if (staff == null) continue;
+                if (staff.HealthCareStaff == HealthCareStaff.Doctor)
+                {
+                    return staff.WorkSchedule;
+                }
             }
-            else return staff.WorkSchedule;
+            return null;
         }
     }
 }

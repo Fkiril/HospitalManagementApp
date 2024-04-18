@@ -12,6 +12,7 @@ using Google.Api;
 
 namespace HospitalManagementApp.Controllers
 {
+    [Authorize(Roles = "Admin, Doctor", AuthenticationSchemes = "Cookies")]
     public class StaffController : Controller
     {
         public readonly StaffContext _context;
@@ -156,7 +157,7 @@ namespace HospitalManagementApp.Controllers
             if (staff != null)
             {
                 var patListNN = PatientContext.PatientList.Where(patient => patient.StaffId is not null).ToList();
-                var patList = patListNN.Where(predicate: patient => patient.StaffId.Contains(id)).ToList();
+                var patList = patListNN.Where(predicate: patient => patient.StaffId.Contains((int)id)).ToList();
                 if (patListNN == null) return View(staff);
                 else return View(patListNN);
             }

@@ -92,10 +92,27 @@ namespace HospitalManagementApp.Models
                 if (value == null) return null;
                 Dictionary<string, object>? dict = value as Dictionary<string, object>;
                 if (dict == null) return null;
+
+                List<string> date = new List<string>();
+                List<Shift> shifts = new List<Shift>();
+
+                List<object> lo = (List<object>)dict["Date"];
+
+                foreach(var data in lo)
+                {
+                    date.Add(data.ToString());
+                }
+                lo = (List<object>)dict["DayofWeek"];
+
+                foreach (var data in lo)
+                {
+                    date.Add(data.ToString());
+                }
+
                 return new Calendar
                 {
-                    Date = (List<string>)dict["Date"],
-                    DayofWeek = (List<Shift>)dict["DayofWeek"]
+                    Date = date,
+                    DayofWeek = shifts
                 };
             }
         }

@@ -192,5 +192,13 @@ namespace HospitalManagementApp.Data
             else return staff.WorkSchedule;
         }
     
+        public bool IsDoctor(int staffId)
+        {
+            Staff staff = StaffList.FirstOrDefault(s => s.Id == id);
+
+            if (staff == null) return false;
+            if (staff.Id == staffId) return true;
+            return false;
+        }
     }
 }

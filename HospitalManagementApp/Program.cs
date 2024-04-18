@@ -14,7 +14,11 @@ builder.Services.AddSingleton<FirestoreDbService>(provider =>
     Google.Apis.Auth.OAuth2.GoogleCredential credential = Google.Apis.Auth.OAuth2.GoogleCredential.FromFile(jsonFilePath);
     return new FirestoreDbService(projectId, credential);
 });
-builder.Services.AddSingleton<PatientContext>();
+builder.Services.AddSingleton<PatientContext>(sp =>
+{
+    var firestoreDbService = sp.GetRequiredService<FirestoreDbService>();
+    return new PatientContext(firestoreDbService, null);
+});
 
 builder.Services.AddSingleton<ApplicationUserContext>();
 

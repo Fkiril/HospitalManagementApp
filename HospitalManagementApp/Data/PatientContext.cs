@@ -10,15 +10,12 @@ namespace HospitalManagementApp.Data
     {
         public readonly FirestoreDb _firestoreDb;
         public static ICollection<Patient> PatientList { get; private set; } = default!;
-        public readonly StaffContext _staffContext;
         public PatientContext(
             FirestoreDbService firestoreDbService,
-            ICollection<Patient>? patientList,
-            StaffContext staffContext)
+            ICollection<Patient>? patientList)
         {
             _firestoreDb = firestoreDbService.GetFirestoreDb();
-            PatientList = patientList ?? ([]);
-            _staffContext = staffContext;
+            PatientList = (patientList != null) ? patientList : new List<Patient>();
         }
 
         private const string colName = "Patient";
@@ -118,7 +115,9 @@ namespace HospitalManagementApp.Data
             }
         }
 
-        public void AddTreatmentSchedule(Patient patient, TreatmentScheduleEle newTreatment)
+        public void AddTreatmentSchedule(Patient patient,
+            TreatmentScheduleEle newTreatment,
+            Models.Calendar? docSchedule)
         {
             ArgumentNullException.ThrowIfNull(patient, nameof(patient));
             ArgumentNullException.ThrowIfNull(newTreatment, nameof(newTreatment));
@@ -133,12 +132,22 @@ namespace HospitalManagementApp.Data
                 }
             }
 
-            patient.TreatmentSchedule.Add(newTreatment);
-            
-            patient.Changed = true;
+            if (IsTreatmentScheduleFix(patient, newTreatment, docSchedule))
+            {
+                patient.TreatmentSchedule.Add(newTreatment);
+
+                patient.Changed = true;
+            }
+            else
+            {
+                throw new Exception("New treatment schedule does not fix!");
+            }
         }
 
-        public void UpdateTreatmentSchedule(Patient patient, int id,  TreatmentScheduleEle treatment)
+        public void UpdateTreatmentSchedule(Patient patient,
+            int id,
+            TreatmentScheduleEle treatment,
+            Models.Calendar? docSchedule)
         {
             ArgumentNullException.ThrowIfNull(patient, nameof(patient));
             ArgumentNullException.ThrowIfNull(treatment, nameof(treatment));
@@ -152,13 +161,19 @@ namespace HospitalManagementApp.Data
             {
                 throw new Exception("There are not any schedule that have the same id!");
             }
+            if (IsTreatmentScheduleFix(patient, treatment, docSchedule))
+            {
+                var curTreatment = patient.TreatmentSchedule.First(x => x.Id == id);
+                curTreatment.Date = treatment.Date;
+                curTreatment.StartTime = treatment.StartTime;
+                curTreatment.EndTime = treatment.EndTime;
 
-            var curTreatment = patient.TreatmentSchedule.First(x =>x.Id == id);
-            curTreatment.Date = treatment.Date;
-            curTreatment.StartTime = treatment.StartTime;
-            curTreatment.EndTime = treatment.EndTime;
-
-            patient.Changed = true;
+                patient.Changed = true;
+            }
+            else
+            {
+                throw new Exception("New treatment schedule does not fix!");
+            }
         }
 
         public void DeleteTreatmentSchedule(Patient patient, int id)
@@ -184,6 +199,7 @@ namespace HospitalManagementApp.Data
         {
             Patient patient = PatientList.First(x => x.Id == patientId) ?? throw new Exception("Patient is not found!");
             patient.TestResult = newTestResult;
+            patient.Status = PatientStatus.Ill;
             patient.Changed = true;
         }
 
@@ -215,40 +231,21 @@ namespace HospitalManagementApp.Data
             patient.Changed = true;
         }
 
-        // a function to add new treatment schedule for patient
-        // It's depended on work schedules of the dotor that take care of the patient
-        public void AddTreatmentSchedule(int patientId, TreatmentScheduleEle scheduel)
+
+        public bool IsTreatmentScheduleFix(Patient patient,
+            TreatmentScheduleEle pSchedule,
+            Models.Calendar? docSchedule)
         {
-            Patient patient = PatientList.First(x => x.Id == patientId) ?? throw new Exception("Patient is not found!");
-                
+            if (pSchedule == null || pSchedule.Date == null || pSchedule.StartTime == null || pSchedule.EndTime == null) 
+                throw new ArgumentNullException(nameof(pSchedule));
+
+            if (patient.StaffId == null) return true;
+            if (docSchedule == null) return true;
             
-            if (patient.TreatmentSchedule != null)
-            {
-                patient.TreatmentSchedule.Add(scheduel);
-            }
+            if (docSchedule == null || docSchedule.DayofWeek == null || docSchedule.Date == null) return true;
             else
             {
-                patient.TreatmentSchedule = [scheduel];
-            }
-            patient.Changed = true;
-        }
-
-        public bool IsTreatmentScheduleFix(int patientId, int scheduleId)
-        {
-            Patient patient = PatientList.First(x => x.Id == patientId) ?? throw new Exception("Patient is not found!");
-            if (patient.StaffId is null) throw new Exception("Patient is not depending on any staffs!");
-
-            if (patient.TreatmentSchedule is null) throw new Exception("Patient does not have any treatment schedules!");
-
-            TreatmentScheduleEle schedule = patient.TreatmentSchedule.First(x => x.Id == scheduleId);
-            if (schedule != null) throw new Exception("Can not define any treatment schedule!");
-
-            Models.Calendar docSchedule = _staffContext.GetCalendar(patient.StaffId);
-            
-            if (docSchedule != null) return false;
-            else
-            {
-                var pDate = DateTime.ParseExact(schedule.Date, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                var pDate = DateTime.ParseExact(pSchedule.Date, "dd/MM/yyyy", CultureInfo.InvariantCulture);
                 var dStartDate = DateTime.ParseExact(docSchedule.Date[0], "dd/MM/yyyy", CultureInfo.InvariantCulture);
                 var dEndDate = DateTime.ParseExact(docSchedule.Date[7], "dd/MM/yyyy", CultureInfo.InvariantCulture);
                 
@@ -256,29 +253,44 @@ namespace HospitalManagementApp.Data
                 
                 for (int idx = 0; idx < 7; idx++)
                 {
-                    if (docSchedule.Date[idx] == schedule.Date)
+                    if (docSchedule.Date[idx] == pSchedule.Date)
                     {
+                        if (docSchedule.DayofWeek is null || docSchedule.DayofWeek.Count < 7) return false;
+
+                        TimeSpan pStartTime = TimeSpan.Parse(pSchedule.StartTime);
+                        TimeSpan pEndTime = TimeSpan.Parse(pSchedule.EndTime);
+                        TimeSpan dStartTime = pStartTime, dEndTime = pEndTime;
                         switch (docSchedule.DayofWeek[idx])
                         {
                             case Shift.Morning: //07:00 -> 14:00
                                 {
+                                    dStartTime = TimeSpan.Parse("07:00");
+                                    dEndTime = TimeSpan.Parse("14:00");
                                     break;
                                 }
 
                             case Shift.Afternoon: //14:00 -> 22:00
                                 {
+                                    dStartTime = TimeSpan.Parse("14:00");
+                                    dEndTime = TimeSpan.Parse("22:00");
                                     break;
                                 }
                             case Shift.Evening: //22:00 -> 07:00
                                 {
+                                    dStartTime = TimeSpan.Parse("22:00");
+                                    dEndTime = TimeSpan.Parse("07:00");
                                     break;
                                 }
                         }
+
+                        if (pStartTime < dStartTime || pEndTime > dEndTime) return false;
                     }
                 }
             }
 
             return true;
         }
+
+
     }
 }

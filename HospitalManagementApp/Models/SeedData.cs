@@ -40,7 +40,8 @@ namespace HospitalManagementApp.Models
                             EndTime = "12:00",
                         }
                     ],
-                    Status = PatientStatus.Ill
+                    Status = PatientStatus.Ill,
+                    PrescriptionId = null
                 },
                 new Patient
                 {
@@ -63,7 +64,8 @@ namespace HospitalManagementApp.Models
                             EndTime = "12:00",
                         }
                     ],
-                    Status = PatientStatus.Ill
+                    Status = PatientStatus.Ill,
+                    PrescriptionId = null
                 }
             };
 

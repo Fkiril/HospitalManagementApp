@@ -145,19 +145,15 @@ namespace HospitalManagementApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult ShowPatient(int? id)
+        public IActionResult ShowPatient(int id)
         {
-            if(id == null)
-            {
-                return NotFound();
-            }
             var staff = StaffContext.StaffList
                   .FirstOrDefault(staff => staff.Id == id);
             if (staff != null)
             {
                 var patListNN = PatientContext.PatientList.Where(patient => patient.StaffId is not null).ToList();
                 var patList = patListNN.Where(predicate: patient => patient.StaffId.Contains(id)).ToList();
-                if (patListNN == null) return View(staff);
+                if (patList == null) return View(staff);
                 else return View(patListNN);
             }
             else

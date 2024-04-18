@@ -58,7 +58,7 @@ namespace HospitalManagementApp.Models
         public string? Specialist { get; set; }
         [FirestoreProperty]
         public string? Department { get; set; }
-        [FirestoreProperty]
+        [FirestoreProperty(ConverterType = typeof(CalendarListConverter))]
         public Calendar? WorkSchedule { get; set; }
 
         public bool? changed { get; set; }
@@ -83,7 +83,7 @@ namespace HospitalManagementApp.Models
         }
     }
 
-    public class CalendarListConverter : IFirestoreConverter<List<Calendar>>
+    public class CalendarListConverter : IFirestoreConverter<Calendar>
     {
         public List<object> CalendarToFirestore(Calendar value)
         {
@@ -115,7 +115,7 @@ namespace HospitalManagementApp.Models
             };
         }
 
-        public List<Calendar> FromFirestore(object value)
+        public Calendar FromFirestore(object value)
         {
             Console.WriteLine("CalendarList FromFirestore");
             var list = value as List<object>;
@@ -124,13 +124,13 @@ namespace HospitalManagementApp.Models
                 throw new ArgumentException("Expected a list");
             }
 
-            return list.Select(o => CalendarFromFirestore(o)).ToList();
+            return CalendarFromFirestore(list);
         }
 
-        public object ToFirestore(List<Calendar> value)
+        public object ToFirestore(Calendar value)
         {
             Console.WriteLine("Calendar ToFirestore");
-            return value.Select(c => CalendarToFirestore(c)).ToList();
+            return CalendarToFirestore(value);
         }
 
     }

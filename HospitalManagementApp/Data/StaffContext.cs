@@ -181,24 +181,18 @@ namespace HospitalManagementApp.Data
             }
         }
     
-        public Calendar GetCalendar(int id)
+        public Calendar GetCalendar(List<int> staffId)
         {
-            Staff staff = StaffList.FirstOrDefault(s => s.Id == id);
-
-            if (staff == null)
+            foreach(int id in staffId)
             {
-                throw new ArgumentException("Not found");
+                Staff staff = StaffList.FirstOrDefault(s => s.Id == id);
+                if (staff == null) continue;
+                if (staff.HealthCareStaff == HealthCareStaff.Doctor)
+                {
+                    return staff.WorkSchedule;
+                }
             }
-            else return staff.WorkSchedule;
-        }
-    
-        public bool IsDoctor(int staffId)
-        {
-            Staff staff = StaffList.FirstOrDefault(s => s.Id == staffId);
-
-            if (staff == null) return false;
-            if (staff.Id == staffId) return true;
-            return false;
+            return null;
         }
     }
 }

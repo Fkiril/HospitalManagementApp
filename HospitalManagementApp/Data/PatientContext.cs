@@ -160,17 +160,5 @@ namespace HospitalManagementApp.Data
             patient.changed = true;
         }
 
-        public static List<Patient>? findPatient(int staffId)
-        {
-            IQueryable<Patient> queryPatient = PatientContext.PatientList.AsQueryable();
-            IQueryable<Patient> patients = queryPatient.Where(p => p.StaffId.Contains(staffId)); 
-            List<Patient> result = new List<Patient>();
-            foreach (Patient patient in patients)
-            {
-                result.Add(patient);
-            }
-            if (result.Count == 0) return null;
-            else return result;
-        }
     }
 }

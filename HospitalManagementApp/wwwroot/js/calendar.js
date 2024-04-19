@@ -1,5 +1,4 @@
 ﻿var date = document.getElementById("date").innerText;
-var shift = document.getElementById("shift").innerText;
 
 const a2 = document.getElementById('a2');
 const a3 = document.getElementById('a3');
@@ -51,30 +50,30 @@ function evening(element1, element2, element3) {
 }
 
 function day(text, element1, element2, element3) {
-    if (text == "Morning") morning(element1, element2, element3);
-    else if (text == "Afternoon") afternoon(element1, element2, element3);
+    if (text == "0") morning(element1, element2, element3);
+    else if (text == "1") afternoon(element1, element2, element3);
     else evening(element1, element2, element3);
 }
 
 //xu li
-var lines = shift.split(", ");
+var lines = date.split(", ");
+console.log(lines);
+console.log("haha");
 
 //update for calendar
-day(lines[0], a2, b2, c2);
-day(lines[1], a3, b3, c3);
-day(lines[2], a4, b4, c4);
-day(lines[3], a5, b5, c5);
-day(lines[4], a6, b6, c6);
-day(lines[5], a7, b7, c7);
-day(lines[6], a8, b8, c8);
+day(lines[7], a2, b2, c2);
+day(lines[8], a3, b3, c3);
+day(lines[9], a4, b4, c4);
+day(lines[10], a5, b5, c5);
+day(lines[11], a6, b6, c6);
+day(lines[12], a7, b7, c7);
+day(lines[13], a8, b8, c8);
 
 
-var dates = date.split(", ");
-
-day1.innerText = dates[0];
-day2.innerText = dates[1];
-day3.innerText = dates[2];
-day4.innerText = dates[3];
-day5.innerText = dates[4];
-day6.innerText = dates[5];
-day7.innerText = dates[6];
+day1.innerText = lines[0];
+day2.innerText = lines[1];
+day3.innerText = lines[2];
+day4.innerText = lines[3];
+day5.innerText = lines[4];
+day6.innerText = lines[5];
+day7.innerText = lines[6];

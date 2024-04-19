@@ -3,8 +3,6 @@ using Google.Cloud.Firestore;
 using HospitalManagementApp.Data;
 using HospitalManagementApp.Models;
 using System;
-using System.Linq;
-using System.Linq.Expressions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Google.Api;
@@ -12,9 +10,11 @@ using Google.Api;
 
 namespace HospitalManagementApp.Controllers
 {
+    //[Authorize(Roles = "Admin", AuthenticationSchemes = "Cookies")]
     public class StaffController : Controller
     {
         public readonly StaffContext _context;
+
         public StaffController(StaffContext context)
         {
             _context = context;
@@ -144,16 +144,17 @@ namespace HospitalManagementApp.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
+        
+        
+        [Route("ShowPatient")]
         public IActionResult ShowPatient(int id)
         {
             var staff = StaffContext.StaffList
                   .FirstOrDefault(staff => staff.Id == id);
             if (staff != null)
             {
-                List<Patient> patientList = PatientContext.findPatient(id);
-                if (patientList == null) return NotFound();
-                return View(patientList);
+                var model = PatientContext.PatientList.Where(p => p.StaffId != null && p.StaffId.Contains(id)).ToList();
+                return View(model);
             }
             else
             {

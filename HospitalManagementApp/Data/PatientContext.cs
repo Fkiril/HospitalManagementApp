@@ -15,7 +15,7 @@ namespace HospitalManagementApp.Data
             ICollection<Patient>? patientList)
         {
             _firestoreDb = firestoreDbService.GetFirestoreDb();
-            PatientList = (patientList != null) ? patientList : new List<Patient>();
+            PatientList = patientList ?? [];
         }
 
         private const string colName = "Patient";

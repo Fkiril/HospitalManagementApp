@@ -2,7 +2,6 @@
 using HospitalManagementApp.Data;
 using HospitalManagementApp.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 
 namespace HospitalManagementApp.Controllers
@@ -21,8 +20,23 @@ namespace HospitalManagementApp.Controllers
         // GET: Patient
         public async Task<IActionResult> Index()
         {
-            await _patientContext.InitializePatientListFromFirestore();
+            var patientList = TempData["PatientList"] as ICollection<Patient>;
+            if (patientList != null)
+            {
+                return View(patientList);
+            }
+            else
+            {
+                await _patientContext.InitializePatientListFromFirestore();
             return View(PatientContext.PatientList);
+            }
+
+        }
+
+        public IActionResult ShowPatientList(ICollection<Patient> patientList)
+        {
+            TempData["PatientList"] = patientList;
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Patient/Details/3
@@ -170,7 +184,7 @@ namespace HospitalManagementApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool PatientExists(int id)
+        private static bool PatientExists(int id)
         {
             return PatientContext.PatientList.Any(patient => patient.Id == id);
         }

@@ -181,7 +181,7 @@ namespace HospitalManagementApp.Data
             }
         }
 
-        public Calendar? GetCalendar(List<int> staffId)
+        public Calendar? GetCalendar(List<int>? staffId)
         {
             if (staffId == null) return null;
             foreach (int id in staffId)

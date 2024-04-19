@@ -138,7 +138,7 @@ namespace HospitalManagementApp.Models
 
             return value.Select(m => MedicalHistoryEleToFirestore(m)).ToList();
         }
-        public List<MedicalHistoryEle>? FromFirestore(object value)
+        public List<MedicalHistoryEle> FromFirestore(object value)
         {
             var list = value as List<object>;
             if (list == null) return new List<MedicalHistoryEle>()
@@ -201,7 +201,7 @@ namespace HospitalManagementApp.Models
             return value.Select(t => TreatmentScheduleEleToFirestore(t)).ToList();
         }
 
-        public List<TreatmentScheduleEle>? FromFirestore(object value)
+        public List<TreatmentScheduleEle> FromFirestore(object value)
         {
             var list = value as List<object>;
             if (list == null) return new List<TreatmentScheduleEle>();

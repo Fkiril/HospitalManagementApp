@@ -1,0 +1,103 @@
+﻿@model ICollection<HospitalManagementApp.Models.Staff>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Staff Management</h1>
+
+<p>
+    <a asp-action="Add">Add new Staff</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Gender)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().HealthCareStaff)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().DateOfBirth)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().PhoneNum)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Degree)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Specialist)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Department)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().WorkSchedule)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(model => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.Gender)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.HealthCareStaff)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.DateOfBirth)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.PhoneNum)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.Degree)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.Specialist)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.Department)
+                </td>
+                <td>
+                    <a asp-action="Calendar" asp-route-id="@item.Id">Calendar</a>
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Remove" asp-route-id="@item.Id">Remove</a> |
+                    <a asp-action="ShowPatient" asp-route-id="@item.Id">ShowPatient</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+    
+</table>
+
+<p>
+    <a asp-action="CreateCalendar">Create calendar for all staff</a>
+</p>

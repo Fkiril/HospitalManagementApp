@@ -9,6 +9,11 @@ namespace HospitalManagementApp.Models
     public class Equipment
     {
         [FirestoreProperty]
+        public static int? Total { get; set; }
+        [FirestoreProperty]
+        public static int? FreeEquipment { get; set; }
+
+        [FirestoreProperty]
         [Required, Range(1, 9999)]
         public int? Id { get; set; }
 

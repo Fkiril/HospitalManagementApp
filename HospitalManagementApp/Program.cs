@@ -14,11 +14,19 @@ builder.Services.AddSingleton<FirestoreDbService>(provider =>
     Google.Apis.Auth.OAuth2.GoogleCredential credential = Google.Apis.Auth.OAuth2.GoogleCredential.FromFile(jsonFilePath);
     return new FirestoreDbService(projectId, credential);
 });
-builder.Services.AddSingleton<PatientContext>();
+builder.Services.AddSingleton<PatientContext>(sp =>
+{
+    var firestoreDbService = sp.GetRequiredService<FirestoreDbService>();
+    return new PatientContext(firestoreDbService, null);
+});
 
 builder.Services.AddSingleton<ApplicationUserContext>();
 
-builder.Services.AddSingleton<EquipmentContext>();
+builder.Services.AddSingleton<DrugsContext>();
+
+builder.Services.AddSingleton<PrescriptionContext>();
+
+builder.Services.AddSingleton<StaffContext>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
         .AddCookie(options =>

@@ -1,7 +1,7 @@
 ﻿@model HospitalManagementApp.Models.Patient
 
 @{
-    ViewData["Title"] = "Treatment schedule manager";
+    ViewData["Title"] = "TreatmentScheduleEle schedule manager";
 }
 
 <h4>Patient's treatment schedules</h4>
@@ -28,7 +28,7 @@
     <tbody>
         @if (Model.TreatmentSchedule != null)
         {
-            @foreach (var schedule in Model.TreatmentSchedule)
+            foreach (var schedule in Model.TreatmentSchedule)
             {
                 <tr>
                     <td>
@@ -45,7 +45,7 @@
                     </td>
                     <td>
                         <a asp-action="EditSchedule" asp-route-id="@schedule.Id" asp-route-patientId="@Model.Id" >Edit schedule</a>
-                        <a asp-action="DeleteSchedule" asp-route-id="@schedule.Id" >Delete schedule</a>
+                        <a asp-action="DeleteSchedule" asp-route-id="@schedule.Id" asp-route-patientId="@Model.Id" >Delete schedule</a>
                     </td>
                 </tr>
             }
@@ -53,6 +53,7 @@
         <tr>
             <td>
                 <a asp-action="AddSchedule" asp-route-id="@Model.Id" >Add new schedule</a>
+                <a asp-action="Index">Back to patient list</a>
             </td>
         </tr>
     </tbody>

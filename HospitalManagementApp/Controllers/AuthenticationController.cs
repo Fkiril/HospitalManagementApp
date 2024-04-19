@@ -43,7 +43,6 @@ namespace HospitalManagementApp.Controllers
 
                 if (user != null)
                 {
-                    Console.WriteLine("user's role: " + user.Role);
                     if (user.Password == model.Password)
                     {
                         var identity = new ClaimsIdentity(

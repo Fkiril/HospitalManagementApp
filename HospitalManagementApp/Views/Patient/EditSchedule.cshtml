@@ -1,4 +1,4 @@
-﻿@model HospitalManagementApp.Models.Treatment
+﻿@model HospitalManagementApp.Models.TreatmentScheduleEle
 @{
     ViewData["Title"] = "EditSchedule";
 }
@@ -8,7 +8,7 @@
 
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="EditSchedule" method="post" asp-route-patientId="@ViewBag.PatientId" asp-route-treatment="@Model">
+        <form asp-action="EditSchedule" method="post" asp-route-patientId="@ViewBag.PatientId">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="@Model.Id" class="control-label"></label>

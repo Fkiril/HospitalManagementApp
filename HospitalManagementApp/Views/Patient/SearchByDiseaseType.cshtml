@@ -4,11 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Patient Management</h1>
-
-<p>
-    <a asp-action="Add">Add new patient</a>
-</p>
+<h1>Patient Management - Search by patient's disease type</h1>
 @using (Html.BeginForm("SearchByDiseaseType", "Patient", FormMethod.Get))
 {
     <p>
@@ -17,6 +13,7 @@
     </p>
 
 }
+
 <table class="table">
     <thead>
         <tr>
@@ -47,7 +44,7 @@
             <th></th>
         </tr>
     </thead>
-    
+
     <tbody>
         @foreach (var item in Model)
         {
@@ -71,18 +68,14 @@
                     @Html.DisplayFor(model => item.PhoneNum)
                 </td>
                 <td>
-                    @if(item.StaffId is not null) @Html.Raw(string.Join(", ", item.StaffId))
+                    @if (item.StaffId is not null)
+                        @Html.Raw(string.Join(", ", item.StaffId))
+
                 </td>
                 <td>
                     @Html.DisplayFor(model => item.Status)
                 </td>
                 <td>
-                    @* <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Remove" asp-route-id="@item.Id">Remove</a> |
-                    <a asp-action="TreatmentScheduleManager" asp-route-id="@item.Id" >Manage treatment schedule</a>
-                    <a asp-controller="Prescription" asp-action="GetPrescriptions" asp-route-id=@item.Id>Get prescription</a> *@
-
                     <div class="dropdown">
                         <button class="dropbtn">Choose an action</button>
                         <div class="dropdown-content">
@@ -98,5 +91,5 @@
             </tr>
         }
     </tbody>
-    
+
 </table>

@@ -27,20 +27,21 @@ namespace HospitalManagementApp.Models
                     DateOfBirth = "09/08/2003",
                     Address = "abc",
                     PhoneNum = "0769421007",
-                    MedicalHistory = "abc",
-                    TestResult = "abc",
-                    StaffId = new List<int> {1, 2},
-                    TreatmentSchedule = new List<Treatment>
-                    {
-                        new Treatment
+                    MedicalHistory = null,
+                    TestResult = null,
+                    StaffId = [1, 2],
+                    TreatmentSchedule =
+                    [
+                        new TreatmentScheduleEle
                         {
                             Id = 1,
                             Date = "09/04/2024",
                             StartTime = "10:00",
                             EndTime = "12:00",
                         }
-                    },
-                    Status = Status.Ill
+                    ],
+                    Status = PatientStatus.Ill,
+                    PrescriptionId = null
                 },
                 new Patient
                 {
@@ -50,20 +51,21 @@ namespace HospitalManagementApp.Models
                     DateOfBirth = "03/03/2003",
                     Address = "abc",
                     PhoneNum = "0969185801",
-                    MedicalHistory = "abc",
-                    TestResult = "abc",
-                    StaffId = new List<int> {3, 4},
-                    TreatmentSchedule = new List<Treatment>
-                    {
-                        new Treatment
+                    MedicalHistory = null,
+                    TestResult = null,
+                    StaffId = [3, 4],
+                    TreatmentSchedule =
+                    [
+                        new TreatmentScheduleEle
                         {
                             Id = 1,
                             Date = "10/04/2024",
                             StartTime = "08:00",
                             EndTime = "12:00",
                         }
-                    },
-                    Status = Status.Ill
+                    ],
+                    Status = PatientStatus.Ill,
+                    PrescriptionId = null
                 }
             };
 

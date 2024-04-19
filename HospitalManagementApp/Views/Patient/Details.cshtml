@@ -1,5 +1,117 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model HospitalManagementApp.Models.Patient
+
 @{
+    ViewData["Title"] = "Index";
 }
+
+<h1>Patient Management</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <strong>Id number</strong>
+            </th>
+            <th>
+                <strong>Full name</strong>
+            </th>
+            <th>
+                <strong>Gender</strong>
+            </th>
+            <th>
+                <strong>Date of birth</strong>
+            </th>
+            <th>
+                <strong>Address</strong>
+            </th>
+            <th>
+                <strong>Phone number</strong>
+            </th>
+            <th>
+                <strong>Staff Id</strong>
+            </th>
+            <th>
+                <strong>Status</strong>
+            </th>
+            <th>
+                <strong>Medical history</strong>
+            </th>
+            <th>
+                <strong>Test result</strong>
+            </th>
+            <th>
+                <strong>Treatment schedules</strong>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr>
+            <td>
+                @Html.DisplayFor(model => model.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.Gender)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.DateOfBirth)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.Address)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.PhoneNum)
+            </td>
+            <td>
+                @if (Model.StaffId is not null)
+                    @Html.Raw(string.Join(", ", Model.StaffId))
+
+
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.Status)
+            </td>
+            <td>
+                <table>
+                    @if (Model.MedicalHistory is not null) foreach (var history in Model.MedicalHistory)
+                    {
+                        <tr>
+                            <td><strong>Disease: </strong>  @history.Disease</td>
+                            <td><strong>Start date: </strong>@history.StartDate</td>
+                            <td><strong>End date: </strong>@history.EndDate</td>
+                        </tr>
+                    }
+                </table>
+            </td>
+            <td>
+                <table>
+                    <tr>
+                        @if (Model.TestResult is not null)
+                        {
+                            <td><strong>Disease: </strong>@Model.TestResult.Disease</td>
+                            <td><strong>Start date: </strong>@Model.TestResult.Type</td>
+                        }
+                    </tr>
+                </table>
+            </td>
+            <td>
+                <table>
+                    @if (Model.TreatmentSchedule is not null) foreach (var schedule in Model.TreatmentSchedule)
+                    {
+                        <tr>
+                            <td><strong>Id: </strong>@schedule.Id</td>
+                            <td><strong>Date: </strong>@schedule.Date</td>
+                            <td><strong>Start time: </strong>@schedule.StartTime</td>
+                            <td><strong>End time: </strong>@schedule.EndTime</td>
+                        </tr>
+                    }
+                </table>
+            </td>
+        </tr>
+    </tbody>
+
+</table>

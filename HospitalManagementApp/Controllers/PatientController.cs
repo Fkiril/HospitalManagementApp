@@ -10,16 +10,18 @@ namespace HospitalManagementApp.Controllers
     [Authorize(Roles = "Admin", AuthenticationSchemes = "Cookies")]
     public class PatientController : Controller
     {
-        public readonly PatientContext _context;
-        public PatientController(PatientContext context)
+        public readonly PatientContext _patientContext;
+        public readonly StaffContext _staffContext;
+        public PatientController(PatientContext patientContext, StaffContext staffContext)
         {
-            _context = context;
+            _patientContext = patientContext;
+            _staffContext = staffContext;
         }
 
         // GET: Patient
         public async Task<IActionResult> Index()
         {
-            await _context.InitializePatientListFromFirestore();
+            await _patientContext.InitializePatientListFromFirestore();
             return View(PatientContext.PatientList);
         }
 
@@ -52,9 +54,23 @@ namespace HospitalManagementApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(patient);
-                await _context.SaveChangesAsync();
+                _patientContext.Add(patient);
+                await _patientContext.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                foreach (var modelStateKey in ModelState.Keys)
+                {
+                    var modelStateVal = ModelState[modelStateKey];
+                    if (modelStateVal != null) foreach (var error in modelStateVal.Errors)
+                        {
+                            var errorMessage = error.ErrorMessage;
+                            var exception = error.Exception;
+                            throw new Exception(errorMessage, exception);
+                        }
+                }
             }
             return View();
         }
@@ -90,8 +106,8 @@ namespace HospitalManagementApp.Controllers
             {
                 try
                 {
-                    _context.Update(patient);
-                    await _context.SaveChangesAsync();
+                    _patientContext.Update(patient);
+                    await _patientContext.SaveChangesAsync();
                 }
                 catch (Exception)
                 {
@@ -105,6 +121,19 @@ namespace HospitalManagementApp.Controllers
                 }
 
                 return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                foreach (var modelStateKey in ModelState.Keys)
+                {
+                    var modelStateVal = ModelState[modelStateKey];
+                    if (modelStateVal != null) foreach (var error in modelStateVal.Errors)
+                    {
+                        var errorMessage = error.ErrorMessage;
+                        var exception = error.Exception;
+                        throw new Exception(errorMessage, exception);
+                    }
+                }
             }
             return View(patient);
         }
@@ -137,7 +166,7 @@ namespace HospitalManagementApp.Controllers
                 PatientContext.PatientList.Remove(patient);
             }
 
-            await _context.SaveChangesAsync();
+            await _patientContext.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
@@ -177,7 +206,7 @@ namespace HospitalManagementApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddSchedule(int patientId, Treatment newTreatment)
+        public async Task<IActionResult> AddSchedule(int patientId, TreatmentScheduleEle newTreatment)
         {
             var patient = PatientContext.PatientList
                 .FirstOrDefault(m => m.Id == patientId);
@@ -193,10 +222,25 @@ namespace HospitalManagementApp.Controllers
                     return BadRequest();
                 }
 
-                _context.AddTreatmentSchedule(patient, newTreatment);
+                Models.Calendar? docSchedule = _staffContext.GetCalendar(patient.StaffId);
 
-                await _context.SaveChangesAsync();
+                _patientContext.AddTreatmentSchedule(patient, newTreatment, docSchedule);
+
+                await _patientContext.SaveChangesAsync();
                 return RedirectToAction(nameof(TreatmentScheduleManager), new {id = patientId});
+            }
+            else
+            {
+                foreach (var modelStateKey in ModelState.Keys)
+                {
+                    var modelStateVal = ModelState[modelStateKey];
+                    if (modelStateVal != null) foreach (var error in modelStateVal.Errors)
+                        {
+                            var errorMessage = error.ErrorMessage;
+                            var exception = error.Exception;
+                            throw new Exception(errorMessage, exception);
+                        }
+                }
             }
             return RedirectToAction(nameof(Index));
         }
@@ -205,31 +249,46 @@ namespace HospitalManagementApp.Controllers
         {
             var patient = PatientContext.PatientList
                 .FirstOrDefault(m => m.Id == patientId);
-            if (patient == null || patient.TreatmentSchedule == null || patient.TreatmentSchedule.FirstOrDefault(s => s.Id == id) == null)
+            if (patient == null || patient.TreatmentSchedule == null || patient.TreatmentSchedule.First(s => s.Id == id) == null)
             {
                 return NotFound();
             }
-            var treatment = patient.TreatmentSchedule.FirstOrDefault(s => s.Id == id);
+            var treatment = patient.TreatmentSchedule.First(s => s.Id == id);
 
             ViewBag.patientId = patientId;
 
             return View(treatment);
         }
         [HttpPost]
-        public async Task<IActionResult> EditSchedule(int id, int patientId, Treatment treatment)
+        public async Task<IActionResult> EditSchedule(int id, int patientId, TreatmentScheduleEle treatment)
         {
             var patient = PatientContext.PatientList
                 .FirstOrDefault(m => m.Id == patientId);
-            if (patient == null || patient.TreatmentSchedule == null || patient.TreatmentSchedule.FirstOrDefault(s => s.Id == id) == null)
+            if (patient == null || id != treatment.Id)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                _context.UpdateTreatmentSchedule(patient, id, treatment);
-                await _context.SaveChangesAsync();
+                Models.Calendar? docSchedule = _staffContext.GetCalendar(patient.StaffId);
+
+                _patientContext.UpdateTreatmentSchedule(patient, id, treatment, docSchedule);
+                await _patientContext.SaveChangesAsync();
                 return RedirectToAction(nameof(TreatmentScheduleManager), new { id = patientId });
+            }
+            else
+            {
+                foreach (var modelStateKey in ModelState.Keys)
+                {
+                    var modelStateVal = ModelState[modelStateKey];
+                    if (modelStateVal != null) foreach (var error in modelStateVal.Errors)
+                        {
+                            var errorMessage = error.ErrorMessage;
+                            var exception = error.Exception;
+                            throw new Exception(errorMessage, exception);
+                        }
+                }
             }
             return RedirectToAction(nameof(Index));
         }
@@ -238,32 +297,100 @@ namespace HospitalManagementApp.Controllers
         {
             var patient = PatientContext.PatientList
                 .FirstOrDefault(m => m.Id == patientId);
-            if (patient == null || patient.TreatmentSchedule == null || patient.TreatmentSchedule.FirstOrDefault(s => s.Id == id) == null)
+            if (patient == null || patient.TreatmentSchedule == null || patient.TreatmentSchedule.First(s => s.Id == id) == null)
             {
                 return NotFound();
             }
-            var treatment = patient.TreatmentSchedule.FirstOrDefault(s => s.Id == id);
+            var treatment = patient.TreatmentSchedule.First(s => s.Id == id);
 
             ViewBag.patientId = patientId;
 
             return View(treatment);
         }
-        [HttpPost]
+        [HttpPost, ActionName("DeleteSchedule")]
         public async Task<IActionResult> DeleScheduleConfirmed(int id, int patientId)
         {
             var patient = PatientContext.PatientList
                 .FirstOrDefault(m => m.Id == patientId);
-            if (patient == null || patient.TreatmentSchedule == null || patient.TreatmentSchedule.FirstOrDefault(s => s.Id == id) == null)
+            if (patient == null)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                _context.DeleteTreatmentSchedule(patient, id);
-                await _context.SaveChangesAsync();
+                _patientContext.DeleteTreatmentSchedule(patient, id);
+                await _patientContext.SaveChangesAsync();
                 return RedirectToAction(nameof(TreatmentScheduleManager), new { id = patientId });
             }
+            else
+            {
+                foreach (var modelStateKey in ModelState.Keys)
+                {
+                    var modelStateVal = ModelState[modelStateKey];
+                    if (modelStateVal != null) foreach (var error in modelStateVal.Errors)
+                        {
+                            var errorMessage = error.ErrorMessage;
+                            var exception = error.Exception;
+                            throw new Exception(errorMessage, exception);
+                        }
+                }
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult SearchByDiseaseType(string searchType)
+        {
+            if (searchType == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                var patientList = PatientContext.PatientList.Where(p => 
+                p.TestResult != null && p.TestResult.Type != null && p.TestResult.Type.Contains(searchType)
+                ).ToList();
+
+                return View(patientList);
+            }
+        }
+
+        public IActionResult SetTestResult(int? id)
+        {
+            var patient = PatientContext.PatientList
+                .FirstOrDefault(m => m.Id == id);
+            if (patient == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.patientId = id;
+            //var diseases = Data.GetDiseases();
+            //ViewBag.Diseases = new SelectList(diseases, "Value", "Text");
+            //var types = Data.GetTypes();
+            //ViewBag.Types = new SelectList(types, "Value", "Text");
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SetTestResult(int patientId, TestResult result)
+        {
+            var patient = PatientContext.PatientList
+                .FirstOrDefault(m => m.Id == patientId);
+            if (patient == null)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                _patientContext.SetTestResult(patientId, result);
+                await _patientContext.SaveChangesAsync();
+
+                return RedirectToAction(nameof(Index));
+            }
+
             return RedirectToAction(nameof(Index));
         }
     }

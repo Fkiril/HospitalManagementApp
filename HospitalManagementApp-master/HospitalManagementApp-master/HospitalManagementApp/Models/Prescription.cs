@@ -46,10 +46,6 @@ namespace HospitalManagementApp.Models
         public string? NameOfDrug { get; set; }
 
         [FirestoreProperty]
-        [Required, Range(1, 9999)]
-        public int? NumberOfDrug { get; set; }
-
-        [FirestoreProperty]
         public string? docId { get; set; } = string.Empty;
 
     }

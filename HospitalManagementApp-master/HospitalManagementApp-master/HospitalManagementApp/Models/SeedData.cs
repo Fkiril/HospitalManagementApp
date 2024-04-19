@@ -129,7 +129,7 @@ namespace HospitalManagementApp.Models
                         new DrugInfo
                         {
                             NameOfDrug ="Halothane",
-                            NumberOfDrug = 1,
+                            //NumberOfDrug = 1,
                             docId = ""
                         }
                     }
@@ -145,7 +145,7 @@ namespace HospitalManagementApp.Models
                         new DrugInfo
                         {
                             NameOfDrug = "Ketamine",
-                            NumberOfDrug = 2,
+                            //NumberOfDrug = 2,
                             docId = ""
                         }
                     }

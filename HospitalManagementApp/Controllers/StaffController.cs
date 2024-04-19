@@ -3,22 +3,27 @@ using Google.Cloud.Firestore;
 using HospitalManagementApp.Data;
 using HospitalManagementApp.Models;
 using System;
-using System.Linq;
-using System.Linq.Expressions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Google.Api;
+using System.Net.WebSockets;
+using AspNetCore;
+using System.Collections.ObjectModel;
+using Google.Cloud.Firestore.V1;
 
 
 namespace HospitalManagementApp.Controllers
 {
-    [Authorize(Roles = "Admin, Doctor", AuthenticationSchemes = "Cookies")]
+    //[Authorize(Roles = "Admin", AuthenticationSchemes = "Cookies")]
     public class StaffController : Controller
     {
         public readonly StaffContext _context;
-        public StaffController(StaffContext context)
+        public readonly PatientContext _pcontext;
+
+        public StaffController(StaffContext context, PatientContext pcontext)
         {
             _context = context;
+            _pcontext = pcontext;
         }
 
         // GET: Staff
@@ -53,7 +58,7 @@ namespace HospitalManagementApp.Controllers
         //POST: Staff/Add
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Add( Staff staff)
+        public async Task<IActionResult> Add(Staff staff)
         {
             if (ModelState.IsValid)
             {
@@ -83,7 +88,7 @@ namespace HospitalManagementApp.Controllers
         //POST: Staff/Edit/3
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit( int id, Staff staff)
+        public async Task<IActionResult> Edit(int id, Staff staff)
         {
             if (id != staff.Id)
             {
@@ -146,25 +151,25 @@ namespace HospitalManagementApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult ShowPatient(int? id)
+        public async Task<IActionResult> ShowPatientAsync(int id)
         {
-            if(id == null)
-            {
-                return NotFound();
-            }
             var staff = StaffContext.StaffList
                   .FirstOrDefault(staff => staff.Id == id);
             if (staff != null)
             {
-                var patListNN = PatientContext.PatientList.Where(patient => patient.StaffId is not null).ToList();
-                var patList = patListNN.Where(predicate: patient => patient.StaffId.Contains((int)id)).ToList();
-                if (patListNN == null) return View(staff);
-                else return View(patListNN);
+                Query patientsQuery = _pcontext._firestoreDb.Collection("Patient").WhereArrayContains("staffId", id);
+                QuerySnapshot querySnapshot = await patientsQuery.GetSnapshotAsync();
+
+                if (querySnapshot == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return RedirectToAction(nameof(PatientController.ShowPatientList), new { patientList = querySnapshot });
+                }
             }
-            else
-            {
-                return NotFound();
-            }
+            return NotFound();
         }
 
 
@@ -172,7 +177,7 @@ namespace HospitalManagementApp.Controllers
         {
             return StaffContext.StaffList.Any(staff => staff.Id == id);
         }
-    
+
         //GET: Staff/Calendar/3
         public IActionResult Calendar(int id)
         {
@@ -193,7 +198,7 @@ namespace HospitalManagementApp.Controllers
         //POST: Staff/Calendar/3
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Calendar (int id,Staff staff)
+        public async Task<IActionResult> Calendar(int id, Staff staff)
         {
             if (id != staff.Id)
             {
@@ -223,7 +228,7 @@ namespace HospitalManagementApp.Controllers
             }
             return View(staff);
         }
-    
+
         public async Task<IActionResult> CreateCalendar()
         {
 
@@ -236,6 +241,7 @@ namespace HospitalManagementApp.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
 
     }
 }

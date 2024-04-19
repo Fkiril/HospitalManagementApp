@@ -6,6 +6,10 @@ using System;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Google.Api;
+using System.Net.WebSockets;
+using AspNetCore;
+using System.Collections.ObjectModel;
+using Google.Cloud.Firestore.V1;
 
 
 namespace HospitalManagementApp.Controllers
@@ -14,10 +18,12 @@ namespace HospitalManagementApp.Controllers
     public class StaffController : Controller
     {
         public readonly StaffContext _context;
+        public readonly PatientContext _pcontext;
 
-        public StaffController(StaffContext context)
+        public StaffController(StaffContext context,PatientContext pcontext)
         {
             _context = context;
+            _pcontext = pcontext;
         }
 
         // GET: Staff
@@ -147,18 +153,23 @@ namespace HospitalManagementApp.Controllers
         
         
         [Route("ShowPatient")]
-        public IActionResult ShowPatient(int id)
+        public async Task<IActionResult> ShowPatientAsync(int id)
         {
             var staff = StaffContext.StaffList
                   .FirstOrDefault(staff => staff.Id == id);
             if (staff != null)
             {
-                var model = PatientContext.PatientList.Where(p => p.StaffId != null && p.StaffId.Contains(id)).ToList();
-                return View(model);
-            }
-            else
-            {
-                return NotFound();
+                Query patientsQuery = _pcontext._firestoreDb.Collection("Patient").WhereArrayContains("staffId", id);
+                QuerySnapshot querySnapshot = await patientsQuery.GetSnapshotAsync();
+
+                if (querySnapshot == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return RedirectToAction(nameof(Views_Patient_ShowPatientList), new { patientList = querySnapshot });
+                }
             }
         }
 

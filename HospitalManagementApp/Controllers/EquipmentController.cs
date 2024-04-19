@@ -135,6 +135,7 @@ namespace HospitalManagementApp.Controllers
                 .FirstOrDefault(equipment => equipment.Id == id);
             if (equipment != null)
             {
+                _context.Remove(equipment);
                 EquipmentContext.EquipmentList.Remove(equipment);
             }
 

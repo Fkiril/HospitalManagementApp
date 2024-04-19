@@ -31,6 +31,8 @@ namespace HospitalManagementApp.Data
                 equipment.changed = false;
                 EquipmentList.Add(equipment);
             }
+
+            UpdateCount();
         }
         public async Task SaveChangesAsync()
         {
@@ -66,11 +68,29 @@ namespace HospitalManagementApp.Data
                 }
             }
         }
-
+        public bool IsIdUnique(int? id)
+        {
+            foreach (var equipment in EquipmentList)
+            {
+                if (id != null && equipment.Id == id)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
         public void Add(Equipment equipment)
         {
-            equipment.changed = true;
-            EquipmentList.Add(equipment);
+            if (IsIdUnique(equipment.Id))
+            {
+                equipment.changed = true;
+                EquipmentList.Add(equipment);
+                UpdateCount();
+            }
+            else
+            {
+                throw new Exception("This equipment id is not unique!");
+            }
         }
         public void Update(Equipment equipment)
         {
@@ -79,15 +99,49 @@ namespace HospitalManagementApp.Data
                 if (p.Id == equipment.Id)
                 {
                     p.Id = equipment.Id;
-                    p.docId = equipment.docId;
                     p.Name = equipment.Name;
                     p.Description = equipment.Description;
                     p.IsAvailable = equipment.IsAvailable;
                     p.UsingUntil = equipment.UsingUntil;
                     p.History = equipment.History;
 
+                    UpdateCount();
                     p.changed = true;
                     break;
+                }
+            }
+        }
+
+        public void Remove(Equipment equipment)
+        {
+            EquipmentList.Remove(equipment);
+            UpdateCount();
+        }
+
+        private void UpdateCount()
+        {
+            // Update TotalCount
+            var equipmentByType = EquipmentList.GroupBy(equipment => equipment.Name);
+
+            foreach (var group in equipmentByType)
+            {
+                int count = group.Count();
+                foreach (var equipment in group)
+                {
+                    equipment.TotalCount = count;
+                }
+            }
+
+            // Update AvailableCount
+            var availableByType = EquipmentList.Where(equipment => equipment.IsAvailable == true)
+                                               .GroupBy(equipment => equipment.Name);
+
+            foreach (var group in availableByType)
+            {
+                int count = group.Count(); // Get the quantity of available equipment for this type
+                foreach (var equipment in group)
+                {
+                    equipment.AvailableCount = count; // Set the count for each available equipment item
                 }
             }
         }

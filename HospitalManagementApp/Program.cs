@@ -28,6 +28,8 @@ builder.Services.AddSingleton<PrescriptionContext>();
 
 builder.Services.AddSingleton<StaffContext>();
 
+builder.Services.AddSingleton<EquipmentContext>();
+
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
         .AddCookie(options =>
         {

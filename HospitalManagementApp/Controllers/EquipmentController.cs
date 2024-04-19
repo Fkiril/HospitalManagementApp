@@ -161,7 +161,7 @@ namespace HospitalManagementApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddSchedule(int equipmentId, Treatment newTreatment)
+        public async Task<IActionResult> AddSchedule(int equipmentId, DateTime newSchedule)
         {
             var equipment = EquipmentContext.EquipmentList
                 .FirstOrDefault(m => m.Id == equipmentId);
@@ -172,13 +172,13 @@ namespace HospitalManagementApp.Controllers
 
             if (ModelState.IsValid)
             {
-                if (newTreatment == null)
+                if (newSchedule == null)
                 {
                     return BadRequest();
                 }
 
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index), new { id = equipmentId });
+                return RedirectToAction(nameof(Index));
             }
             return RedirectToAction(nameof(Index));
         }

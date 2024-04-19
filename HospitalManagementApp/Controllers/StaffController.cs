@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Google.Api;
 using System.Net.WebSockets;
-using AspNetCore;
 using System.Collections.ObjectModel;
 using Google.Cloud.Firestore.V1;
 

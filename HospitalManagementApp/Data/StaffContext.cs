@@ -68,11 +68,28 @@ namespace HospitalManagementApp.Data
                 }
             }
         }
-
+        public bool IsIdUnique(int? id)
+        {
+            foreach (var staff in StaffList)
+            {
+                if (id != null && staff.Id == id)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
         public void Add(Staff staff)
         {
-            staff.changed = true;
-            StaffList.Add(staff);
+            if (IsIdUnique(staff.Id))
+            {
+                staff.changed = true;
+                StaffList.Add(staff);
+            }
+            else
+            {
+                throw new Exception("Id is not unique!");
+            }
         }
         public void Update(Staff staff)
         {

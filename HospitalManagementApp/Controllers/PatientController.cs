@@ -2,7 +2,7 @@
 using HospitalManagementApp.Data;
 using HospitalManagementApp.Models;
 using Microsoft.AspNetCore.Authorization;
-using HospitalManagementApp.Models.PatientViewModels;
+using Google.Cloud.Firestore;
 
 
 namespace HospitalManagementApp.Controllers
@@ -34,10 +34,25 @@ namespace HospitalManagementApp.Controllers
 
         }
 
-        public IActionResult ShowPatientList(ICollection<Patient> patientList)
+        public async Task<IActionResult> ShowPatientListAsync(int id)
         {
-            TempData["PatientList"] = patientList;
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                QuerySnapshot querySnapshot = await _patientContext._firestoreDb.Collection("Patient")
+                    .WhereArrayContains("staffId", id)
+                    .GetSnapshotAsync();
+
+                var patients = querySnapshot.Documents
+                    .Select(doc => doc.ConvertTo<Patient>())
+                    .ToList();
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error querying Firestore: " + ex.Message);
+                return StatusCode(500);
+            }
         }
 
         // GET: Patient/Details/3

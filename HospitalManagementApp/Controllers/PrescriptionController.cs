@@ -193,7 +193,7 @@ namespace HospitalManagementApp.Controllers
         [HttpGet, ActionName("GetPrescriptions")]
         public async Task<IActionResult> GetPrescriptions(int Id)
         {
-            var prescriptions = await _context.GetPrescriptionsForPatientAsync(Id);
+            var prescriptions = await _context.GetPrescriptionsForPatientAsync(2);
             return View(prescriptions);
         }
         private bool PrescriptionExists(int id)

@@ -55,6 +55,7 @@ using (var scope = app.Services.CreateScope())
     if (firestoreDbService != null)
     {
         SeedData.InitializePatientData(firestoreDbService.GetFirestoreDb());
+        SeedData.InitializeStaffData(firestoreDbService.GetFirestoreDb());
         //SeedData.InitializeApplicationUserData(firestoreDbService.GetFirestoreDb());
     }
 }

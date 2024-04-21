@@ -101,6 +101,64 @@ namespace HospitalManagementApp.Models
                 await colRef.Document("applicationuser_" + user.Id).SetAsync(user);
             }
         }
+
+        public static async void InitializeStaffData(FirestoreDb firestoreDb)
+        {
+            Console.WriteLine("InitializeStaffData");
+            CollectionReference colRef = firestoreDb.Collection("Staff");
+
+            QuerySnapshot snapshots = await colRef.GetSnapshotAsync();
+            if (snapshots.Documents.Any())
+            {
+                return;
+            }
+
+            var staffs = new List<Staff>
+            {
+                new Staff
+                {
+                    Id = 1,
+                    Name = "Doctor",
+                    Gender = Gender.Male,
+                    HealthCareStaff = HealthCareStaff.Doctor,
+                    DateOfBirth = "09/08/2003",
+                    Email = "doctor@gmail.com",
+                    PhoneNum = "0769421007",
+                    Degree = "abc",
+                    Specialist = "abc",
+                    Department = "abc",
+                    WorkSchedule = null
+                },
+                new Staff
+                {
+                    Id = 2,
+                    Name = "Nurse",
+                    Gender = Gender.Female,
+                    HealthCareStaff = HealthCareStaff.Nurse,
+                    DateOfBirth = "04/02/2004",
+                    Email = "nurse@gmail.com",
+                    PhoneNum = "0987654312",
+                    Degree = "abc",
+                    Specialist = "abc",
+                    Department = "abc",
+                    WorkSchedule = null
+                },
+                new Staff
+                {
+                    Id = 3,
+                    Name = "SupportStaff",
+                    Gender = Gender.Female,
+                    HealthCareStaff = HealthCareStaff.SupportStaff,
+                    DateOfBirth = "04/02/2001",
+                    Email = "SupporStaff@gmail.com",
+                    PhoneNum = "0231456978",
+                    Degree = "abc",
+                    Specialist = "abc",
+                    Department = "abc",
+                    WorkSchedule = null
+                }
+            };
+        }
     }
 }
     

@@ -58,7 +58,7 @@ namespace HospitalManagementApp.Models
         public string? Specialist { get; set; }
         [FirestoreProperty]
         public string? Department { get; set; }
-        [FirestoreProperty]
+        [FirestoreProperty(ConverterType = typeof(CalendarListConverter))]
         public Calendar? WorkSchedule { get; set; }
 
         public bool? changed { get; set; }
@@ -83,54 +83,48 @@ namespace HospitalManagementApp.Models
         }
     }
 
-    public class CalendarListConverter : IFirestoreConverter<List<Calendar>>
+    public class CalendarListConverter : IFirestoreConverter<Calendar>
     {
-        public List<object> CalendarToFirestore(Calendar value)
+
+        public Calendar FromFirestore(object value)
         {
-            List<object> ls = new List<object>();
-            for (int i = 0; i < 7; i++)
             {
-                object o = new Dictionary<string, object>()
+                if (value == null) return null;
+                Dictionary<string, object>? dict = value as Dictionary<string, object>;
+                if (dict == null) return null;
+
+                List<string> date = new List<string>();
+                List<Shift> shifts = new List<Shift>();
+
+                List<object> lo = (List<object>)dict["Date"];
+
+                foreach (var data in lo)
                 {
-                    { "Date", value.Date[i] ?? new object() },
-                    { "DayofWeek", value.DayofWeek[i].ToString() ?? new object() }
+                    date.Add(data.ToString());
+                }
+                lo = (List<object>)dict["DayofWeek"];
+
+                foreach (var data in lo)
+                {
+                    date.Add(data.ToString());
+                }
+
+                return new Calendar
+                {
+                    Date = date,
+                    DayofWeek = shifts
                 };
-                ls.Add(o);
             }
-            return ls;
         }
 
-        public Calendar CalendarFromFirestore(object value)
-        {
-            var dict = value as Dictionary<string, object>;
-            if (dict == null)
-            {
-                throw new ArgumentException("Expected a dictionary");
-            }
-
-            return new Calendar
-            {
-                Date = (List<string>)(dict["Date"]),
-                DayofWeek = (List<Shift>) (dict["DayofWeek"])
-            };
-        }
-
-        public List<Calendar> FromFirestore(object value)
-        {
-            Console.WriteLine("CalendarList FromFirestore");
-            var list = value as List<object>;
-            if (list == null)
-            {
-                throw new ArgumentException("Expected a list");
-            }
-
-            return list.Select(o => CalendarFromFirestore(o)).ToList();
-        }
-
-        public object ToFirestore(List<Calendar> value)
+        public object ToFirestore(Calendar value)
         {
             Console.WriteLine("Calendar ToFirestore");
-            return value.Select(c => CalendarToFirestore(c)).ToList();
+            return new Dictionary<string, object>
+            {
+                { "Date",value.Date },
+                { "DayofWeek",value.DayofWeek }
+            };
         }
 
     }

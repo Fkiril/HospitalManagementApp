@@ -8,12 +8,8 @@
     <h1>Drugs Management</h1>
 
     <p>
-        <a asp-action="Add">Add new drugs</a>
+        <a asp-action="Add">Add New Drug</a>
     </p>
-    <a href="/Prescription/Add">Add a new prescription</a>
-
-<a asp-controller="Prescription" asp-action="GetPrescriptions" asp-route-Id="@Model.FirstOrDefault().IdOfDrug">Get Prescriptions</a>
-
 
 
     @using (Html.BeginForm("Search","Drugs",FormMethod.Get)){

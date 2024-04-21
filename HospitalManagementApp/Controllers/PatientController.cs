@@ -46,7 +46,7 @@ namespace HospitalManagementApp.Controllers
                     .Select(doc => doc.ConvertTo<Patient>())
                     .ToList();
 
-                return View(patients);
+                return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {

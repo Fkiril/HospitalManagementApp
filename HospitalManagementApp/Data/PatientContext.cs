@@ -203,17 +203,16 @@ namespace HospitalManagementApp.Data
             patient.Changed = true;
         }
 
-        public void SetStaffId(int patientId, List<int> staffIds)
+        public void SetStaffId(int patientId, int staffId)
         {
             Patient patient = PatientList.First(x => x.Id == patientId) ?? throw new Exception("Patient is not found!");
-            foreach (var id in staffIds)
+            
+            if (patient.StaffIds != null)
             {
-                // if (_staffContext.???) 
-                // {
-                //      throw new Exception();
-                // }
+                if (!patient.StaffIds.Contains(staffId)) patient.StaffIds.Add(staffId);
+                else throw new Exception("Can not have the same staff id!");
             }
-            patient.StaffId = staffIds;
+            else patient.StaffIds = new List<int> {  staffId };
             patient.Changed = true;
         }
 
@@ -239,7 +238,7 @@ namespace HospitalManagementApp.Data
             if (pSchedule == null || pSchedule.Date == null || pSchedule.StartTime == null || pSchedule.EndTime == null) 
                 throw new ArgumentNullException(nameof(pSchedule));
 
-            if (patient.StaffId == null) return true;
+            if (patient.StaffIds == null) return true;
             if (docSchedule == null) return true;
             
             if (docSchedule == null || docSchedule.DayofWeek == null || docSchedule.Date == null) return true;

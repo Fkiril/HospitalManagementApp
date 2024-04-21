@@ -3,6 +3,7 @@ using Google.Api.Gax;
 using Google.Cloud.Firestore;
 using HospitalManagementApp.Models;
 using HospitalManagementApp.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using System;
 using System.Linq;
@@ -106,7 +107,7 @@ namespace HospitalManagementApp.Data
                     s.PhoneNum = staff.PhoneNum;
                     s.Degree = staff.Degree;
                     s.Department = staff.Department;
-                    s.Specialist = staff.Specialist;
+                    s.SpecialList = staff.SpecialList;
                     s.WorkSchedule = staff.WorkSchedule;
                
 
@@ -161,7 +162,7 @@ namespace HospitalManagementApp.Data
                         int randomNumber = random.Next(0, 2);
                         staff.WorkSchedule.DayofWeek.Add( (Shift)randomNumber);
                         int other = 1 - randomNumber;
-                        var specialList = StaffList.Where(s => s.Specialist == staff.Specialist && s != staff).ToList();
+                        var specialList = StaffList.Where(s => s.SpecialList == staff.SpecialList && s != staff).ToList();
 
                         if(specialList.Count > 0)
                         {

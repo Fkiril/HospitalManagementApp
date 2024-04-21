@@ -28,6 +28,8 @@ builder.Services.AddSingleton<PrescriptionContext>();
 
 builder.Services.AddSingleton<StaffContext>();
 
+//builder.Services.AddSingleton<EquipmentContext>();
+
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
         .AddCookie(options =>
         {
@@ -54,9 +56,24 @@ using (var scope = app.Services.CreateScope())
     var firestoreDbService = scope.ServiceProvider.GetService<FirestoreDbService>();
     if (firestoreDbService != null)
     {
+        SeedData.InitializeApplicationUserData(firestoreDbService.GetFirestoreDb());
         SeedData.InitializePatientData(firestoreDbService.GetFirestoreDb());
         SeedData.InitializeStaffData(firestoreDbService.GetFirestoreDb());
-        //SeedData.InitializeApplicationUserData(firestoreDbService.GetFirestoreDb());
+
+        var patientContext = scope.ServiceProvider.GetService<PatientContext>();
+        if (patientContext != null) await patientContext.InitializePatientListFromFirestore();
+
+        var staffContext = scope.ServiceProvider.GetService<StaffContext>();
+        if (staffContext != null) await staffContext.InitializeStaffListFromFirestore();
+
+        var drugContext = scope.ServiceProvider.GetService<DrugsContext>();
+        if (drugContext != null) await drugContext.InitializeDrugsListFromFirestore();
+
+        var prescriptionContext = scope.ServiceProvider.GetService<PrescriptionContext>();
+        if (prescriptionContext != null) await prescriptionContext.InitializePrescriptionListFromFirestore();
+
+        //var equitmentContext = scope.ServiceProvider.GetService<EquipmentContext>();
+        //if (equitmentContext != null) await equitmentContext.InitializeEquipmentListFromFirestore();
     }
 }
 

@@ -71,7 +71,7 @@
                     @Html.DisplayFor(model => item.PhoneNum)
                 </td>
                 <td>
-                    @if(item.StaffId is not null) @Html.Raw(string.Join(", ", item.StaffId))
+                    @if(item.StaffIds is not null) @Html.Raw(string.Join(", ", item.StaffIds))
                 </td>
                 <td>
                     @Html.DisplayFor(model => item.Status)
@@ -92,6 +92,7 @@
                             <a href="/Patient/TreatmentScheduleManager/@item.Id">Manage treatment schedule</a>
                             <a href="/Patient/Prescription/GetPrescriptions/@item.Id">Get prescription</a>
                             <a href="/Patient/SetTestResult/@item.Id">Set test result</a>
+                            <a href="/Patient/SetStaffId/@item.Id">Set staff in charge</a>
                         </div>
                     </div>
                 </td>

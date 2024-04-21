@@ -150,27 +150,22 @@ namespace HospitalManagementApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult> ShowPatientAsync(int id)
+        public IActionResult ShowPatient(int id)
         {
             var staff = StaffContext.StaffList
                   .FirstOrDefault(staff => staff.Id == id);
             if (staff != null)
             {
-                Query patientsQuery = _pcontext._firestoreDb.Collection("Patient").WhereArrayContains("staffId", id);
-                QuerySnapshot querySnapshot = await patientsQuery.GetSnapshotAsync();
-
-                if (querySnapshot == null)
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    return RedirectToAction(nameof(PatientController.ShowPatientList), new { patientList = querySnapshot });
-                }
+                return RedirectToAction("ShowPatientList", "PatientController", new { staffId = id });
             }
-            return NotFound();
+
+            return ArgumentException("NOT FOUND");
         }
 
+        private IActionResult ArgumentException(string v)
+        {
+            throw new NotImplementedException();
+        }
 
         private bool StaffExists(int id)
         {

@@ -30,9 +30,6 @@
                 @Html.DisplayNameFor(model => model.FirstOrDefault().IdOfPatient)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.FirstOrDefault().Drug)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.FirstOrDefault().Description)
             </th>
             <th></th>
@@ -50,10 +47,11 @@
                     @Html.DisplayFor(model => item.IdOfPatient)
                 </td>
                 <td>
-                    @Html.DisplayFor(model => item.Drug)
+                    @Html.DisplayFor(model => item.Description)
                 </td>
                 <td>
-                    @Html.DisplayFor(model => item.Description)
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Remove" asp-route-id="@item.Id">Delete</a>
                 </td>
             </tr>
         }

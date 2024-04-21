@@ -156,8 +156,8 @@ namespace HospitalManagementApp.Controllers
                   .FirstOrDefault(staff => staff.Id == id);
             if (staff != null)
             {
-                var patListNN = PatientContext.PatientList.Where(patient => patient.StaffId is not null).ToList();
-                var patList = patListNN.Where(predicate: patient => patient.StaffId.Contains((int)id)).ToList();
+                var patListNN = PatientContext.PatientList.Where(patient => patient.StaffIds is not null).ToList();
+                var patList = patListNN.Where(predicate: patient => patient.StaffIds.Contains((int)id)).ToList();
                 if (patListNN == null) return View(staff);
                 else return View(patListNN);
             }

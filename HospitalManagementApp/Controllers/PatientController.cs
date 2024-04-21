@@ -2,6 +2,7 @@
 using HospitalManagementApp.Data;
 using HospitalManagementApp.Models;
 using Microsoft.AspNetCore.Authorization;
+using HospitalManagementApp.Models.PatientViewModels;
 
 
 namespace HospitalManagementApp.Controllers
@@ -206,8 +207,12 @@ namespace HospitalManagementApp.Controllers
 
             return View(patient);
         }
-        public IActionResult AddSchedule(int id)
+        public IActionResult AddSchedule(int? id)
         {
+            if (id == null)
+            {
+                return NotFound();
+            }
             var patient = PatientContext.PatientList
                 .FirstOrDefault(m => m.Id == id);
             if (patient == null)
@@ -236,7 +241,7 @@ namespace HospitalManagementApp.Controllers
                     return BadRequest();
                 }
 
-                Models.Calendar? docSchedule = _staffContext.GetCalendar(patient.StaffId);
+                Models.Calendar? docSchedule = _staffContext.GetCalendar(patient.StaffIds);
 
                 _patientContext.AddTreatmentSchedule(patient, newTreatment, docSchedule);
 
@@ -261,6 +266,10 @@ namespace HospitalManagementApp.Controllers
 
         public IActionResult EditSchedule(int? id, int patientId)
         {
+            if (id == null)
+            {
+                return NotFound();
+            }
             var patient = PatientContext.PatientList
                 .FirstOrDefault(m => m.Id == patientId);
             if (patient == null || patient.TreatmentSchedule == null || patient.TreatmentSchedule.First(s => s.Id == id) == null)
@@ -285,7 +294,7 @@ namespace HospitalManagementApp.Controllers
 
             if (ModelState.IsValid)
             {
-                Models.Calendar? docSchedule = _staffContext.GetCalendar(patient.StaffId);
+                Models.Calendar? docSchedule = _staffContext.GetCalendar(patient.StaffIds);
 
                 _patientContext.UpdateTreatmentSchedule(patient, id, treatment, docSchedule);
                 await _patientContext.SaveChangesAsync();
@@ -309,6 +318,10 @@ namespace HospitalManagementApp.Controllers
 
         public IActionResult DeleteSchedule(int? id, int patientId)
         {
+            if (id == null)
+            {
+                return NotFound();
+            }
             var patient = PatientContext.PatientList
                 .FirstOrDefault(m => m.Id == patientId);
             if (patient == null || patient.TreatmentSchedule == null || patient.TreatmentSchedule.First(s => s.Id == id) == null)
@@ -371,6 +384,10 @@ namespace HospitalManagementApp.Controllers
 
         public IActionResult SetTestResult(int? id)
         {
+            if (id == null)
+            {
+                return NotFound();
+            }
             var patient = PatientContext.PatientList
                 .FirstOrDefault(m => m.Id == id);
             if (patient == null)
@@ -404,7 +421,71 @@ namespace HospitalManagementApp.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
+            else
+            {
+                foreach (var modelStateKey in ModelState.Keys)
+                {
+                    var modelStateVal = ModelState[modelStateKey];
+                    if (modelStateVal != null) foreach (var error in modelStateVal.Errors)
+                        {
+                            var errorMessage = error.ErrorMessage;
+                            var exception = error.Exception;
+                            throw new Exception(errorMessage, exception);
+                        }
+                }
+            }
+            return RedirectToAction(nameof(Index));
+        }
 
+        public IActionResult SetStaffId(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var patient = PatientContext.PatientList
+                .FirstOrDefault(m => m.Id == id);
+            if (patient == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.patientId = id;
+            //ViewBag.suitableStaff = _staffContext.GetSuitableStaff();
+            ViewBag.suitableStaff = new List<int> { 1, 2, 3 };
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SetStaffId(int patientId, PatientStaffIdModel model)
+        {
+            var patient = PatientContext.PatientList
+                .FirstOrDefault(m => m.Id == patientId);
+            if (patient == null)
+            {
+                return NotFound();
+            }
+            if (ModelState.IsValid)
+            {
+                _patientContext.SetStaffId(patientId, model.staffId);
+                await _patientContext.SaveChangesAsync();
+
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                foreach (var modelStateKey in ModelState.Keys)
+                {
+                    var modelStateVal = ModelState[modelStateKey];
+                    if (modelStateVal != null) foreach (var error in modelStateVal.Errors)
+                        {
+                            var errorMessage = error.ErrorMessage;
+                            var exception = error.Exception;
+                            throw new Exception(errorMessage, exception);
+                        }
+                }
+            }
             return RedirectToAction(nameof(Index));
         }
     }

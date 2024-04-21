@@ -1,0 +1,29 @@
+﻿@model HospitalManagementApp.Models.PatientViewModels.PatientStaffIdModel
+
+@{
+    ViewData["Title"] = "SetStaffId";
+}
+
+<h3>Set staff in charge of this patient!</h3>
+<br />
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="SetStaffId" method="post" asp-route-patientId="@ViewBag.patientId">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="@Model.staffId" class="control-label">Select Staff:</label>
+                <input asp-for="@Model.staffId" class="form-control" />
+                @* <select asp-for="@Model.staffId" asp-items="@(new SelectList(ViewBag.suitableStaff))" class="form-control"></select> *@
+                <span asp-validation-for="@Model.staffId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Set" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to patients list</a>
+</div>

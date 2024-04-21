@@ -55,7 +55,7 @@ namespace HospitalManagementApp.Models
         public int? PrescriptionId { get; set; }
 
         [FirestoreProperty]
-        public List<int>? StaffId { get; set; }
+        public List<int>? StaffIds { get; set; }
 
         [FirestoreProperty]
         public PatientStatus? Status { get; set; }
@@ -84,7 +84,7 @@ namespace HospitalManagementApp.Models
                 { "StartDate", value.Type?? new object()}
             };
         }
-        public TestResult? FromFirestore(object value)
+        public TestResult FromFirestore(object value)
         {
             var dict = value as Dictionary<string, object>;
             if (dict == null) return new TestResult();

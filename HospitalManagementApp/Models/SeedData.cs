@@ -29,7 +29,7 @@ namespace HospitalManagementApp.Models
                     PhoneNum = "0769421007",
                     MedicalHistory = null,
                     TestResult = null,
-                    StaffId = [1, 2],
+                    StaffIds = [1, 2],
                     TreatmentSchedule =
                     [
                         new TreatmentScheduleEle
@@ -53,7 +53,7 @@ namespace HospitalManagementApp.Models
                     PhoneNum = "0969185801",
                     MedicalHistory = null,
                     TestResult = null,
-                    StaffId = [3, 4],
+                    StaffIds = [3, 4],
                     TreatmentSchedule =
                     [
                         new TreatmentScheduleEle

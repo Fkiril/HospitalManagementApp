@@ -118,6 +118,16 @@ namespace HospitalManagementApp.Data
             UpdateCount();
         }
 
+        public void AddSchedule(int equipmentId, DateTime date)
+        {
+            var equipment = EquipmentList.FirstOrDefault(e => e.Id == equipmentId);
+            if (equipment.History == null)
+            {
+                equipment.History = default;
+            }
+            equipment.History.Add(date);
+        }
+
         private void UpdateCount()
         {
             // Update TotalCount
@@ -139,9 +149,12 @@ namespace HospitalManagementApp.Data
             foreach (var group in availableByType)
             {
                 int count = group.Count(); // Get the quantity of available equipment for this type
-                foreach (var equipment in group)
+                foreach (var equipment in EquipmentList)
                 {
-                    equipment.AvailableCount = count; // Set the count for each available equipment item
+                    if (equipment.Name == group.First().Name)
+                    {
+                        equipment.AvailableCount = count;
+                    }
                 }
             }
         }

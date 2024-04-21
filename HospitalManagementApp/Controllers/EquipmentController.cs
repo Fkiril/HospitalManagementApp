@@ -143,6 +143,24 @@ namespace HospitalManagementApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public IActionResult AddDate()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult AddDate(int equipmentId, DateTime date)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.AddSchedule(equipmentId, date);
+                return RedirectToAction(nameof(Index)); // Redirect to a success page or another action
+            }
+
+            return View(); // Re-render the view with validation errors
+        }
+
         private bool EquipmentExists(int id)
         {
             return EquipmentContext.EquipmentList.Any(equipment => equipment.Id == id);

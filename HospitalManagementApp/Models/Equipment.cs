@@ -32,7 +32,7 @@ namespace HospitalManagementApp.Models
         public DateTime? UsingUntil { get; set; } = null;
 
         [FirestoreProperty]
-        public List<String>? History { get; set; } = null;
+        public List<DateTime>? History { get; set; } = default;
 
         // note for checking if anything have changed
         [FirestoreProperty]

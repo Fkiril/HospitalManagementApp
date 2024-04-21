@@ -32,6 +32,14 @@
                 @* @Html.DisplayNameFor(model => model.FirstOrDefault().Schedule) *@
                 <strong>UsingUntil</strong>
             </th>
+            <th>
+                @* @Html.DisplayNameFor(model => model.FirstOrDefault().Schedule) *@
+                <strong>Total Count</strong>
+            </th>
+            <th>
+                @* @Html.DisplayNameFor(model => model.FirstOrDefault().Schedule) *@
+                <strong>Free Count</strong>
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -50,15 +58,29 @@
                     @Html.DisplayFor(model => item.Description)
                 </td>
                 <td>
-                    @Html.DisplayFor(model => item.IsAvailable)
+                    @if (item.IsAvailable == true)
+                    {
+                        @:Yes
+                    }
+                    else
+                    {
+                        @:No
+                    }
                 </td>
                 <td>
                     @Html.DisplayFor(model => item.UsingUntil)
                 </td>
                 <td>
+                    @Html.DisplayFor(model => item.TotalCount)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.AvailableCount)
+                </td>
+                <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                     <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                     <a asp-action="Remove" asp-route-id="@item.Id">Remove</a> |
+                    <a asp-action="AddSchedule" asp-route-id="@item.Id">Add Schedule</a>
                 </td>
             </tr>
         }

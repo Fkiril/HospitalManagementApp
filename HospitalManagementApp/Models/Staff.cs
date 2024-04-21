@@ -19,6 +19,30 @@ namespace HospitalManagementApp.Models
         Evening
     }
 
+    public enum SpecialList
+    {
+        TimMach,
+        NoiTiet,
+        TieuHoa,
+        HoHap,
+        Mat,
+        TaiMuiHong,
+        NgoaiChinhHinh,
+        PhuKhoa,
+        ThaiNhi,
+        SinhDuc,
+        XQuang
+    }
+
+    public enum Deparment
+    {
+        NoiKhoa,
+        NgoaiKhoa,
+        SanPhu,
+        ChanDoan,
+        QuanLy
+    }
+
     [FirestoreData]
     public class Staff
     {
@@ -55,9 +79,9 @@ namespace HospitalManagementApp.Models
         [FirestoreProperty]
         public string? Degree { get; set; }
         [FirestoreProperty]
-        public string? Specialist { get; set; }
+        public SpecialList? SpecialList { get; set; }
         [FirestoreProperty]
-        public string? Department { get; set; }
+        public Deparment? Department { get; set; }
         [FirestoreProperty(ConverterType = typeof(CalendarListConverter))]
         public Calendar? WorkSchedule { get; set; }
 

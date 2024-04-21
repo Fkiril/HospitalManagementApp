@@ -8,7 +8,6 @@ namespace HospitalManagementApp.Models
     {
         public static async void InitializePatientData(FirestoreDb firestoreDb)
         {
-            Console.WriteLine("InitializePatientData");
             CollectionReference colRef = firestoreDb.Collection("Patient");
 
             QuerySnapshot snapshots = await colRef.GetSnapshotAsync();
@@ -16,6 +15,8 @@ namespace HospitalManagementApp.Models
             {
                 return;
             }
+
+            Console.WriteLine("InitializePatientData");
 
             var patients = new List<Patient>
             {
@@ -104,7 +105,6 @@ namespace HospitalManagementApp.Models
 
         public static async void InitializeStaffData(FirestoreDb firestoreDb)
         {
-            Console.WriteLine("InitializeStaffData");
             CollectionReference colRef = firestoreDb.Collection("Staff");
 
             QuerySnapshot snapshots = await colRef.GetSnapshotAsync();
@@ -113,6 +113,7 @@ namespace HospitalManagementApp.Models
                 return;
             }
 
+            Console.WriteLine("InitializeStaffData");
             var staffs = new List<Staff>
             {
                 new Staff
@@ -125,8 +126,8 @@ namespace HospitalManagementApp.Models
                     Email = "doctor@gmail.com",
                     PhoneNum = "0769421007",
                     Degree = "abc",
-                    Specialist = "abc",
-                    Department = "abc",
+                    SpecialList = SpecialList.TimMach,
+                    Department = Deparment.NoiKhoa,
                     WorkSchedule = null
                 },
                 new Staff
@@ -139,8 +140,8 @@ namespace HospitalManagementApp.Models
                     Email = "nurse@gmail.com",
                     PhoneNum = "0987654312",
                     Degree = "abc",
-                    Specialist = "abc",
-                    Department = "abc",
+                    SpecialList = SpecialList.TieuHoa,
+                    Department = Deparment.NoiKhoa,
                     WorkSchedule = null
                 },
                 new Staff
@@ -153,11 +154,14 @@ namespace HospitalManagementApp.Models
                     Email = "SupporStaff@gmail.com",
                     PhoneNum = "0231456978",
                     Degree = "abc",
-                    Specialist = "abc",
-                    Department = "abc",
+                    SpecialList = null,
+                    Department = Deparment.QuanLy,
                     WorkSchedule = null
                 }
             };
+            foreach (var staff in staffs) {
+                await colRef.Document("staff_" + staff.Id).SetAsync(staff);
+            }
         }
     }
 }

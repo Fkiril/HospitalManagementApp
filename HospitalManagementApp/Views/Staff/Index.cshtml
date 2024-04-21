@@ -37,7 +37,7 @@
                 @Html.DisplayNameFor(model => model.FirstOrDefault().Degree)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.FirstOrDefault().Specialist)
+                @Html.DisplayNameFor(model => model.FirstOrDefault().SpecialList)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.FirstOrDefault().Department)
@@ -78,7 +78,7 @@
                     @Html.DisplayFor(model => item.Degree)
                 </td>
                 <td>
-                    @Html.DisplayFor(model => item.Specialist)
+                    @Html.DisplayFor(model => item.SpecialList)
                 </td>
                 <td>
                     @Html.DisplayFor(model => item.Department)
@@ -90,7 +90,7 @@
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                     <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                     <a asp-action="Remove" asp-route-id="@item.Id">Remove</a> |
-                    <a asp-action="ShowPatientAsync" asp-route-id="@item.Id">ShowPatient</a>
+                    <a asp-action="ShowPatient" asp-route-id="@item.Id">ShowPatient</a>
                 </td>
             </tr>
         }

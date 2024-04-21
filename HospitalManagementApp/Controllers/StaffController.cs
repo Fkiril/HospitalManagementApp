@@ -13,7 +13,7 @@ using Google.Cloud.Firestore.V1;
 
 namespace HospitalManagementApp.Controllers
 {
-    //[Authorize(Roles = "Admin", AuthenticationSchemes = "Cookies")]
+    [Authorize(Roles = "Admin, Doctor", AuthenticationSchemes = "Cookies")]
     public class StaffController : Controller
     {
         public readonly StaffContext _context;
@@ -156,7 +156,7 @@ namespace HospitalManagementApp.Controllers
                   .FirstOrDefault(staff => staff.Id == id);
             if (staff != null)
             {
-                return RedirectToAction("ShowPatientList", "PatientController", new { staffId = id });
+                return RedirectToAction("ShowPatientList", "Patient", new { staffId = id });
             }
 
             return ArgumentException("NOT FOUND");

@@ -3,6 +3,7 @@ using HospitalManagementApp.Data;
 using HospitalManagementApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using Google.Cloud.Firestore;
+using HospitalManagementApp.Models.PatientViewModels;
 
 
 namespace HospitalManagementApp.Controllers
@@ -21,32 +22,48 @@ namespace HospitalManagementApp.Controllers
         // GET: Patient
         public async Task<IActionResult> Index()
         {
-            var patientList = TempData["PatientList"] as ICollection<Patient>;
-            if (patientList != null)
+            var patientList = TempData["PatientIdList"] as List<int>;
+            ICollection<Patient> patients = [];
+            foreach (var pId in patientList)
             {
-                return View(patientList);
+                patients.Add(PatientContext.PatientList.FirstOrDefault(x => x.Id == pId));
+            }
+            if (patients != null)
+            {
+                return View(patients);
             }
             else
             {
                 await _patientContext.InitializePatientListFromFirestore();
-            return View(PatientContext.PatientList);
+                return View(PatientContext.PatientList);
             }
-
         }
 
-        public async Task<IActionResult> ShowPatientListAsync(int id)
+        public async Task<IActionResult> ShowPatientList(int id)
         {
             try
             {
                 QuerySnapshot querySnapshot = await _patientContext._firestoreDb.Collection("Patient")
                     .WhereArrayContains("staffId", id)
                     .GetSnapshotAsync();
+                if (querySnapshot != null)
+                {
+                    var patients = querySnapshot.Documents
+                        .Select(doc => doc.ConvertTo<Patient>())
+                        .ToList();
+                    if (patients == null) return NotFound();
 
-                var patients = querySnapshot.Documents
-                    .Select(doc => doc.ConvertTo<Patient>())
-                    .ToList();
+                    List<int> patientIdList = new List<int>();
+                    foreach (var p in patients)
+                    {
+                        patientIdList.Add((int)p.Id); 
+                    }
 
-                return RedirectToAction(nameof(Index));
+                    TempData["PatientIdList"] = patientIdList ;
+
+                    return RedirectToAction(nameof(Index));
+                }
+                return NotFound();
             }
             catch (Exception ex)
             {
@@ -56,6 +73,7 @@ namespace HospitalManagementApp.Controllers
         }
 
         // GET: Patient/Details/3
+        [Authorize(Roles = "Admin, Doctor, Patient")]
         public IActionResult Details(int? id)
         {
             if (id == null)

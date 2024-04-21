@@ -51,7 +51,7 @@ namespace HospitalManagementApp.Controllers
             catch (Exception ex)
             {
                 Console.WriteLine("Error querying Firestore: " + ex.Message);
-                return StatusCode(500);
+                return NotFound();
             }
         }
 

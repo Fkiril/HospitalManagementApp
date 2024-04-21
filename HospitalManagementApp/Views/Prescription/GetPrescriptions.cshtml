@@ -14,14 +14,13 @@
 }
 else{
 <table class="table">
-    <thead>
-        <tr>
-            <th>Prescription ID</th>
-            <th>Patient ID</th>
-            <th>Drug</th>
-            <th>Description</th>
-        </tr>
-    </thead>
+        <thead>
+            <tr>
+                <th>Prescription ID</th>
+                <th>Patient ID</th>
+                <th>Description</th>
+            </tr>
+        </thead>
     <tbody>
         @foreach (var item in Model)
         {
@@ -33,10 +32,10 @@ else{
                     @Html.DisplayFor(model => item.IdOfPatient)
                 </td>
                 <td>
-                    @Html.DisplayFor(model => item.Drug)
+                    @Html.DisplayFor(model => item.Description)
                 </td>
                 <td>
-                    @Html.DisplayFor(model => item.Description)
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a>
                 </td>
             </tr>
         }

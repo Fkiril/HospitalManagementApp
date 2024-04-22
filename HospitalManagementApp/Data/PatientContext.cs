@@ -144,7 +144,7 @@ namespace HospitalManagementApp.Data
             }
             else
             {
-                throw new Exception("New treatment schedule does not fix!");
+                throw new InvalidDataException("New treatment schedule does not fix!");
             }
         }
 
@@ -165,6 +165,7 @@ namespace HospitalManagementApp.Data
             {
                 throw new Exception("There are not any schedule that have the same id!");
             }
+
             if (IsTreatmentScheduleFix(patient, treatment, docSchedule))
             {
                 var curTreatment = patient.TreatmentSchedule.First(x => x.Id == id);
@@ -176,7 +177,7 @@ namespace HospitalManagementApp.Data
             }
             else
             {
-                throw new Exception("New treatment schedule does not fix!");
+                throw new InvalidDataException("New treatment schedule does not fix!");
             }
         }
 
@@ -203,17 +204,29 @@ namespace HospitalManagementApp.Data
             TreatmentScheduleEle pSchedule,
             Models.Calendar? docSchedule)
         {
-            if (pSchedule == null || pSchedule.Date == null || pSchedule.StartTime == null || pSchedule.EndTime == null)
+            if (pSchedule == null || 
+                pSchedule.Date == null || 
+                pSchedule.StartTime == null || 
+                pSchedule.EndTime == null)
                 throw new ArgumentNullException(nameof(pSchedule));
 
             if (patient.StaffIds == null || docSchedule == null) return true;
+            
+            TimeSpan pStartTime = TimeSpan.Parse(pSchedule.StartTime);
+            TimeSpan pEndTime = TimeSpan.Parse(pSchedule.EndTime);
+            if (pStartTime >  pEndTime) return false;
 
-            if (docSchedule == null || docSchedule.DayofWeek == null || docSchedule.Date == null) return true;
+            if (docSchedule == null || 
+                docSchedule.DayofWeek == null || 
+                docSchedule.Date == null) 
+                return true;
+
             else
             {
+                Console.WriteLine("Check doctor schedule");
                 var pDate = DateTime.ParseExact(pSchedule.Date, "dd/MM/yyyy", CultureInfo.InvariantCulture);
                 var dStartDate = DateTime.ParseExact(docSchedule.Date[0], "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                var dEndDate = DateTime.ParseExact(docSchedule.Date[7], "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                var dEndDate = DateTime.ParseExact(docSchedule.Date[6], "dd/MM/yyyy", CultureInfo.InvariantCulture);
 
                 if (pDate < dStartDate || pDate > dEndDate) return false;
 
@@ -223,8 +236,6 @@ namespace HospitalManagementApp.Data
                     {
                         if (docSchedule.DayofWeek is null || docSchedule.DayofWeek.Count < 7) return false;
 
-                        TimeSpan pStartTime = TimeSpan.Parse(pSchedule.StartTime);
-                        TimeSpan pEndTime = TimeSpan.Parse(pSchedule.EndTime);
                         TimeSpan dStartTime = pStartTime, dEndTime = pEndTime;
                         switch (docSchedule.DayofWeek[idx])
                         {

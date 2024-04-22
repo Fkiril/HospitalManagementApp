@@ -39,7 +39,7 @@ namespace HospitalManagementApp.Models
         public string? Address { get; set; }
 
         [FirestoreProperty]
-        [RegularExpression(@"^0\d{9}$"), StringLength(10)]
+        [RegularExpression(@"^0\d{9}$", ErrorMessage = "Invalid phone number format!"), StringLength(10)]
         public string? PhoneNum { get; set; }
             
         // Need some classes to implement these field

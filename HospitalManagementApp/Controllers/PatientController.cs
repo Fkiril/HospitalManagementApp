@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Google.Cloud.Firestore;
 using HospitalManagementApp.Models.PatientViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 
 namespace HospitalManagementApp.Controllers
@@ -23,6 +24,7 @@ namespace HospitalManagementApp.Controllers
         // GET: Patient
         public async Task<IActionResult> Index()
         {
+            
             if (TempData["PatientList"] == null)
             {
                 await _patientContext.InitializePatientListFromFirestore();
@@ -39,7 +41,7 @@ namespace HospitalManagementApp.Controllers
                 return View(null);
             }
         }
-
+        [Authorize(Roles = "Admin, Doctor")]
         public IActionResult ShowPatientList(int id)
         {
             var patients = _patientContext.GetPatientsFromStaffId(id).Result;
@@ -100,6 +102,7 @@ namespace HospitalManagementApp.Controllers
         }
 
         // GET: Patient/Add
+        [Authorize(Roles = "Admin")]
         public IActionResult Add()
         {
             return View();
@@ -133,6 +136,7 @@ namespace HospitalManagementApp.Controllers
         }
 
         //GET: Patient/Edit/3
+        [Authorize(Roles = "Admin, Doctor")]
         public IActionResult Edit(int? id)
         {
             if (id == null)
@@ -183,6 +187,7 @@ namespace HospitalManagementApp.Controllers
         }
 
         //GET: Patient/Remove/3
+        [Authorize(Roles = "Admin")]
         public IActionResult Remove(int? id)
         {
             if (id == null)
@@ -214,6 +219,7 @@ namespace HospitalManagementApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize(Roles = "Admin, Doctor")]
         public IActionResult TreatmentScheduleManager(int? id)
         {
             if (id == null)
@@ -228,8 +234,12 @@ namespace HospitalManagementApp.Controllers
                 return NotFound();
             }
 
+            //Models.Calendar? docSchedule = _staffContext.GetCalendar(patient.StaffIds);
+
             return View(patient);
         }
+
+        [Authorize(Roles = "Admin, Doctor")]
         public IActionResult AddSchedule(int? id)
         {
             if (id == null)
@@ -266,9 +276,24 @@ namespace HospitalManagementApp.Controllers
 
                 Models.Calendar? docSchedule = _staffContext.GetCalendar(patient.StaffIds);
 
-                _patientContext.AddTreatmentSchedule(patient, newTreatment, docSchedule);
+                try
+                {
+                    _patientContext.AddTreatmentSchedule(patient, newTreatment, docSchedule);
+                    await _patientContext.SaveChangesAsync();
+                }
+                catch (ArgumentException arex)
+                {
+                    ModelState.AddModelError("Id", arex.Message);
+                    ViewBag.patientId = patientId;
+                    return View();
+                }
+                catch (InvalidDataException ex)
+                {
+                    ViewBag.InvalidDataException = ex.Message;
+                    ViewBag.patientId = patientId;
+                    return View();
+                }
 
-                await _patientContext.SaveChangesAsync();
                 return RedirectToAction(nameof(TreatmentScheduleManager), new {id = patientId});
             }
             else
@@ -287,6 +312,7 @@ namespace HospitalManagementApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize(Roles = "Admin, Doctor")]
         public IActionResult EditSchedule(int? id, int patientId)
         {
             if (id == null)
@@ -319,8 +345,18 @@ namespace HospitalManagementApp.Controllers
             {
                 Models.Calendar? docSchedule = _staffContext.GetCalendar(patient.StaffIds);
 
-                _patientContext.UpdateTreatmentSchedule(patient, id, treatment, docSchedule);
-                await _patientContext.SaveChangesAsync();
+                try
+                {
+                    _patientContext.UpdateTreatmentSchedule(patient, id, treatment, docSchedule);
+                    await _patientContext.SaveChangesAsync();
+                }
+                catch (InvalidDataException ex)
+                {
+                    ViewBag.InvalidDataException = ex.Message;
+                    ViewBag.patientId = patientId;
+                    return View();
+                }
+
                 return RedirectToAction(nameof(TreatmentScheduleManager), new { id = patientId });
             }
             else
@@ -339,6 +375,7 @@ namespace HospitalManagementApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize(Roles = "Admin, Doctor")]
         public IActionResult DeleteSchedule(int? id, int patientId)
         {
             if (id == null)
@@ -389,6 +426,7 @@ namespace HospitalManagementApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize(Roles = "Admin, Doctor")]
         public IActionResult SetTestResult(int? id)
         {
             if (id == null)
@@ -440,6 +478,7 @@ namespace HospitalManagementApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize(Roles = "Admin, Doctor")]
         public IActionResult StaffIdsManager(int? id)
         {
             if (id == null)
@@ -501,6 +540,7 @@ namespace HospitalManagementApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize(Roles = "Admin, Doctor")]
         public IActionResult MedicalHistoryManager(int? id) 
         {
             if (id == null)
@@ -518,6 +558,7 @@ namespace HospitalManagementApp.Controllers
             return View(patient);
         }
 
+        [Authorize(Roles = "Admin, Doctor")]
         public IActionResult AddMedicalHistory (int? id)
         {
             if (id == null)

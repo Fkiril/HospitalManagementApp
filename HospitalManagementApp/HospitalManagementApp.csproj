@@ -26,4 +26,12 @@
     <Folder Include="Views\Prescription\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="Views\Equipment\Add.cshtml" />
+    <None Include="Views\Equipment\AddSchedule.cshtml" />
+    <None Include="Views\Equipment\Edit.cshtml" />
+    <None Include="Views\Equipment\Index.cshtml" />
+    <None Include="Views\Equipment\Remove.cshtml" />
+  </ItemGroup>
+
 </Project>

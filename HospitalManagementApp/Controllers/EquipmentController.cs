@@ -135,11 +135,30 @@ namespace HospitalManagementApp.Controllers
                 .FirstOrDefault(equipment => equipment.Id == id);
             if (equipment != null)
             {
+                _context.Remove(equipment);
                 EquipmentContext.EquipmentList.Remove(equipment);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult AddDate()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult AddDate(int equipmentId, DateTime date)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.AddSchedule(equipmentId, date);
+                return RedirectToAction(nameof(Index)); // Redirect to a success page or another action
+            }
+
+            return View(); // Re-render the view with validation errors
         }
 
         private bool EquipmentExists(int id)

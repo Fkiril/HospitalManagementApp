@@ -28,6 +28,8 @@ builder.Services.AddSingleton<PrescriptionContext>();
 
 builder.Services.AddSingleton<StaffContext>();
 
+builder.Services.AddSingleton<EquipmentContext>();
+
 //builder.Services.AddSingleton<EquipmentContext>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -95,6 +97,6 @@ app.UseAuthentication();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Equipment}/{action=Index}/{id?}");
 
 app.Run();

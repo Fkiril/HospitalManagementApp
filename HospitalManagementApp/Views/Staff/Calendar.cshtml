@@ -16,24 +16,15 @@
         </p>
         <p> Morning: 6AM - 14PM   |   Afternoon: 14AM - 22PM   |   Evening: 22PM - 6AM </p>
         <div id="date">
-            <p class="col-sm-10" id="cal" style="color:white">
-                @if (Model.WorkSchedule != null)
+                @if (Model.WorkSchedule != null && Model.WorkSchedule.Date != null && Model.WorkSchedule.DayofWeek != null)
                 {
-                    if (Model.WorkSchedule.Date != null)
-                        @string.Join(", ", Model.WorkSchedule.Date)
-                    ;
+                    var a = string.Join(", ", Model.WorkSchedule.Date);
+                    var b = string.Join(", ", Model.WorkSchedule.DayofWeek);
+
+
+                    <p class="col-sm-10" id="cal" style="color:white">@a</p>
+                    <p class="col-sm-10" id="cal" style="color:white">@b</p>
                 }
-            </p>
-        </div>
-        <div id="shift">
-            <p class="col-sm-10" id="cal" style="color:white">
-                @if (Model.WorkSchedule != null)
-                {
-                    if (Model.WorkSchedule.DayofWeek != null)
-                        @string.Join(", ", Model.WorkSchedule.DayofWeek)
-                    ;
-                }
-            </p>
         </div>
     <hr />
     </table>
@@ -102,7 +93,7 @@
 
     </div>
 
-    <script src="~/js/calendar.js">  </script>
+    <script src="~/js/Calendar.js">  </script>
 
 </body>
 

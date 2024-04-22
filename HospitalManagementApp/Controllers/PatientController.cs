@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace HospitalManagementApp.Controllers
 {
-    [Authorize(Roles = "Admin", AuthenticationSchemes = "Cookies")]
+    [Authorize(Roles = "Admin, Doctor, Patient", AuthenticationSchemes = "Cookies")]
     public class PatientController : Controller
     {
         public readonly PatientContext _patientContext;
@@ -161,21 +161,8 @@ namespace HospitalManagementApp.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _patientContext.Update(patient);
-                    await _patientContext.SaveChangesAsync();
-                }
-                catch (Exception)
-                {
-                    if (!PatientExists((int)patient.Id)) {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                _patientContext.Update(patient);
+                await _patientContext.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
             }
@@ -226,12 +213,6 @@ namespace HospitalManagementApp.Controllers
             await _patientContext.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
-        private static bool PatientExists(int id)
-        {
-            return PatientContext.PatientList.Any(patient => patient.Id == id);
-        }
-
 
         public IActionResult TreatmentScheduleManager(int? id)
         {

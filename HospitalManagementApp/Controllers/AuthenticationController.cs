@@ -35,7 +35,7 @@ namespace HospitalManagementApp.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(
-            [Bind("Email,Password,RememberMe")]LoginModel model)
+            [Bind("Email,Password")]LoginModel model)
         {
             if (ModelState.IsValid)
             {
@@ -52,6 +52,7 @@ namespace HospitalManagementApp.Controllers
                                 new Claim(ClaimTypes.Email, user.Email),
                                 new Claim(ClaimTypes.NameIdentifier, user.Id),
                                 new Claim(ClaimTypes.Role, user.Role),
+                                new Claim(ClaimTypes.UserData, user.DataId.ToString())
                             },
                             CookieAuthenticationDefaults.AuthenticationScheme
                             );
@@ -71,12 +72,12 @@ namespace HospitalManagementApp.Controllers
                     }
                     else
                     {
-                        ModelState.AddModelError("", "Invalid email or password");
+                        ModelState.AddModelError("", "Wrong password!");
                     }
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Can not find that email in database");
+                    ModelState.AddModelError("", "Invalid email!");
                 }
 
             }
@@ -87,13 +88,15 @@ namespace HospitalManagementApp.Controllers
         [HttpGet]
         public IActionResult Register()
         {
+            List<string> roles = new List<string> { "Admin", "Doctor", "Patient" };
+            ViewBag.Roles = roles;
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(
-            [Bind("Id,UserName,Email,Password,ConfirmPassword,Role")]RegisterModel model)
+            [Bind("Id,UserName,Email,Password,ConfirmPassword,Role,DataId")]RegisterModel model)
         {
             if (ModelState.IsValid)
             {
@@ -103,7 +106,8 @@ namespace HospitalManagementApp.Controllers
                     UserName = model.UserName,
                     Email = model.Email,
                     Password = model.Password,
-                    Role = model.Role
+                    Role = model.Role,
+                    DataId = model.DataId
                 };
 
                 await _applicationUserContext.AddUserAsync(user);

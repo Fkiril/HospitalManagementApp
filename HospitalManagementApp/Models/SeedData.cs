@@ -104,7 +104,26 @@ namespace HospitalManagementApp.Models
                     UserName = "KiriL",
                     Email = "abc.gmail.com",
                     Password = "abcdef123",
-                    Role = "Admin"
+                    Role = "Admin",
+                    DataId = 0
+                },
+                new ApplicationUser
+                {
+                    Id = "2",
+                    UserName = "Doctor1",
+                    Email = "doctor1@gmail.com",
+                    Password = "doc123",
+                    Role = "Doctor",
+                    DataId = 1
+                },
+                new ApplicationUser
+                {
+                    Id = "3",
+                    UserName = "Violet",
+                    Email = "patient1@gmail.com",
+                    Password = "patient123",
+                    Role = "Patient",
+                    DataId = 2
                 }
             };
 

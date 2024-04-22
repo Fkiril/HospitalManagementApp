@@ -29,5 +29,7 @@ namespace HospitalManagementApp.Models.AuthenticationModels
 
         [Display(Name = "Account's role")]
         public string Role { get; set; }
+        [Display(Name = "Database Id")]
+        public int DataId { get; set; }
     }
 }

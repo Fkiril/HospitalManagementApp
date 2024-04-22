@@ -125,7 +125,7 @@ namespace HospitalManagementApp.Models
                     DateOfBirth = "09/08/2003",
                     Email = "doctor1@gmail.com",
                     PhoneNum = "0769421007",
-                    Degree = "abc",
+                    Degree = "Bachelor of Medicine",
                     SpecialList = SpecialList.TimMach,
                     Department = Deparment.NoiKhoa,
                     WorkSchedule = null
@@ -139,7 +139,7 @@ namespace HospitalManagementApp.Models
                     DateOfBirth = "02/04/2001",
                     Email = "doctor2@gmail.com",
                     PhoneNum = "0987651234",
-                    Degree = "abc",
+                    Degree = "Bachelor of Medicine",
                     SpecialList = SpecialList.TimMach,
                     Department = Deparment.NoiKhoa,
                     WorkSchedule = null
@@ -153,7 +153,7 @@ namespace HospitalManagementApp.Models
                     DateOfBirth = "10/10/2002",
                     Email = "doctor3@gmail.com",
                     PhoneNum = "0123459876",
-                    Degree = "abc",
+                    Degree = "Bachelor of Medicine",
                     SpecialList = SpecialList.TimMach,
                     Department = Deparment.NoiKhoa,
                     WorkSchedule = null
@@ -167,7 +167,7 @@ namespace HospitalManagementApp.Models
                     DateOfBirth = "01/01/2001",
                     Email = "doctor4@gmail.com",
                     PhoneNum = "0234561798",
-                    Degree = "abc",
+                    Degree = "Bachelor of Medicine",
                     SpecialList = SpecialList.NoiTiet,
                     Department = Deparment.NoiKhoa,
                     WorkSchedule = null
@@ -181,7 +181,7 @@ namespace HospitalManagementApp.Models
                     DateOfBirth = "09/08/2003",
                     Email = "doctor5@gmail.com",
                     PhoneNum = "0769421007",
-                    Degree = "abc",
+                    Degree = "Bachelor of Medicine",
                     SpecialList = SpecialList.NoiTiet,
                     Department = Deparment.NoiKhoa,
                     WorkSchedule = null
@@ -195,7 +195,7 @@ namespace HospitalManagementApp.Models
                     DateOfBirth = "02/04/2001",
                     Email = "doctor6@gmail.com",
                     PhoneNum = "0987651234",
-                    Degree = "abc",
+                    Degree = "Bachelor of Medicine",
                     SpecialList = SpecialList.NoiTiet,
                     Department = Deparment.NoiKhoa,
                     WorkSchedule = null
@@ -209,7 +209,7 @@ namespace HospitalManagementApp.Models
                     DateOfBirth = "10/10/2002",
                     Email = "doctor7@gmail.com",
                     PhoneNum = "0123459876",
-                    Degree = "abc",
+                    Degree = "Bachelor of Medicine",
                     SpecialList = SpecialList.TieuHoa,
                     Department = Deparment.NoiKhoa,
                     WorkSchedule = null
@@ -223,7 +223,7 @@ namespace HospitalManagementApp.Models
                     DateOfBirth = "01/01/2001",
                     Email = "doctor8@gmail.com",
                     PhoneNum = "0234561798",
-                    Degree = "abc",
+                    Degree = "Bachelor of Medicine",
                     SpecialList = SpecialList.TieuHoa,
                     Department = Deparment.NoiKhoa,
                     WorkSchedule = null
@@ -237,7 +237,7 @@ namespace HospitalManagementApp.Models
                     DateOfBirth = "09/08/2003",
                     Email = "doctor9@gmail.com",
                     PhoneNum = "0769421007",
-                    Degree = "abc",
+                    Degree = "Bachelor of Medicine",
                     SpecialList = SpecialList.TieuHoa,
                     Department = Deparment.NoiKhoa,
                     WorkSchedule = null
@@ -251,7 +251,7 @@ namespace HospitalManagementApp.Models
                     DateOfBirth = "02/04/2001",
                     Email = "doctoc10@gmail.com",
                     PhoneNum = "0987651234",
-                    Degree = "abc",
+                    Degree = "Bachelor of Medicine",
                     SpecialList = SpecialList.HoHap,
                     Department = Deparment.NoiKhoa,
                     WorkSchedule = null
@@ -265,7 +265,7 @@ namespace HospitalManagementApp.Models
                     DateOfBirth = "10/10/2002",
                     Email = "doctor11@gmail.com",
                     PhoneNum = "0123459876",
-                    Degree = "abc",
+                    Degree = "Bachelor of Medicine",
                     SpecialList = SpecialList.HoHap,
                     Department = Deparment.NoiKhoa,
                     WorkSchedule = null
@@ -279,7 +279,7 @@ namespace HospitalManagementApp.Models
                     DateOfBirth = "01/01/2001",
                     Email = "doctor12@gmail.com",
                     PhoneNum = "0234561798",
-                    Degree = "abc",
+                    Degree = "Bachelor of Medicine",
                     SpecialList = SpecialList.HoHap,
                     Department = Deparment.NoiKhoa,
                     WorkSchedule = null
@@ -293,7 +293,7 @@ namespace HospitalManagementApp.Models
                     DateOfBirth = "02/04/2001",
                     Email = "doctoc13@gmail.com",
                     PhoneNum = "0987651234",
-                    Degree = "abc",
+                    Degree = "Bachelor of Medicine",
                     SpecialList = SpecialList.Mat,
                     Department = Deparment.NgoaiKhoa,
                     WorkSchedule = null
@@ -307,7 +307,7 @@ namespace HospitalManagementApp.Models
                     DateOfBirth = "10/10/2002",
                     Email = "doctor14@gmail.com",
                     PhoneNum = "0123459876",
-                    Degree = "abc",
+                    Degree = "Bachelor of Medicine",
                     SpecialList = SpecialList.Mat,
                     Department = Deparment.NgoaiKhoa,
                     WorkSchedule = null
@@ -321,7 +321,7 @@ namespace HospitalManagementApp.Models
                     DateOfBirth = "01/01/2001",
                     Email = "doctor15@gmail.com",
                     PhoneNum = "0234561798",
-                    Degree = "abc",
+                    Degree = "Bachelor of Medicine",
                     SpecialList = SpecialList.Mat,
                     Department = Deparment.NgoaiKhoa,
                     WorkSchedule = null
@@ -335,7 +335,7 @@ namespace HospitalManagementApp.Models
                     DateOfBirth = "02/04/2001",
                     Email = "doctoc16@gmail.com",
                     PhoneNum = "0987651234",
-                    Degree = "abc",
+                    Degree = "Bachelor of Medicine",
                     SpecialList = SpecialList.TaiMuiHong,
                     Department = Deparment.NgoaiKhoa,
                     WorkSchedule = null
@@ -349,7 +349,7 @@ namespace HospitalManagementApp.Models
                     DateOfBirth = "10/10/2002",
                     Email = "doctor17@gmail.com",
                     PhoneNum = "0123459876",
-                    Degree = "abc",
+                    Degree = "Bachelor of Medicine",
                     SpecialList = SpecialList.TaiMuiHong,
                     Department = Deparment.NgoaiKhoa,
                     WorkSchedule = null
@@ -363,7 +363,7 @@ namespace HospitalManagementApp.Models
                     DateOfBirth = "01/01/2001",
                     Email = "doctor18@gmail.com",
                     PhoneNum = "0234561798",
-                    Degree = "abc",
+                    Degree = "Bachelor of Medicine",
                     SpecialList = SpecialList.TaiMuiHong,
                     Department = Deparment.NgoaiKhoa,
                     WorkSchedule = null
@@ -377,7 +377,7 @@ namespace HospitalManagementApp.Models
                     DateOfBirth = "02/04/1980",
                     Email = "doctoc19@gmail.com",
                     PhoneNum = "0987651234",
-                    Degree = "abc",
+                    Degree = "Associate Professor",
                     SpecialList = SpecialList.NgoaiChinhHinh,
                     Department = Deparment.NgoaiKhoa,
                     WorkSchedule = null
@@ -391,7 +391,7 @@ namespace HospitalManagementApp.Models
                     DateOfBirth = "10/10/1979",
                     Email = "doctor14@gmail.com",
                     PhoneNum = "0123459876",
-                    Degree = "abc",
+                    Degree = "Associate Professor",
                     SpecialList = SpecialList.NgoaiChinhHinh,
                     Department = Deparment.NgoaiKhoa,
                     WorkSchedule = null
@@ -405,7 +405,7 @@ namespace HospitalManagementApp.Models
                     DateOfBirth = "01/01/1988",
                     Email = "doctor21@gmail.com",
                     PhoneNum = "0234561798",
-                    Degree = "abc",
+                    Degree = "Associate Professor",
                     SpecialList = SpecialList.NgoaiChinhHinh,
                     Department = Deparment.NgoaiKhoa,
                     WorkSchedule = null
@@ -419,7 +419,7 @@ namespace HospitalManagementApp.Models
                     DateOfBirth = "02/04/1981",
                     Email = "doctoc22@gmail.com",
                     PhoneNum = "0987651234",
-                    Degree = "abc",
+                    Degree = "Associate Professor",
                     SpecialList = SpecialList.XQuang,
                     Department = Deparment.ChanDoan,
                     WorkSchedule = null
@@ -433,7 +433,7 @@ namespace HospitalManagementApp.Models
                     DateOfBirth = "10/10/1979",
                     Email = "doctor23@gmail.com",
                     PhoneNum = "0123459876",
-                    Degree = "abc",
+                    Degree = "Associate Professor",
                     SpecialList = SpecialList.XQuang,
                     Department = Deparment.ChanDoan,
                     WorkSchedule = null
@@ -447,7 +447,7 @@ namespace HospitalManagementApp.Models
                     DateOfBirth = "01/01/1986",
                     Email = "doctor24@gmail.com",
                     PhoneNum = "0234561798",
-                    Degree = "abc",
+                    Degree = "Associate Professor",
                     SpecialList = SpecialList.XQuang,
                     Department = Deparment.ChanDoan,
                     WorkSchedule = null
@@ -461,7 +461,7 @@ namespace HospitalManagementApp.Models
                     DateOfBirth = "02/04/1981",
                     Email = "doctoc25@gmail.com",
                     PhoneNum = "0987651234",
-                    Degree = "abc",
+                    Degree = "Associate Professor",
                     SpecialList = SpecialList.PhuKhoa,
                     Department = Deparment.SanPhu,
                     WorkSchedule = null
@@ -475,7 +475,7 @@ namespace HospitalManagementApp.Models
                     DateOfBirth = "10/10/1970",
                     Email = "doctor26@gmail.com",
                     PhoneNum = "0123459876",
-                    Degree = "abc",
+                    Degree = "Professor",
                     SpecialList = SpecialList.PhuKhoa,
                     Department = Deparment.SanPhu,
                     WorkSchedule = null
@@ -489,7 +489,7 @@ namespace HospitalManagementApp.Models
                     DateOfBirth = "01/01/1985",
                     Email = "doctor27@gmail.com",
                     PhoneNum = "0234561798",
-                    Degree = "abc",
+                    Degree = "Associate Professor",
                     SpecialList = SpecialList.PhuKhoa,
                     Department = Deparment.SanPhu,
                     WorkSchedule = null
@@ -503,7 +503,7 @@ namespace HospitalManagementApp.Models
                     DateOfBirth = "10/10/1990",
                     Email = "doctor28@gmail.com",
                     PhoneNum = "0123459876",
-                    Degree = "abc",
+                    Degree = "Doctor of Medicine",
                     SpecialList = SpecialList.ThaiNhi,
                     Department = Deparment.SanPhu,
                     WorkSchedule = null
@@ -517,7 +517,7 @@ namespace HospitalManagementApp.Models
                     DateOfBirth = "01/01/1991",
                     Email = "doctor29@gmail.com",
                     PhoneNum = "0234561798",
-                    Degree = "abc",
+                    Degree = "Doctor of Medicine",
                     SpecialList = SpecialList.ThaiNhi,
                     Department = Deparment.SanPhu,
                     WorkSchedule = null
@@ -531,7 +531,7 @@ namespace HospitalManagementApp.Models
                     DateOfBirth = "02/04/1992",
                     Email = "doctoc30@gmail.com",
                     PhoneNum = "0987651234",
-                    Degree = "abc",
+                    Degree = "Doctor of Medicine",
                     SpecialList = SpecialList.ThaiNhi,
                     Department = Deparment.SanPhu,
                     WorkSchedule = null
@@ -545,7 +545,7 @@ namespace HospitalManagementApp.Models
                     DateOfBirth = "10/10/1990",
                     Email = "doctor31@gmail.com",
                     PhoneNum = "0123459876",
-                    Degree = "abc",
+                    Degree = "Doctor of Medicine",
                     SpecialList = SpecialList.SinhDuc,
                     Department = Deparment.SanPhu,
                     WorkSchedule = null
@@ -559,7 +559,7 @@ namespace HospitalManagementApp.Models
                     DateOfBirth = "01/01/1991",
                     Email = "doctor32@gmail.com",
                     PhoneNum = "0234561798",
-                    Degree = "abc",
+                    Degree = "Doctor of Medicine",
                     SpecialList = SpecialList.SinhDuc,
                     Department = Deparment.SanPhu,
                     WorkSchedule = null
@@ -573,7 +573,7 @@ namespace HospitalManagementApp.Models
                     DateOfBirth = "02/04/1992",
                     Email = "doctoc33@gmail.com",
                     PhoneNum = "0987651234",
-                    Degree = "abc",
+                    Degree = "Doctor of Medicine",
                     SpecialList = SpecialList.SinhDuc,
                     Department = Deparment.SanPhu,
                     WorkSchedule = null
@@ -587,7 +587,7 @@ namespace HospitalManagementApp.Models
                     DateOfBirth = "04/02/2004",
                     Email = "nurse@gmail.com",
                     PhoneNum = "0987654312",
-                    Degree = "abc",
+                    Degree = "Bachelor of Medicine",
                     SpecialList = SpecialList.TieuHoa,
                     Department = Deparment.NoiKhoa,
                     WorkSchedule = null
@@ -601,7 +601,7 @@ namespace HospitalManagementApp.Models
                     DateOfBirth = "04/02/2001",
                     Email = "SupporStaff@gmail.com",
                     PhoneNum = "0231456978",
-                    Degree = "abc",
+                    Degree = "Bachelor of Medicine",
                     SpecialList = null,
                     Department = Deparment.QuanLy,
                     WorkSchedule = null

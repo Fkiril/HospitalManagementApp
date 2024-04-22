@@ -27,13 +27,17 @@ namespace HospitalManagementApp.Data
             {
                 return;
             }
-            QuerySnapshot snapshotQuery = await _firestoreDb.Collection(colName).GetSnapshotAsync();
-
-            foreach (DocumentSnapshot docSnapshot in snapshotQuery.Documents)
+            else
             {
-                Patient patient = docSnapshot.ConvertTo<Patient>();
-                patient.Changed = false;
-                PatientList.Add(patient);
+                Console.WriteLine("InitializePatientListFromFirestore");
+                QuerySnapshot snapshotQuery = await _firestoreDb.Collection(colName).GetSnapshotAsync();
+
+                foreach (DocumentSnapshot docSnapshot in snapshotQuery.Documents)
+                {
+                    Patient patient = docSnapshot.ConvertTo<Patient>();
+                    patient.Changed = false;
+                    PatientList.Add(patient);
+                }
             }
         }
         public async Task SaveChangesAsync()
@@ -195,61 +199,24 @@ namespace HospitalManagementApp.Data
             patient.Changed = true;
         }
 
-        public void SetTestResult(int patientId, TestResult? newTestResult)
-        {
-            Patient patient = PatientList.First(x => x.Id == patientId) ?? throw new Exception("Patient is not found!");
-            patient.TestResult = newTestResult;
-            patient.Status = PatientStatus.Ill;
-            patient.Changed = true;
-        }
-
-        public void SetStaffId(int patientId, int staffId)
-        {
-            Patient patient = PatientList.First(x => x.Id == patientId) ?? throw new Exception("Patient is not found!");
-            
-            if (patient.StaffIds != null)
-            {
-                if (!patient.StaffIds.Contains(staffId)) patient.StaffIds.Add(staffId);
-                else throw new Exception("Can not have the same staff id!");
-            }
-            else patient.StaffIds = new List<int> {  staffId };
-            patient.Changed = true;
-        }
-
-        public void AddMedicalHistory(int patientId, MedicalHistoryEle medicalHistoryEle)
-        {
-            Patient patient = PatientList.First(x => x.Id == patientId) ?? throw new Exception("Patient is not found!");
-            if (patient.MedicalHistory != null)
-            {
-                patient.MedicalHistory.Add(medicalHistoryEle);
-            }
-            else
-            {
-                patient.MedicalHistory = [medicalHistoryEle];
-            }
-            patient.Changed = true;
-        }
-
-
         public bool IsTreatmentScheduleFix(Patient patient,
             TreatmentScheduleEle pSchedule,
             Models.Calendar? docSchedule)
         {
-            if (pSchedule == null || pSchedule.Date == null || pSchedule.StartTime == null || pSchedule.EndTime == null) 
+            if (pSchedule == null || pSchedule.Date == null || pSchedule.StartTime == null || pSchedule.EndTime == null)
                 throw new ArgumentNullException(nameof(pSchedule));
 
-            if (patient.StaffIds == null) return true;
-            if (docSchedule == null) return true;
-            
+            if (patient.StaffIds == null || docSchedule == null) return true;
+
             if (docSchedule == null || docSchedule.DayofWeek == null || docSchedule.Date == null) return true;
             else
             {
                 var pDate = DateTime.ParseExact(pSchedule.Date, "dd/MM/yyyy", CultureInfo.InvariantCulture);
                 var dStartDate = DateTime.ParseExact(docSchedule.Date[0], "dd/MM/yyyy", CultureInfo.InvariantCulture);
                 var dEndDate = DateTime.ParseExact(docSchedule.Date[7], "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                
-                if (pDate <  dStartDate || pDate > dEndDate) return false;
-                
+
+                if (pDate < dStartDate || pDate > dEndDate) return false;
+
                 for (int idx = 0; idx < 7; idx++)
                 {
                     if (docSchedule.Date[idx] == pSchedule.Date)
@@ -290,6 +257,130 @@ namespace HospitalManagementApp.Data
             return true;
         }
 
+        public void SetTestResult(Patient patient, TestResult? newTestResult)
+        {
+            ArgumentNullException.ThrowIfNull(patient, nameof(patient));
 
+            if (patient.TestResult != null)
+            {
+                MedicalHistoryEle newHistory = new MedicalHistoryEle
+                {
+                    Disease = patient.TestResult.Disease,
+                    StartDate = patient.TestResult.StartDate,
+                    EndDate = DateTime.Now.ToString("dd/MM/yyyy")
+                };
+                if (patient.MedicalHistory != null)
+                {
+                    patient.MedicalHistory.Add(newHistory);
+                }
+                else
+                {
+                    patient.MedicalHistory = new List<MedicalHistoryEle> { newHistory };
+                }
+            }
+            else
+            {
+                patient.TestResult = newTestResult;
+                patient.Status = PatientStatus.Ill;
+            }
+
+            patient.Changed = true;
+        }
+
+        public void SetStaffId(Patient patient, List<int> staffIds)
+        {
+            ArgumentNullException.ThrowIfNull(patient, nameof (patient));
+            
+            patient.StaffIds = staffIds;
+
+            patient.Changed = true;
+        }
+
+        public void AddMedicalHistory(Patient patient, MedicalHistoryEle history)
+        {
+            ArgumentNullException.ThrowIfNull(patient, nameof(patient));
+            ArgumentNullException.ThrowIfNull(history, nameof(history));
+
+            if (patient.MedicalHistory != null)
+            {
+                patient.MedicalHistory.Add(history);
+            }
+            else
+            {
+                patient.MedicalHistory = [history];
+            }
+            patient.Changed = true;
+        }
+
+        public void DeleteMedicalHistory(Patient patient, string startDate)
+        {
+            ArgumentNullException.ThrowIfNull(patient, nameof (patient));
+
+            if (patient.MedicalHistory != null)
+            {
+                var history = patient.MedicalHistory.FirstOrDefault(x => x.StartDate == startDate);
+
+                if (history != null)
+                {
+                    patient.MedicalHistory.Remove(history);
+
+                    patient.Changed = true;
+                }
+            }
+        }
+
+        public async Task<List<Patient>?> GetPatientsFromStaffId(int staffId)
+        {
+            List<Patient>? patientList = new List<Patient>();
+
+            foreach (var patient in PatientList)
+            {
+                if (patient != null && patient.StaffIds != null && patient.StaffIds.Contains(staffId) && patient.Changed != true)
+                {
+                    patientList.Add(patient);
+                }
+                else if (patient != null && patient.Changed == true)
+                {
+                    await SaveChangesAsync();
+                }
+            }
+
+            return patientList;
+        }
+
+        public List<int> FromPatientListToIds(List<Patient>? patients)
+        {
+            List<int> ids = new List<int>();
+
+            if (patients == null) return ids;
+
+            foreach (var patient in patients)
+            {
+                if (patient != null && patient.Id != null)
+                    ids.Add((int)patient.Id);
+            }
+            return ids;
+        }
+
+        public async Task<ICollection<Patient>> GetPatientListFromIds(List<int>? ids)
+        {
+            ICollection<Patient> patientList = [];
+
+            if (ids == null) return patientList;
+
+            foreach (var id in ids)
+            {
+                var patient = PatientList.FirstOrDefault(x => x.Id == id);
+                if (patient != null)
+                {
+                    if (patient.Changed != true)
+                        patientList.Add(patient);
+                    else 
+                        await SaveChangesAsync();
+                }
+            }
+
+            return patientList;
+        }
     }
 }

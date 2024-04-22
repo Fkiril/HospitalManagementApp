@@ -29,7 +29,12 @@ namespace HospitalManagementApp.Models
                     Address = "abc",
                     PhoneNum = "0769421007",
                     MedicalHistory = null,
-                    TestResult = null,
+                    TestResult = new TestResult
+                    {
+                        Disease = "abc",
+                        Type = SpecialList.TieuHoa,
+                        StartDate = "23/04/2024"
+                    },
                     StaffIds = [1, 2],
                     TreatmentSchedule =
                     [
@@ -53,7 +58,12 @@ namespace HospitalManagementApp.Models
                     Address = "abc",
                     PhoneNum = "0969185801",
                     MedicalHistory = null,
-                    TestResult = null,
+                    TestResult = new TestResult
+                    {
+                        Disease = "abc",
+                        Type = SpecialList.TimMach,
+                        StartDate = "23/04/2024"
+                    },
                     StaffIds = [3, 4],
                     TreatmentSchedule =
                     [
@@ -85,6 +95,7 @@ namespace HospitalManagementApp.Models
                 return;
             }
 
+            Console.WriteLine("InitializeApplicationUserData");
             var users = new List<ApplicationUser>
             {
                 new ApplicationUser

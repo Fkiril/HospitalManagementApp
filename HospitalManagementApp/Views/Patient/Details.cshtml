@@ -93,7 +93,8 @@
                         @if (Model.TestResult is not null)
                         {
                             <td><strong>Disease: </strong>@Model.TestResult.Disease</td>
-                            <td><strong>Start date: </strong>@Model.TestResult.Type</td>
+                            <td><strong>Type: </strong>@Model.TestResult.Type</td>
+                            <td><strong>Start Date: </strong>@Model.TestResult.StartDate</td>
                         }
                     </tr>
                 </table>
@@ -103,7 +104,6 @@
                     @if (Model.TreatmentSchedule is not null) foreach (var schedule in Model.TreatmentSchedule)
                     {
                         <tr>
-                            <td><strong>Id: </strong>@schedule.Id</td>
                             <td><strong>Date: </strong>@schedule.Date</td>
                             <td><strong>Start time: </strong>@schedule.StartTime</td>
                             <td><strong>End time: </strong>@schedule.EndTime</td>
@@ -113,5 +113,9 @@
             </td>
         </tr>
     </tbody>
+
+    <div>
+        <a asp-action="Index">Back to patients list</a>
+    </div>
 
 </table>

@@ -4,6 +4,7 @@ using HospitalManagementApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using Google.Cloud.Firestore;
 using HospitalManagementApp.Models.PatientViewModels;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 
 namespace HospitalManagementApp.Controllers
@@ -22,53 +23,61 @@ namespace HospitalManagementApp.Controllers
         // GET: Patient
         public async Task<IActionResult> Index()
         {
-            var patientList = TempData["PatientIdList"] as List<int>;
-            ICollection<Patient> patients = [];
-            foreach (var pId in patientList)
-            {
-                patients.Add(PatientContext.PatientList.FirstOrDefault(x => x.Id == pId));
-            }
-            if (patients != null)
-            {
-                return View(patients);
-            }
-            else
+            if (TempData["PatientList"] == null)
             {
                 await _patientContext.InitializePatientListFromFirestore();
                 return View(PatientContext.PatientList);
             }
+            else
+            {
+                var ids = TempData["PatientIdList"] as List<int>;
+                ICollection<Patient> patients = _patientContext.GetPatientListFromIds(ids).Result;
+                if (patients != null)
+                {
+                    return View(patients);
+                }
+                return View(null);
+            }
         }
 
-        public async Task<IActionResult> ShowPatientList(int id)
+        public IActionResult ShowPatientList(int id)
         {
-            try
+            var patients = _patientContext.GetPatientsFromStaffId(id).Result;
+            var ids = _patientContext.FromPatientListToIds(patients);
+
+            if (ids == null || ids.Count == 0)
             {
-                QuerySnapshot querySnapshot = await _patientContext._firestoreDb.Collection("Patient")
-                    .WhereArrayContains("staffId", id)
-                    .GetSnapshotAsync();
-                if (querySnapshot != null)
-                {
-                    var patients = querySnapshot.Documents
-                        .Select(doc => doc.ConvertTo<Patient>())
-                        .ToList();
-                    if (patients == null) return NotFound();
-
-                    List<int> patientIdList = new List<int>();
-                    foreach (var p in patients)
-                    {
-                        patientIdList.Add((int)p.Id); 
-                    }
-
-                    TempData["PatientIdList"] = patientIdList ;
-
-                    return RedirectToAction(nameof(Index));
-                }
                 return NotFound();
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine("Error querying Firestore: " + ex.Message);
-                return NotFound();
+                TempData["PatientIdList"] = ids;
+
+                return RedirectToAction(nameof(Index));
+            }
+        }
+
+        public IActionResult SearchByDiseaseType(string searchType)
+        {
+            if (searchType == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                SpecialList type;
+                if (Enum.TryParse(searchType, out type))
+                {
+                    var patientList = PatientContext.PatientList.Where(p =>
+                    p.TestResult != null && p.TestResult.Type != null && p.TestResult.Type == type
+                    ).ToList();
+
+                    return View(patientList);
+                }
+                else
+                {
+                    return NotFound();
+                }
             }
         }
 
@@ -399,22 +408,6 @@ namespace HospitalManagementApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult SearchByDiseaseType(string searchType)
-        {
-            if (searchType == null)
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            else
-            {
-                var patientList = PatientContext.PatientList.Where(p => 
-                p.TestResult != null && p.TestResult.Type != null && p.TestResult.Type.Contains(searchType)
-                ).ToList();
-
-                return View(patientList);
-            }
-        }
-
         public IActionResult SetTestResult(int? id)
         {
             if (id == null)
@@ -429,10 +422,6 @@ namespace HospitalManagementApp.Controllers
             }
 
             ViewBag.patientId = id;
-            //var diseases = Data.GetDiseases();
-            //ViewBag.Diseases = new SelectList(diseases, "Value", "Text");
-            //var types = Data.GetTypes();
-            //ViewBag.Types = new SelectList(types, "Value", "Text");
 
             return View();
         }
@@ -449,7 +438,7 @@ namespace HospitalManagementApp.Controllers
 
             if (ModelState.IsValid)
             {
-                _patientContext.SetTestResult(patientId, result);
+                _patientContext.SetTestResult(patient, result);
                 await _patientContext.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
@@ -470,7 +459,7 @@ namespace HospitalManagementApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult SetStaffId(int? id)
+        public IActionResult StaffIdsManager(int? id)
         {
             if (id == null)
             {
@@ -478,20 +467,29 @@ namespace HospitalManagementApp.Controllers
             }
             var patient = PatientContext.PatientList
                 .FirstOrDefault(m => m.Id == id);
-            if (patient == null)
+            if (patient == null || 
+                patient.TestResult == null || 
+                patient.TestResult.Type == null ||
+                patient.StaffIds == null)
             {
                 return NotFound();
             }
 
-            ViewBag.patientId = id;
-            //ViewBag.suitableStaff = _staffContext.GetSuitableStaff();
-            ViewBag.suitableStaff = new List<int> { 1, 2, 3 };
+            StaffIdsModel model = new StaffIdsModel { staffIds = patient.StaffIds };
 
-            return View();
+            ViewBag.patientId = id;
+            var suitableStaffs = _staffContext.GetSuitableStaffs((SpecialList)patient.TestResult.Type);
+            if (suitableStaffs == null || suitableStaffs.Count == 0)
+            {
+                return NotFound("Can find any suitable staffs");
+            }
+            ViewBag.suitableStaffs = new SelectList(suitableStaffs);
+
+            return View(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> SetStaffId(int patientId, PatientStaffIdModel model)
+        public async Task<IActionResult> UpdateStaffIds(int patientId, StaffIdsModel model)
         {
             var patient = PatientContext.PatientList
                 .FirstOrDefault(m => m.Id == patientId);
@@ -501,10 +499,116 @@ namespace HospitalManagementApp.Controllers
             }
             if (ModelState.IsValid)
             {
-                _patientContext.SetStaffId(patientId, model.staffId);
+                _patientContext.SetStaffId(patient, model.staffIds);
                 await _patientContext.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                foreach (var modelStateKey in ModelState.Keys)
+                {
+                    var modelStateVal = ModelState[modelStateKey];
+                    if (modelStateVal != null) foreach (var error in modelStateVal.Errors)
+                        {
+                            var errorMessage = error.ErrorMessage;
+                            var exception = error.Exception;
+                            throw new Exception(errorMessage, exception);
+                        }
+                }
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult MedicalHistoryManager(int? id) 
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var patient = PatientContext.PatientList
+                .FirstOrDefault(m => m.Id == id);
+            if (patient == null)
+            {
+                return NotFound();
+            }
+
+            return View(patient);
+        }
+
+        public IActionResult AddMedicalHistory (int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var patient = PatientContext.PatientList
+                .FirstOrDefault(m => m.Id == id);
+
+            if (patient == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.patientId = id;
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddMedicalHistory (int patientId, MedicalHistoryEle history)
+        {
+            var patient = PatientContext.PatientList
+                .FirstOrDefault(m => m.Id == patientId);
+            if (patient == null)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                if (history == null)
+                {
+                    return BadRequest();
+                }
+
+                _patientContext.AddMedicalHistory(patient, history);
+
+                await _patientContext.SaveChangesAsync();
+                return RedirectToAction(nameof(MedicalHistoryManager), new { id = patientId });
+            }
+            else
+            {
+                foreach (var modelStateKey in ModelState.Keys)
+                {
+                    var modelStateVal = ModelState[modelStateKey];
+                    if (modelStateVal != null) foreach (var error in modelStateVal.Errors)
+                        {
+                            var errorMessage = error.ErrorMessage;
+                            var exception = error.Exception;
+                            throw new Exception(errorMessage, exception);
+                        }
+                }
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteMedicalHistory (int patientId, string startDate)
+        {
+            var patient = PatientContext.PatientList
+                .FirstOrDefault(m => m.Id == patientId);
+            if (patient == null)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                _patientContext.DeleteMedicalHistory(patient, startDate);
+                await _patientContext.SaveChangesAsync();
+                return RedirectToAction(nameof(MedicalHistoryManager), new { id = patientId });
             }
             else
             {

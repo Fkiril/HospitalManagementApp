@@ -22,11 +22,11 @@ namespace HospitalManagementApp.Data
         private string docId = "staff_";
         public async Task InitializeStaffListFromFirestore()
         {
-            Console.WriteLine("InitializeStaffListFromFirestore");
             if (StaffList.Count != 0)
             {
                 return;
             }
+            Console.WriteLine("InitializeStaffListFromFirestore");
             QuerySnapshot snapshotQuery = await _firestoreDb.Collection("Staff").GetSnapshotAsync();
 
             foreach (DocumentSnapshot docSnapshot in snapshotQuery.Documents)
@@ -212,6 +212,23 @@ namespace HospitalManagementApp.Data
                 }
             }
             return null;
+        }
+
+        public List<int> GetSuitableStaffs(SpecialList specialList)
+        {
+            List<int> ids = [];
+
+            Console.WriteLine("GetSuitableStaffs with: " + specialList);
+
+            foreach (var staff in StaffList)
+            {
+                if (staff != null && staff.SpecialList != null && (SpecialList)staff.SpecialList == specialList)
+                {
+                    ids.Add(staff.Id);
+                }
+            }
+
+            return ids;
         }
     }
 }

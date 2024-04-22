@@ -22,7 +22,6 @@
 
   <ItemGroup>
     <Folder Include="Views\Drugs\" />
-    <Folder Include="Views\Staff\" />
     <Folder Include="Views\Prescription\" />
   </ItemGroup>
 

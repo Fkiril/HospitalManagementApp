@@ -77,11 +77,12 @@ namespace HospitalManagementApp.Controllers
             }
 
             var staff = StaffContext.StaffList
-                .FirstOrDefault(staff => staff.Id == id);
+                .FirstOrDefault(s => s.Id == id);
             if (staff == null)
             {
                 return NotFound();
             }
+
             return View(staff);
         }
         //POST: Staff/Edit/3
@@ -113,7 +114,20 @@ namespace HospitalManagementApp.Controllers
                     }
                 }
 
-                return RedirectToAction(nameof(Edit));
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                foreach (var modelStateKey in ModelState.Keys)
+                {
+                    var modelStateVal = ModelState[modelStateKey];
+                    if (modelStateVal != null) foreach (var error in modelStateVal.Errors)
+                        {
+                            var errorMessage = error.ErrorMessage;
+                            var exception = error.Exception;
+                            throw new Exception(errorMessage, exception);
+                        }
+                }
             }
             return View(staff);
         }
@@ -144,6 +158,39 @@ namespace HospitalManagementApp.Controllers
             if (staff != null)
             {
                 StaffContext.StaffList.Remove(staff);
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult RemoveCalendar()
+        {
+            if (StaffContext.StaffList == null)
+            {
+                throw new Exception("No staff");
+            }
+
+            else
+            {
+                return View();
+            }
+            
+        }
+
+
+        [HttpPost, ActionName("RemoveCalendar")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RemoveCalendarConfirmed()
+        {
+            foreach(var staff in StaffContext.StaffList)
+            {
+                if(staff.WorkSchedule != null)
+                {
+                    staff.WorkSchedule = null;
+
+                    staff.changed = true;
+                }
             }
 
             await _context.SaveChangesAsync();

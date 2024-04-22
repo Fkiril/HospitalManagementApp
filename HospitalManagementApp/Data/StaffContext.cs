@@ -162,7 +162,7 @@ namespace HospitalManagementApp.Data
                         int randomNumber = random.Next(0, 2);
                         staff.WorkSchedule.DayofWeek.Add( (Shift)randomNumber);
                         int other = 1 - randomNumber;
-                        var specialList = StaffList.Where(s => s.SpecialList == staff.SpecialList && s != staff).ToList();
+                        var specialList = StaffList.Where(s => s.SpecialList == staff.SpecialList && s.HealthCareStaff == staff.HealthCareStaff && s != staff).ToList();
 
                         if(specialList.Count > 0)
                         {

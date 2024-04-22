@@ -119,11 +119,11 @@ namespace HospitalManagementApp.Models
                 new Staff
                 {
                     Id = 1,
-                    Name = "Doctor",
+                    Name = "Doctor1",
                     Gender = Gender.Male,
                     HealthCareStaff = HealthCareStaff.Doctor,
                     DateOfBirth = "09/08/2003",
-                    Email = "doctor@gmail.com",
+                    Email = "doctor1@gmail.com",
                     PhoneNum = "0769421007",
                     Degree = "abc",
                     SpecialList = SpecialList.TimMach,
@@ -133,6 +133,48 @@ namespace HospitalManagementApp.Models
                 new Staff
                 {
                     Id = 2,
+                    Name = "Doctor2",
+                    Gender = Gender.Female,
+                    HealthCareStaff = HealthCareStaff.Doctor,
+                    DateOfBirth = "02/04/2001",
+                    Email = "doctor2@gmail.com",
+                    PhoneNum = "0987651234",
+                    Degree = "abc",
+                    SpecialList = SpecialList.TimMach,
+                    Department = Deparment.NoiKhoa,
+                    WorkSchedule = null
+                },
+                new Staff
+                {
+                    Id = 3,
+                    Name = "Doctor3",
+                    Gender = Gender.Male,
+                    HealthCareStaff = HealthCareStaff.Doctor,
+                    DateOfBirth = "10/10/2002",
+                    Email = "doctor3@gmail.com",
+                    PhoneNum = "0123459876",
+                    Degree = "abc",
+                    SpecialList = SpecialList.TimMach,
+                    Department = Deparment.NoiKhoa,
+                    WorkSchedule = null
+                },
+                new Staff
+                {
+                    Id = 4,
+                    Name = "Doctor4",
+                    Gender = Gender.Male,
+                    HealthCareStaff = HealthCareStaff.Doctor,
+                    DateOfBirth = "01/01/2001",
+                    Email = "doctor4@gmail.com",
+                    PhoneNum = "0234561798",
+                    Degree = "abc",
+                    SpecialList = SpecialList.NoiTiet,
+                    Department = Deparment.NoiKhoa,
+                    WorkSchedule = null
+                },
+                new Staff
+                {
+                    Id = 5,
                     Name = "Nurse",
                     Gender = Gender.Female,
                     HealthCareStaff = HealthCareStaff.Nurse,
@@ -146,7 +188,7 @@ namespace HospitalManagementApp.Models
                 },
                 new Staff
                 {
-                    Id = 3,
+                    Id = 6,
                     Name = "SupportStaff",
                     Gender = Gender.Female,
                     HealthCareStaff = HealthCareStaff.SupportStaff,

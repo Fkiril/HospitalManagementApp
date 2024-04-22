@@ -81,7 +81,7 @@ namespace HospitalManagementApp.Models
         [FirestoreProperty]
         public SpecialList? SpecialList { get; set; }
         [FirestoreProperty]
-        public Deparment? Department { get; set; }
+        public Deparment Department { get; set; }
         [FirestoreProperty(ConverterType = typeof(CalendarListConverter))]
         public Calendar? WorkSchedule { get; set; }
 

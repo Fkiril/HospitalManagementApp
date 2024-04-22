@@ -1,4 +1,5 @@
 ﻿var date = document.getElementById("date").innerText;
+var shift = document.getElementById("shift").innerText;
 
 const a2 = document.getElementById('a2');
 const a3 = document.getElementById('a3');
@@ -57,17 +58,16 @@ function day(text, element1, element2, element3) {
 
 //xu li
 var lines = date.split(", ");
-console.log(lines);
-console.log("haha");
+var shifts = shift.split(", ");
 
 //update for calendar
-day(lines[7], a2, b2, c2);
-day(lines[8], a3, b3, c3);
-day(lines[9], a4, b4, c4);
-day(lines[10], a5, b5, c5);
-day(lines[11], a6, b6, c6);
-day(lines[12], a7, b7, c7);
-day(lines[13], a8, b8, c8);
+day(shifts[0], a2, b2, c2);
+day(shifts[1], a3, b3, c3);
+day(shifts[2], a4, b4, c4);
+day(shifts[3], a5, b5, c5);
+day(shifts[4], a6, b6, c6);
+day(shifts[5], a7, b7, c7);
+day(shifts[6], a8, b8, c8);
 
 
 day1.innerText = lines[0];

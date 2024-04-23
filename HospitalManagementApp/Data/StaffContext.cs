@@ -120,9 +120,9 @@ namespace HospitalManagementApp.Data
         public void DateInWeek(Staff staff)
         {
             //add 7 day in week
-            DateTime today = DateTime.Today;
-            int currentDayOfWeek = (int)today.DayOfWeek;
-            DateTime sunday = today.AddDays(-currentDayOfWeek);
+            DateTime vietnamTime = DateTime.Now.AddHours(7);
+            int currentDayOfWeek = (int)vietnamTime.DayOfWeek;
+            DateTime sunday = vietnamTime.AddDays(-currentDayOfWeek);
             DateTime monday = sunday.AddDays(1);
 
             // If we started on Sunday, we should actually have gone *back*

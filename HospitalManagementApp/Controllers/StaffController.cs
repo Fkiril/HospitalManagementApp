@@ -282,7 +282,23 @@ namespace HospitalManagementApp.Controllers
             return View(staff);
         }
 
-        public async Task<IActionResult> CreateCalendar()
+        public IActionResult CreateCalendar()
+        {
+            if (StaffContext.StaffList == null)
+            {
+                return Error("List staff is empty");
+            }
+
+            else
+            {
+                return View();
+            }
+
+        }
+
+        [HttpPost, ActionName("CreateCalendar")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateCalendarConfirm()
         {
 
             if (ModelState.IsValid)

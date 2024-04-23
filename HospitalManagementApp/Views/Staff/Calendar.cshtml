@@ -18,11 +18,19 @@
         <div>
             @if (Model.WorkSchedule != null && Model.WorkSchedule.Date != null && Model.WorkSchedule.DayofWeek != null)
             {
-                var a = string.Join(", ", Model.WorkSchedule.Date);
-                var b = string.Join(", ", Model.WorkSchedule.DayofWeek);
+                string a = "";
+                foreach(var date in Model.WorkSchedule.Date)
+                {
+                if (date != Model.WorkSchedule.Date[0]) a += ", ";
+                    a += date;
+                }
+                foreach (var shift in Model.WorkSchedule.DayofWeek)
+                {
+                    if (shift != Model.WorkSchedule.DayofWeek[0]) a += ", ";
+                    a += (int)shift;
+                }
 
                 <p class="col-sm-10" style="color:white" id="cal-date">@a</p>
-                <p class="col-sm-10" style="color:white" id="cal-shift">@b</p>
             }
         </div>
     <hr />
@@ -92,7 +100,7 @@
 
     </div>
 
-    <script src="~/js/Calendar.js">  </script>
+    <script src="~/js/calendar.js">  </script>
 
 </body>
 

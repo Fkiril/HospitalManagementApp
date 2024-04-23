@@ -143,22 +143,57 @@ namespace HospitalManagementApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult AddDate()
+        public IActionResult AddSchedule(int? id)
         {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var equipment = EquipmentContext.EquipmentList
+                .FirstOrDefault(m => m.Id == id);
+            if (equipment == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.EquipmentId = id;
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult AddDate(int equipmentId, DateTime date)
+        public IActionResult AddSchedule(int id, DateTime schedule)
         {
             if (ModelState.IsValid)
             {
-                _context.AddSchedule(equipmentId, date);
-                return RedirectToAction(nameof(Index)); // Redirect to a success page or another action
+                if (schedule < DateTime.Now)
+                {
+                    ViewData["AlertMessage"] = "You must choose a time in the future";
+                    return View();
+                }
+
+                var equipment = EquipmentContext.EquipmentList.FirstOrDefault(e => e.Id == id);
+                if (equipment == null)
+                {
+                    throw new Exception("Add Schedule bug, can't find id " + id);
+                }
+
+                equipment.History ??= new List<DateTime>();
+                Console.WriteLine("I'm gonna add " + schedule);
+                foreach (var startTime in equipment.History)
+                {
+                    if (EquipmentContext.IsBetweenDate(schedule, startTime) == true)
+                    {
+                        ViewData["AlertMessage"] = "Can't add this date because there will be another patient using it";
+                        return View();
+                    }
+                }
+
+                _context.AddSchedule(id, schedule);
+                return RedirectToAction(nameof(Index));
             }
 
-            return View(); // Re-render the view with validation errors
+            return View();
         }
 
         private bool EquipmentExists(int id)

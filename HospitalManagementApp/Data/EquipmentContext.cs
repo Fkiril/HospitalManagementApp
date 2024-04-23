@@ -4,6 +4,8 @@ using Google.Cloud.Firestore;
 using HospitalManagementApp.Models;
 using HospitalManagementApp.Services;
 using Microsoft.EntityFrameworkCore;
+using System.Drawing.Printing;
+using System.Globalization;
 
 namespace HospitalManagementApp.Data
 {
@@ -18,6 +20,9 @@ namespace HospitalManagementApp.Data
         }
         public async Task InitializeEquipmentListFromFirestore()
         {
+            UpdateSchedule();
+            UpdateCount("InitFirestore");
+
             Console.WriteLine("InitializeEquipmentListFromFirestore");
             if (EquipmentList.Count != 0)
             {
@@ -25,14 +30,29 @@ namespace HospitalManagementApp.Data
             }
             QuerySnapshot snapshotQuery = await _firestoreDb.Collection("Equipment").GetSnapshotAsync();
 
+            Console.WriteLine("Convert from string to DateTime");
             foreach (DocumentSnapshot docSnapshot in snapshotQuery.Documents)
             {
                 Equipment equipment = docSnapshot.ConvertTo<Equipment>();
+                equipment.History = new List<DateTime>();
+
+                if (equipment.historyString != null)
+                {
+                    Console.WriteLine("Id " + equipment.Id);
+                    foreach (var s in equipment.historyString)
+                    {
+                        Console.WriteLine(s);
+                    }
+                    // Convert List<string> to List<DateTime>
+                    equipment.History = equipment.historyString.Select(dtString => DateTime.ParseExact(dtString, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture)).ToList();
+                }
+
                 equipment.changed = false;
                 EquipmentList.Add(equipment);
             }
 
-            UpdateCount();
+            UpdateSchedule();
+            UpdateCount("InitFirestore");
         }
         public async Task SaveChangesAsync()
         {
@@ -85,7 +105,6 @@ namespace HospitalManagementApp.Data
             {
                 equipment.changed = true;
                 EquipmentList.Add(equipment);
-                UpdateCount();
             }
             else
             {
@@ -105,7 +124,7 @@ namespace HospitalManagementApp.Data
                     p.UsingUntil = equipment.UsingUntil;
                     p.History = equipment.History;
 
-                    UpdateCount();
+                    p.historyString = equipment.historyString;
                     p.changed = true;
                     break;
                 }
@@ -115,20 +134,34 @@ namespace HospitalManagementApp.Data
         public void Remove(Equipment equipment)
         {
             EquipmentList.Remove(equipment);
-            UpdateCount();
         }
 
-        public void AddSchedule(int equipmentId, DateTime date)
+        public static bool IsBetweenDate(DateTime date, DateTime target)
         {
-            var equipment = EquipmentList.FirstOrDefault(e => e.Id == equipmentId);
-            if (equipment.History == null)
+            DateTime startTime = target.AddDays(-7);
+            DateTime finishTime = target.AddDays(7);
+
+            if (date >= startTime && date < finishTime)
             {
-                equipment.History = default;
+                return true;
             }
-            equipment.History.Add(date);
+
+            return false;
         }
 
-        private void UpdateCount()
+        public void AddSchedule(int id, DateTime schedule)
+        {
+            var equipment = EquipmentList.FirstOrDefault(e => e.Id == id);
+            if (equipment == null)
+            {
+                throw new Exception("Add Schedule bug");
+            }
+
+            equipment.History ??= new List<DateTime>();
+            equipment.History.Add(schedule);
+        }
+
+        private void UpdateCount(string taskName = "empty")
         {
             // Update TotalCount
             var equipmentByType = EquipmentList.GroupBy(equipment => equipment.Name);
@@ -155,6 +188,31 @@ namespace HospitalManagementApp.Data
                     {
                         equipment.AvailableCount = count;
                     }
+                }
+            }
+        }
+
+        private void UpdateSchedule() {
+            Console.WriteLine("Convert History to string");
+            foreach (var equipment in EquipmentList)
+            {
+                equipment.History ??= new List<DateTime>();
+
+                equipment.IsAvailable = true;
+                foreach (DateTime startTime in equipment.History)
+                {
+                    bool currentAvailable = !IsBetweenDate(DateTime.Now, startTime);
+                    if (currentAvailable == false)
+                    {
+                        equipment.IsAvailable = false;
+                        break;
+                    }
+                }
+
+                if (equipment.History != null)
+                {
+                    List<string> historyStringList = equipment.History.Select(dt => dt.ToString("yyyy-MM-dd HH:mm:ss")).ToList();
+                    equipment.historyString = historyStringList;
                 }
             }
         }

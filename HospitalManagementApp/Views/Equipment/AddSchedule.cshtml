@@ -2,25 +2,38 @@
 
 @{
     ViewData["Title"] = "AddSchedule";
+    var alertMessage = ViewData["AlertMessage"] as string;
 }
 
-<h3>Add a new equipment's schedule</h3>
-<br />
+<h1>Add Schedule equipment information</h1>
+
+<h4>Equipment</h4>
+<hr />
+
+@if (!string.IsNullOrEmpty(alertMessage))
+{
+    <div class="alert alert-danger" role="alert">
+        @alertMessage
+    </div>
+}
 
 <div class="row">
     <div class="col-md-4">
         <form asp-action="AddSchedule" method="post">
-            <input type="hidden" name="equipmentId" value="@Model.Id" />
-            <label for="date">Date:</label>
-            <input type="date" id="date" name="date" required />
-            <br />
-            <button type="submit">Add Date</button>
+            <input type="hidden" name="id" value="@ViewBag.EquipmentId" />
+            <div class="form-group">
+                <label for="schedule">Date Time:</label>
+                <input type="datetime-local" id="schedule" name="schedule" class="form-control" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="AddSchedule" class="btn btn-primary" />
+            </div>
         </form>
     </div>
-</div> 
+</div>
 
 <div>
-    <a asp-action="Index">Back to list</a>
+    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

@@ -24,10 +24,7 @@ namespace HospitalManagementApp.Controllers
         {
             var patientList = TempData["PatientIdList"] as List<int>;
             ICollection<Patient> patients = [];
-            foreach (var pId in patientList)
-            {
-                patients.Add(PatientContext.PatientList.FirstOrDefault(x => x.Id == pId));
-            }
+
             if (patients != null)
             {
                 return View(patients);

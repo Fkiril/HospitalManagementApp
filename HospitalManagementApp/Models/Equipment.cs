@@ -29,12 +29,15 @@ namespace HospitalManagementApp.Models
         public bool? IsAvailable { get; set; } = true;
 
         [FirestoreProperty]
-        public DateTime? UsingUntil { get; set; } = null;
+        public string? UsingUntil { get; set; } = null;
 
         [FirestoreProperty]
         public List<DateTime>? History { get; set; } = default;
 
-        // note for checking if anything have changed
+        // helper
+        [FirestoreProperty]
+        public List<string> historyString { get; set; } = new List<string>();
+
         [FirestoreProperty]
         public bool? changed { get; set; } = true;
     }

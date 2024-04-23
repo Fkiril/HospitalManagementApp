@@ -168,7 +168,7 @@ namespace HospitalManagementApp.Controllers
         {
             if (StaffContext.StaffList == null)
             {
-                throw new Exception("No staff");
+                return Error("List staff is empty");
             }
 
             else
@@ -197,6 +197,18 @@ namespace HospitalManagementApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public IActionResult Error(string error)
+        {
+            try
+            {
+                throw new Exception(error);
+            }
+            catch (Exception ex)
+            {
+                return View("Error", ex);
+            }
+        }
+
         public IActionResult ShowPatient(int id)
         {
             var staff = StaffContext.StaffList
@@ -206,7 +218,7 @@ namespace HospitalManagementApp.Controllers
                 return RedirectToAction("ShowPatientList", "Patient", new { staffId = id });
             }
 
-            return ArgumentException("NOT FOUND");
+            return NotFound();
         }
 
         private IActionResult ArgumentException(string v)
@@ -231,7 +243,7 @@ namespace HospitalManagementApp.Controllers
             else
             {
                 if (staff.WorkSchedule == null)
-                    throw new Exception("No calendar");
+                    return Error("No calendar");
             }
             return View(staff);
         }

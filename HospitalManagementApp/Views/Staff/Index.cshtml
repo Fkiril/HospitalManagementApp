@@ -93,10 +93,15 @@
                     <a asp-action="Calendar" asp-route-id="@item.Id">Calendar</a>
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Remove" asp-route-id="@item.Id">Remove</a> |
-                    <a asp-action="ShowPatient" asp-route-id="@item.Id">ShowPatient</a>
+                    <div class="dropdown">
+                        <button class="dropbtn">Action</button>
+                        <div class="dropdown-content">
+                            <a href="#">Edit</a>
+                            <a href="#">Details</a>
+                            <a href="#">Remove</a>
+                            <a href="#">ShowPatient</a>
+                        </div>
+                    </div>
                 </td>
             </tr>
         }

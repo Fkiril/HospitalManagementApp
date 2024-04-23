@@ -11,11 +11,18 @@
 </p>
 @using (Html.BeginForm("SearchByDiseaseType", "Patient", FormMethod.Get))
 {
-    <p>
-        Find patients: @Html.TextBox("searchType", ViewBag.CurrentFilter as string)
-        <input type="submit" value="By disease type" />
-    </p>
-
+    @using (Html.BeginForm("SearchByType", "Patient", FormMethod.Get))
+    {
+        <p>
+            Find patients:
+            @Html.DropDownList("searchType", Enum.GetValues(typeof(SpecialList)).Cast<SpecialList>().Select(x => new SelectListItem
+            {
+                Text = x.ToString(),
+                Value = x.ToString()
+            }), "Select Type", new { @class = "form-control" })
+            <input type="submit" value="By disease type" />
+        </p>
+    }
 }
 <table class="table">
     <thead>
@@ -77,27 +84,21 @@
                     @Html.DisplayFor(model => item.Status)
                 </td>
                 <td>
-                    @* <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Remove" asp-route-id="@item.Id">Remove</a> |
-                    <a asp-action="TreatmentScheduleManager" asp-route-id="@item.Id" >Manage treatment schedule</a>
-                    <a asp-controller="Prescription" asp-action="GetPrescriptions" asp-route-id=@item.Id>Get prescription</a> *@
-
                     <div class="dropdown">
                         <button class="dropbtn">Choose an action</button>
                         <div class="dropdown-content">
                             <a href="/Patient/Edit/@item.Id">Edit</a>
                             <a href="/Patient/Details/@item.Id">Details</a>
                             <a href="/Patient/Remove/@item.Id">Remove</a>
-                            <a href="/Patient/TreatmentScheduleManager/@item.Id">Manage treatment schedule</a>
-                            <a href="/Patient/Prescription/GetPrescriptions/@item.Id">Get prescription</a>
                             <a href="/Patient/SetTestResult/@item.Id">Set test result</a>
-                            <a href="/Patient/SetStaffId/@item.Id">Set staff in charge</a>
+                            <a href="/Prescription/GetPrescriptions/@item.Id">Get prescription</a>
+                            <a href="/Patient/TreatmentScheduleManager/@item.Id">Manage treatment schedule</a>
+                            <a href="/Patient/StaffIdsManager/@item.Id">Manage staffs in charge</a>
+                            <a href="/Patient/MedicalHistoryManager/@item.Id">Manage medical history</a>
                         </div>
                     </div>
                 </td>
             </tr>
         }
     </tbody>
-    
 </table>

@@ -1,0 +1,18 @@
+﻿@model HospitalManagementApp.Models.PatientViewModels.StaffIdsModel
+
+@{
+    ViewData["Title"] = "StaffIds Manager";
+}
+
+<h3>Set staff in charge of this patient!</h3>
+<br />
+
+@using (Html.BeginForm("UpdateStaffIds", "Patient", new { patientId = ViewBag.patientId }, FormMethod.Post))
+{
+    @Html.ListBoxFor(model => model.staffIds, (SelectList)ViewBag.suitableStaffs)
+    <input type="submit" value="Save" />
+}
+
+<div>
+    <a asp-action="Index">Back to patients list</a>
+</div>

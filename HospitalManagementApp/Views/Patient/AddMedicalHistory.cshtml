@@ -1,0 +1,38 @@
+﻿@model HospitalManagementApp.Models.MedicalHistoryEle
+
+@{
+    ViewData["Title"] = "Add medical history";
+}
+
+<h3>Set new medical history!</h3>
+<br />
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AddMedicalHistory" method="post" asp-route-patientId="@ViewBag.patientId" asp-route-history="@Model">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="@Model.Disease" class="control-label"></label>
+                <input asp-for="@Model.Disease" class="form-control" />
+                <span asp-validation-for="@Model.Disease" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.StartDate" class="control-label"></label>
+                <input asp-for="@Model.StartDate" class="form-control" />
+                <span asp-validation-for="@Model.StartDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.EndDate" class="control-label"></label>
+                <input asp-for="@Model.EndDate" class="form-control" />
+                <span asp-validation-for="@Model.EndDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Add" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to patients list</a>
+</div>

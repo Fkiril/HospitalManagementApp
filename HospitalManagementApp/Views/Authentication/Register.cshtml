@@ -38,9 +38,20 @@
                 <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
-                <input asp-for="Role" class="form-control" />
-                <label asp-for="Role">Account's role'</label>
+                @* <input asp-for="Role" class="form-control" /> *@
+                <select asp-for="Role" class="form-control">
+                    @foreach (var role in ViewBag.Roles)
+                    {
+                        <option value="@role">@role</option>
+                    }
+                </select>
+                <label asp-for="Role">Account's role</label>
                 <span asp-validation-for="Role" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="DataId" class="form-control" />
+                <label asp-for="DataId">Database identifier</label>
+                <span asp-validation-for="DataId" class="text-danger"></span>
             </div>
             <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
         </form>

@@ -15,16 +15,23 @@
             @Html.DisplayFor(model => model.Name)
         </p>
         <p> Morning: 6AM - 14PM   |   Afternoon: 14AM - 22PM   |   Evening: 22PM - 6AM </p>
-        <div id="date">
-                @if (Model.WorkSchedule != null && Model.WorkSchedule.Date != null && Model.WorkSchedule.DayofWeek != null)
+        <div>
+            @if (Model.WorkSchedule != null && Model.WorkSchedule.Date != null && Model.WorkSchedule.DayofWeek != null)
+            {
+                string a = "";
+                foreach(var date in Model.WorkSchedule.Date)
                 {
-                    var a = string.Join(", ", Model.WorkSchedule.Date);
-                    var b = string.Join(", ", Model.WorkSchedule.DayofWeek);
-
-
-                    <p class="col-sm-10" id="cal" style="color:white">@a</p>
-                    <p class="col-sm-10" id="cal" style="color:white">@b</p>
+                if (date != Model.WorkSchedule.Date[0]) a += ", ";
+                    a += date;
                 }
+                foreach (var shift in Model.WorkSchedule.DayofWeek)
+                {
+                    if (shift != Model.WorkSchedule.DayofWeek[0]) a += ", ";
+                    a += (int)shift;
+                }
+
+                <p class="col-sm-10" style="color:white" id="cal-date">@a</p>
+            }
         </div>
     <hr />
     </table>
@@ -93,7 +100,7 @@
 
     </div>
 
-    <script src="~/js/Calendar.js">  </script>
+    <script src="~/js/calendar.js">  </script>
 
 </body>
 

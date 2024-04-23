@@ -39,7 +39,7 @@ namespace HospitalManagementApp.Models
         public string? Address { get; set; }
 
         [FirestoreProperty]
-        [RegularExpression(@"^0\d{9}$"), StringLength(10)]
+        [RegularExpression(@"^0\d{9}$", ErrorMessage = "Invalid phone number format!"), StringLength(10)]
         public string? PhoneNum { get; set; }
             
         // Need some classes to implement these field
@@ -70,7 +70,10 @@ namespace HospitalManagementApp.Models
         public string? Disease { get; set; }
         [FirestoreProperty]
         [Required]
-        public string? Type { get; set; }
+        public SpecialList? Type { get; set; }
+        [FirestoreProperty]
+        [Required]
+        public string? StartDate { get; set; }
     }
 
     public class TestResultConverter : IFirestoreConverter<TestResult>
@@ -81,7 +84,8 @@ namespace HospitalManagementApp.Models
             return new Dictionary<string, object>
             {
                 { "Disease", value.Disease?? new object()},
-                { "StartDate", value.Type?? new object()}
+                { "Type", value.Type?? new object()},
+                { "StartDate", value.StartDate?? new object()}
             };
         }
         public TestResult FromFirestore(object value)
@@ -91,7 +95,8 @@ namespace HospitalManagementApp.Models
             return new TestResult
             {
                 Disease = (string)dict["Disease"],
-                Type = (string)dict["StartDate"]
+                Type = (SpecialList)(int)(long)(dict["Type"]),
+                StartDate = (string)dict["StartDate"]
             };
         }
     }

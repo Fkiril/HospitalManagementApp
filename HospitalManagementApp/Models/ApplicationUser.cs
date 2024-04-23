@@ -28,5 +28,9 @@ namespace HospitalManagementApp.Models
         [FirestoreProperty]
         [Required]
         public string Role { get; set; }
+
+        [FirestoreProperty]
+        [Required]
+        public int DataId { get; set; }
     }
 }

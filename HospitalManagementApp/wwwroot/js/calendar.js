@@ -1,4 +1,4 @@
-﻿var date = document.getElementById("date").innerText;
+﻿var date = document.getElementById("cal-date").innerText;
 
 const a2 = document.getElementById('a2');
 const a3 = document.getElementById('a3');
@@ -58,6 +58,14 @@ function day(text, element1, element2, element3) {
 //xu li
 var lines = date.split(", ");
 
+day1.innerText = lines[0];
+day2.innerText = lines[1];
+day3.innerText = lines[2];
+day4.innerText = lines[3];
+day5.innerText = lines[4];
+day6.innerText = lines[5];
+day7.innerText = lines[6];
+
 //update for calendar
 day(lines[7], a2, b2, c2);
 day(lines[8], a3, b3, c3);
@@ -67,10 +75,3 @@ day(lines[11], a6, b6, c6);
 day(lines[12], a7, b7, c7);
 day(lines[13], a8, b8, c8);
 
-day1.innerText = lines[0];
-day2.innerText = lines[1];
-day3.innerText = lines[2];
-day4.innerText = lines[3];
-day5.innerText = lines[4];
-day6.innerText = lines[5];
-day7.innerText = lines[6];

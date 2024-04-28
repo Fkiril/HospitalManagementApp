@@ -1,5 +1,48 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model HospitalManagementApp.Models.Equipment
+
 @{
+    ViewData["Title"] = "Details";
 }
+
+<h1>Equipment Management</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <strong>Schedule</strong>
+            </th>
+            <th>
+                <strong>JSON String</strong>
+            </th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr>
+            <td>
+                @if (Model.History != null)
+                {
+                    @foreach (var date in Model.History)
+                    {
+                        <tr>
+                            <td>@date</td>
+                        </tr>
+                    }
+                }
+                else {
+                    <tr>
+                        <strong>No schedule yet</strong>
+                    </tr>
+                }
+            </td>
+            <td>
+                @Model.historyString
+            </td>
+        </tr>
+    </tbody>
+
+    <a asp-action="Index">Back to patients list</a>
+
+</table>
+

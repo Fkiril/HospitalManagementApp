@@ -4,8 +4,10 @@ using Google.Cloud.Firestore;
 using HospitalManagementApp.Models;
 using HospitalManagementApp.Services;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System.Drawing.Printing;
 using System.Globalization;
+using static Google.Api.ResourceDescriptor.Types;
 
 namespace HospitalManagementApp.Data
 {
@@ -34,19 +36,8 @@ namespace HospitalManagementApp.Data
             foreach (DocumentSnapshot docSnapshot in snapshotQuery.Documents)
             {
                 Equipment equipment = docSnapshot.ConvertTo<Equipment>();
-                equipment.History = new List<DateTime>();
 
-                if (equipment.historyString != null)
-                {
-                    Console.WriteLine("Id " + equipment.Id);
-                    foreach (var s in equipment.historyString)
-                    {
-                        Console.WriteLine(s);
-                    }
-                    // Convert List<string> to List<DateTime>
-                    equipment.History = equipment.historyString.Select(dtString => DateTime.ParseExact(dtString, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture)).ToList();
-                }
-
+                equipment.History ??= new List<string>();
                 equipment.changed = false;
                 EquipmentList.Add(equipment);
             }
@@ -83,6 +74,7 @@ namespace HospitalManagementApp.Data
             {
                 if (equipment.changed == true)
                 {
+                    equipment.historyString = JsonConvert.SerializeObject(equipment.History);
                     await colRef.Document("equipment_" + equipment.Id).SetAsync(equipment);
                     equipment.changed = false;
                 }
@@ -104,7 +96,7 @@ namespace HospitalManagementApp.Data
             if (IsIdUnique(equipment.Id))
             {
                 equipment.changed = true;
-                EquipmentList.Add(equipment);
+                EquipmentList.Add(equipment);       
             }
             else
             {
@@ -123,8 +115,8 @@ namespace HospitalManagementApp.Data
                     p.IsAvailable = equipment.IsAvailable;
                     p.UsingUntil = equipment.UsingUntil;
                     p.History = equipment.History;
-
                     p.historyString = equipment.historyString;
+
                     p.changed = true;
                     break;
                 }
@@ -157,8 +149,11 @@ namespace HospitalManagementApp.Data
                 throw new Exception("Add Schedule bug");
             }
 
-            equipment.History ??= new List<DateTime>();
-            equipment.History.Add(schedule);
+            var utcSchedule = schedule.ToUniversalTime();
+            var utcString = utcSchedule.ToString("o");
+            equipment.History ??= new List<string>();
+            equipment.History.Add(utcString);
+            equipment.changed = true;
         }
 
         private void UpdateCount(string taskName = "empty")
@@ -196,11 +191,12 @@ namespace HospitalManagementApp.Data
             Console.WriteLine("Convert History to string");
             foreach (var equipment in EquipmentList)
             {
-                equipment.History ??= new List<DateTime>();
+                equipment.History ??= new List<string>();
 
                 equipment.IsAvailable = true;
-                foreach (DateTime startTime in equipment.History)
+                foreach (var time in equipment.History)
                 {
+                    DateTime startTime = DateTime.Parse(time);
                     bool currentAvailable = !IsBetweenDate(DateTime.Now, startTime);
                     if (currentAvailable == false)
                     {
@@ -208,12 +204,7 @@ namespace HospitalManagementApp.Data
                         break;
                     }
                 }
-
-                if (equipment.History != null)
-                {
-                    List<string> historyStringList = equipment.History.Select(dt => dt.ToString("yyyy-MM-dd HH:mm:ss")).ToList();
-                    equipment.historyString = historyStringList;
-                }
+                equipment.changed = true;
             }
         }
     }

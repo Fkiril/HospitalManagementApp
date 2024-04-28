@@ -178,18 +178,20 @@ namespace HospitalManagementApp.Controllers
                     throw new Exception("Add Schedule bug, can't find id " + id);
                 }
 
-                equipment.History ??= new List<DateTime>();
+                equipment.History ??= new List<string>();
                 Console.WriteLine("I'm gonna add " + schedule);
-                foreach (var startTime in equipment.History)
+                foreach (var time in equipment.History)
                 {
-                    if (EquipmentContext.IsBetweenDate(schedule, startTime) == true)
+                    DateTime startTime = DateTime.Parse(time);
+                    if (schedule >= startTime && schedule <= startTime.AddDays(7))
                     {
                         ViewData["AlertMessage"] = "Can't add this date because there will be another patient using it";
                         return View();
                     }
                 }
 
-                _context.AddSchedule(id, schedule);
+                var utcSchedule = schedule.ToUniversalTime();
+                _context.AddSchedule(id, utcSchedule);
                 return RedirectToAction(nameof(Index));
             }
 

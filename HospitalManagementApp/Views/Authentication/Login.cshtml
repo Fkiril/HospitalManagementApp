@@ -4,12 +4,12 @@
     ViewData["Title"] = "Login";
 }
 
-<h1>@ViewData["Title"]</h1>
+<link rel="stylesheet" href="~/css/login.css">
 <div class="row">
     <div class="col-md-4">
         <section>
             <form asp-action="Login" method="post">
-                <h2>Use a local account to log in.</h2>
+                <h1>@ViewData["Title"]</h1>
                 <hr />
                 <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
                 <div class="form-floating mb-3">

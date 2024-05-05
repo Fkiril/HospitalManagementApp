@@ -9,12 +9,16 @@ namespace HospitalManagementApp.Controllers
     [Authorize(Roles = "Admin, Doctor", AuthenticationSchemes = "Cookies")]
     public class PrescriptionController : Controller
     {
-        public readonly PrescriptionContext _context;
+        public readonly PrescriptionContext _presciptionContext;
         public readonly DrugsContext _drugContext;
-        public PrescriptionController(PrescriptionContext context, DrugsContext drugContext)
+        public readonly PatientContext _patientContext;
+        public PrescriptionController(PrescriptionContext context,
+                                      DrugsContext drugContext,
+                                      PatientContext patientContext)
         {
-            _context = context;
+            _presciptionContext = context;
             _drugContext = drugContext;
+            _patientContext = patientContext;
         }
 
         public IActionResult Search(int? searchingId)
@@ -34,7 +38,7 @@ namespace HospitalManagementApp.Controllers
 
         public async Task<IActionResult> List()
         {
-            await _context.InitializePrescriptionListFromFirestore();
+            await _presciptionContext.InitializePrescriptionListFromFirestore();
             return View(PrescriptionContext.PrescriptionList);
         }
 
@@ -67,15 +71,15 @@ namespace HospitalManagementApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _context.InitializePrescriptionListFromFirestore();
-                if (_context.FindById(prescription.Id ?? -1) != null)
+                await _presciptionContext.InitializePrescriptionListFromFirestore();
+                if (_presciptionContext.FindById(prescription.Id ?? -1) != null)
                 {
                     TempData["error"] = "This Prescription Id is existed";
                 }
                 else
                 {
-                    _context.Add(prescription);
-                    await _context.SaveChangesAsync();
+                    _presciptionContext.Add(prescription);
+                    await _presciptionContext.SaveChangesAsync();
                     return RedirectToAction("AddDetail", new { presId = prescription.Id });
                 }
             }
@@ -96,8 +100,8 @@ namespace HospitalManagementApp.Controllers
         {
             Drugs drug = await _drugContext.FindById(model.IdOfDrug ?? -1);
             model.NameOfDrug = drug.Name;
-            await _context.AddDetail(model);
-            await _context.SaveChangesAsync();
+            await _presciptionContext.AddDetail(model);
+            await _presciptionContext.SaveChangesAsync();
             return RedirectToAction("AddDetail", new { presId = model.PresId });
         }
 
@@ -132,8 +136,8 @@ namespace HospitalManagementApp.Controllers
             {
                 try
                 {
-                    _context.Update(prescription);
-                    await _context.SaveChangesAsync();
+                    _presciptionContext.Update(prescription);
+                    await _presciptionContext.SaveChangesAsync();
                 }
                 catch (Exception)
                 {
@@ -166,7 +170,7 @@ namespace HospitalManagementApp.Controllers
                 return NotFound();
             }
 
-            await _context.DeleteAsync(prescription.docId);
+            await _presciptionContext.DeleteAsync(prescription.docId);
 
             return RedirectToAction(nameof(List));
         }
@@ -180,9 +184,9 @@ namespace HospitalManagementApp.Controllers
             if (prescription != null)
             {
                 PrescriptionContext.PrescriptionList.Remove(prescription);
-                await _context.DeleteAsync(prescription.docId);
+                await _presciptionContext.DeleteAsync(prescription.docId);
 
-                await _context.SaveChangesAsync();
+                await _presciptionContext.SaveChangesAsync();
 
                 return RedirectToAction(nameof(List));
             }
@@ -193,7 +197,18 @@ namespace HospitalManagementApp.Controllers
         [HttpGet, ActionName("GetPrescriptions")]
         public async Task<IActionResult> GetPrescriptions(int Id)
         {
-            var prescriptions = await _context.GetPrescriptionsForPatientAsync(2);
+            var prescriptions = await _presciptionContext.GetPrescriptionsForPatientAsync(Id);
+            
+            //if (prescriptions != null)
+            //{
+            //    var patient = _patientContext.GetPatientById(Id);
+            //    foreach (var pre in prescriptions)
+            //    {
+            //        patient.PrescriptionId = pre.Id;
+            //    }
+            //}
+            
+
             return View(prescriptions);
         }
         private bool PrescriptionExists(int id)

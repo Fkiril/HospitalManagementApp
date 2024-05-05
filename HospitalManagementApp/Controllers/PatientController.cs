@@ -6,6 +6,7 @@ using Google.Cloud.Firestore;
 using HospitalManagementApp.Models.PatientViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.Security.Claims;
 
 
 namespace HospitalManagementApp.Controllers
@@ -15,16 +16,35 @@ namespace HospitalManagementApp.Controllers
     {
         public readonly PatientContext _patientContext;
         public readonly StaffContext _staffContext;
-        public PatientController(PatientContext patientContext, StaffContext staffContext)
+        public readonly IHttpContextAccessor _httpContextAccessor;
+        public PatientController(PatientContext patientContext,
+                                StaffContext staffContext,
+                                IHttpContextAccessor httpContextAccessor)
         {
             _patientContext = patientContext;
             _staffContext = staffContext;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         // GET: Patient
         public async Task<IActionResult> Index()
         {
-            
+            if (_httpContextAccessor.HttpContext != null && _httpContextAccessor.HttpContext.User.IsInRole("Patient"))
+            {
+                int pId;
+                var userDataClaim = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.UserData);
+                if (userDataClaim != null)
+                {
+                    pId = Convert.ToInt32(userDataClaim.Value);
+                    var patient = _patientContext.GetPatientById(pId);
+
+                    if (patient != null)
+                    {
+                        return RedirectToAction(nameof(Details), new { id = pId });
+                    }
+                }
+            }
+
             if (TempData["PatientList"] == null)
             {
                 await _patientContext.InitializePatientListFromFirestore();
@@ -253,7 +273,15 @@ namespace HospitalManagementApp.Controllers
                 return NotFound();
             }
 
+            //Models.Calendar? docSchedule = _staffContext.GetCalendar(patient.StaffIds);
+            //if (docSchedule != null)
+            //{
+            //    ViewBag.Date = docSchedule.Date;
+            //    ViewBag.DayOfWeek = docSchedule.DayofWeek;
+            //}
+
             ViewBag.PatientId = id;
+
             return View();
         }
 
@@ -647,5 +675,6 @@ namespace HospitalManagementApp.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
+
     }
 }

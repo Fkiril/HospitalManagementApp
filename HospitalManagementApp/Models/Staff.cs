@@ -49,7 +49,7 @@ namespace HospitalManagementApp.Models
         
         [FirestoreProperty]
         [Key,Required, Range(1, 9999)]
-        public int Id { get; set; }
+        public int? Id { get; set; }
 
         [FirestoreProperty]
         [Required, StringLength(60, MinimumLength = 3)]

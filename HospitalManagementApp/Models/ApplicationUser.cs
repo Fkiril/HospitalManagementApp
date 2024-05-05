@@ -13,24 +13,24 @@ namespace HospitalManagementApp.Models
 
         [FirestoreProperty]
         [PersonalData, Required]
-        public override string UserName { get; set; }
+        public override string? UserName { get; set; }
 
         [FirestoreProperty]
         [DataType(DataType.EmailAddress)]
         [PersonalData, Required]
-        public override string Email { get; set; }
+        public override string? Email { get; set; }
 
         [FirestoreProperty]
         [DataType(DataType.Password)]
         [PersonalData, Required]
-        public string Password { get; set; }
+        public string? Password { get; set; }
 
         [FirestoreProperty]
         [Required]
-        public string Role { get; set; }
+        public string? Role { get; set; }
 
         [FirestoreProperty]
         [Required]
-        public int DataId { get; set; }
+        public int? DataId { get; set; }
     }
 }

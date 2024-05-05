@@ -224,7 +224,7 @@ namespace HospitalManagementApp.Data
             {
                 if (staff != null && staff.SpecialList != null && (SpecialList)staff.SpecialList == specialList)
                 {
-                    ids.Add(staff.Id);
+                    ids.Add((int)staff.Id);
                 }
             }
 

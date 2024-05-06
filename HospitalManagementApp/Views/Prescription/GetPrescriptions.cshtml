@@ -6,7 +6,7 @@
 
 <h1>Prescriptions</h1>
 <div>
-    <a asp-action="List">Back to List</a>
+    <a asp-action="List" class="btn btn-primary">Back to List</a>
 </div>
 @if (Model == null)
 {
@@ -35,7 +35,7 @@ else{
                     @Html.DisplayFor(model => item.Description)
                 </td>
                 <td>
-                        <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                        <a asp-action="Details" class="btn btn-primary" asp-route-id="@item.Id">Details</a>
                 </td>
             </tr>
         }

@@ -7,7 +7,7 @@
 <h1>List of Prescription</h1>
 
 <p>
-    <a asp-action="Add">Add new prescription</a>
+    <a asp-action="Add" class="btn btn-primary">Add new prescription</a>
 </p>
 
 @using (Html.BeginForm("Search", "Prescription", FormMethod.Get))
@@ -50,8 +50,8 @@
                     @Html.DisplayFor(model => item.Description)
                 </td>
                 <td>
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Remove" asp-route-id="@item.Id">Delete</a>
+                    <a asp-action="Details" class="btn btn-primary" asp-route-id="@item.Id">Details</a> |
+                    <button type="button" class="btn btn-danger btn-delete-pres" value="@item.Id">Delete</button>
                 </td>
             </tr>
         }

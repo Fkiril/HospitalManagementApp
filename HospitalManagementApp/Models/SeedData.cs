@@ -28,6 +28,7 @@ namespace HospitalManagementApp.Models
                     DateOfBirth = "09/08/2003",
                     Address = "abc",
                     PhoneNum = "0769421007",
+                    Email = string.Empty,
                     MedicalHistory = null,
                     TestResult = new TestResult
                     {
@@ -57,6 +58,7 @@ namespace HospitalManagementApp.Models
                     DateOfBirth = "03/03/2003",
                     Address = "abc",
                     PhoneNum = "0969185801",
+                    Email = string.Empty,
                     MedicalHistory = null,
                     TestResult = new TestResult
                     {
@@ -100,30 +102,12 @@ namespace HospitalManagementApp.Models
             {
                 new ApplicationUser
                 {
-                    Id = "1",
-                    UserName = "KiriL",
-                    Email = "abc.gmail.com",
-                    Password = "abcdef123",
+                    Id = "0",
+                    UserName = "Admin",
+                    Email = "admin@gmail.com",
+                    Password = "admin123",
                     Role = "Admin",
                     DataId = 0
-                },
-                new ApplicationUser
-                {
-                    Id = "2",
-                    UserName = "Doctor1",
-                    Email = "doctor1@gmail.com",
-                    Password = "doc123",
-                    Role = "Doctor",
-                    DataId = 1
-                },
-                new ApplicationUser
-                {
-                    Id = "3",
-                    UserName = "Violet",
-                    Email = "patient1@gmail.com",
-                    Password = "patient123",
-                    Role = "Patient",
-                    DataId = 2
                 }
             };
 

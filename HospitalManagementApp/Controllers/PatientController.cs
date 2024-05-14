@@ -7,6 +7,7 @@ using HospitalManagementApp.Models.PatientViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 
 namespace HospitalManagementApp.Controllers
@@ -45,6 +46,11 @@ namespace HospitalManagementApp.Controllers
                 }
             }
 
+            if (TempData["ErrorMessage"] != null && TempData["ErrorMessage"] as string != null)
+            {
+                ViewBag.ErrorMessage = TempData["ErrorMessage"] as string;
+            }
+
             if (TempData["PatientList"] == null)
             {
                 await _patientContext.InitializePatientListFromFirestore();
@@ -61,6 +67,7 @@ namespace HospitalManagementApp.Controllers
                 return View(null);
             }
         }
+
         [Authorize(Roles = "Admin, Doctor")]
         public IActionResult ShowPatientList(int id)
         {
@@ -134,7 +141,15 @@ namespace HospitalManagementApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                _patientContext.Add(patient);
+                try
+                {
+                    _patientContext.Add(patient);
+                }
+                catch (Exception ex)
+                {
+                    ViewBag.ErrorMessage = ex.Message;
+                    return View();
+                }
                 await _patientContext.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
@@ -189,19 +204,6 @@ namespace HospitalManagementApp.Controllers
                 await _patientContext.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
-            }
-            else
-            {
-                foreach (var modelStateKey in ModelState.Keys)
-                {
-                    var modelStateVal = ModelState[modelStateKey];
-                    if (modelStateVal != null) foreach (var error in modelStateVal.Errors)
-                    {
-                        var errorMessage = error.ErrorMessage;
-                        var exception = error.Exception;
-                        throw new Exception(errorMessage, exception);
-                    }
-                }
             }
             return View(patient);
         }
@@ -311,31 +313,18 @@ namespace HospitalManagementApp.Controllers
                 }
                 catch (ArgumentException arex)
                 {
-                    ModelState.AddModelError("Id", arex.Message);
+                    ViewBag.ErrorMessage = arex.Message;
                     ViewBag.patientId = patientId;
                     return View();
                 }
                 catch (InvalidDataException ex)
                 {
-                    ViewBag.InvalidDataException = ex.Message;
+                    ViewBag.ErrorMessage = ex.Message;
                     ViewBag.patientId = patientId;
                     return View();
                 }
 
                 return RedirectToAction(nameof(TreatmentScheduleManager), new {id = patientId});
-            }
-            else
-            {
-                foreach (var modelStateKey in ModelState.Keys)
-                {
-                    var modelStateVal = ModelState[modelStateKey];
-                    if (modelStateVal != null) foreach (var error in modelStateVal.Errors)
-                        {
-                            var errorMessage = error.ErrorMessage;
-                            var exception = error.Exception;
-                            throw new Exception(errorMessage, exception);
-                        }
-                }
             }
             return RedirectToAction(nameof(Index));
         }
@@ -380,25 +369,12 @@ namespace HospitalManagementApp.Controllers
                 }
                 catch (InvalidDataException ex)
                 {
-                    ViewBag.InvalidDataException = ex.Message;
+                    ViewBag.ErrorMessage = ex.Message;
                     ViewBag.patientId = patientId;
                     return View();
                 }
 
                 return RedirectToAction(nameof(TreatmentScheduleManager), new { id = patientId });
-            }
-            else
-            {
-                foreach (var modelStateKey in ModelState.Keys)
-                {
-                    var modelStateVal = ModelState[modelStateKey];
-                    if (modelStateVal != null) foreach (var error in modelStateVal.Errors)
-                        {
-                            var errorMessage = error.ErrorMessage;
-                            var exception = error.Exception;
-                            throw new Exception(errorMessage, exception);
-                        }
-                }
             }
             return RedirectToAction(nameof(Index));
         }
@@ -434,22 +410,17 @@ namespace HospitalManagementApp.Controllers
 
             if (ModelState.IsValid)
             {
-                _patientContext.DeleteTreatmentSchedule(patient, id);
+                try {
+                    _patientContext.DeleteTreatmentSchedule(patient, id);
+                }
+                catch (Exception ex)
+                {
+                    ViewBag.ErrorMessage = ex.Message;
+                    return RedirectToAction(nameof(TreatmentScheduleManager), new { id = patientId });
+                }
+
                 await _patientContext.SaveChangesAsync();
                 return RedirectToAction(nameof(TreatmentScheduleManager), new { id = patientId });
-            }
-            else
-            {
-                foreach (var modelStateKey in ModelState.Keys)
-                {
-                    var modelStateVal = ModelState[modelStateKey];
-                    if (modelStateVal != null) foreach (var error in modelStateVal.Errors)
-                        {
-                            var errorMessage = error.ErrorMessage;
-                            var exception = error.Exception;
-                            throw new Exception(errorMessage, exception);
-                        }
-                }
             }
             return RedirectToAction(nameof(Index));
         }
@@ -485,23 +456,18 @@ namespace HospitalManagementApp.Controllers
 
             if (ModelState.IsValid)
             {
-                _patientContext.SetTestResult(patient, result);
+                try
+                {
+                    _patientContext.SetTestResult(patient, result);
+                }
+                catch (Exception ex)
+                {
+                    ViewBag.ErrorMessage = ex.Message;
+                    return RedirectToAction(nameof(Index));
+                }
                 await _patientContext.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
-            }
-            else
-            {
-                foreach (var modelStateKey in ModelState.Keys)
-                {
-                    var modelStateVal = ModelState[modelStateKey];
-                    if (modelStateVal != null) foreach (var error in modelStateVal.Errors)
-                        {
-                            var errorMessage = error.ErrorMessage;
-                            var exception = error.Exception;
-                            throw new Exception(errorMessage, exception);
-                        }
-                }
             }
             return RedirectToAction(nameof(Index));
         }
@@ -529,7 +495,8 @@ namespace HospitalManagementApp.Controllers
             var suitableStaffs = _staffContext.GetSuitableStaffs((SpecialList)patient.TestResult.Type);
             if (suitableStaffs == null || suitableStaffs.Count == 0)
             {
-                return NotFound("Can find any suitable staffs");
+                ViewBag.ErrorMessage = "Can not find any suitable staffs for this patient!";
+                return RedirectToAction(nameof(Index));
             }
             ViewBag.suitableStaffs = new SelectList(suitableStaffs);
 
@@ -551,19 +518,6 @@ namespace HospitalManagementApp.Controllers
                 await _patientContext.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
-            }
-            else
-            {
-                foreach (var modelStateKey in ModelState.Keys)
-                {
-                    var modelStateVal = ModelState[modelStateKey];
-                    if (modelStateVal != null) foreach (var error in modelStateVal.Errors)
-                        {
-                            var errorMessage = error.ErrorMessage;
-                            var exception = error.Exception;
-                            throw new Exception(errorMessage, exception);
-                        }
-                }
             }
             return RedirectToAction(nameof(Index));
         }
@@ -620,26 +574,22 @@ namespace HospitalManagementApp.Controllers
             {
                 if (history == null)
                 {
-                    return BadRequest();
+                    ViewBag.ErrorMessage = "Bad request!";
+                    return RedirectToAction(nameof(MedicalHistoryManager), new { id = patientId });
                 }
 
-                _patientContext.AddMedicalHistory(patient, history);
+                try
+                {
+                    _patientContext.AddMedicalHistory(patient, history);
+                }
+                catch (Exception ex)
+                {
+                    ViewBag.ErrorMessage = ex.Message;
+                    return RedirectToAction(nameof(MedicalHistoryManager), new { id = patientId });
+                }
 
                 await _patientContext.SaveChangesAsync();
                 return RedirectToAction(nameof(MedicalHistoryManager), new { id = patientId });
-            }
-            else
-            {
-                foreach (var modelStateKey in ModelState.Keys)
-                {
-                    var modelStateVal = ModelState[modelStateKey];
-                    if (modelStateVal != null) foreach (var error in modelStateVal.Errors)
-                        {
-                            var errorMessage = error.ErrorMessage;
-                            var exception = error.Exception;
-                            throw new Exception(errorMessage, exception);
-                        }
-                }
             }
             return RedirectToAction(nameof(Index));
         }
@@ -656,22 +606,18 @@ namespace HospitalManagementApp.Controllers
 
             if (ModelState.IsValid)
             {
-                _patientContext.DeleteMedicalHistory(patient, startDate);
+                try
+                {
+                    _patientContext.DeleteMedicalHistory(patient, startDate);
+                }
+                catch (Exception ex)
+                {
+                    ViewBag.ErrorMessage = ex.Message;
+                    return RedirectToAction(nameof(MedicalHistoryManager), new { id = patientId });
+                }
+
                 await _patientContext.SaveChangesAsync();
                 return RedirectToAction(nameof(MedicalHistoryManager), new { id = patientId });
-            }
-            else
-            {
-                foreach (var modelStateKey in ModelState.Keys)
-                {
-                    var modelStateVal = ModelState[modelStateKey];
-                    if (modelStateVal != null) foreach (var error in modelStateVal.Errors)
-                        {
-                            var errorMessage = error.ErrorMessage;
-                            var exception = error.Exception;
-                            throw new Exception(errorMessage, exception);
-                        }
-                }
             }
             return RedirectToAction(nameof(Index));
         }

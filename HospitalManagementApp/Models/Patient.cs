@@ -41,6 +41,10 @@ namespace HospitalManagementApp.Models
         [FirestoreProperty]
         [RegularExpression(@"^0\d{9}$", ErrorMessage = "Invalid phone number format!"), StringLength(10)]
         public string? PhoneNum { get; set; }
+
+        [FirestoreProperty]
+        [RegularExpression(@"^[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]", ErrorMessage = "Invalid email format!")]
+        public string? Email {  get; set; }
             
         // Need some classes to implement these field
         [FirestoreProperty(ConverterType = typeof(MedicalHistoryConverter))]

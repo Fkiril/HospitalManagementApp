@@ -36,14 +36,7 @@ namespace HospitalManagementApp.Data
         {
             if (await IsIdUnique(user.Id))
             {
-                try
-                {
-                    await GetDocumentReferenceWithId(user.Id).SetAsync(user).ConfigureAwait(false);
-                }
-                catch (Exception)
-                {
-                    Console.Write("Can not add new data into FirestoreDb");
-                }
+                await GetDocumentReferenceWithId(user.Id).SetAsync(user).ConfigureAwait(false);
             }
             else
             {
@@ -122,7 +115,7 @@ namespace HospitalManagementApp.Data
                 
                 user.Password = newPassword;
 
-                await GetDocumentReferenceWithId(docId + id).SetAsync(user);
+                await GetDocumentReferenceWithId(id).SetAsync(user);
             }
             else
             {
@@ -147,10 +140,8 @@ namespace HospitalManagementApp.Data
             else
             {
                 var docQuery = query.Documents.FirstOrDefault(doc => (
-                                (doc.GetValue<string>("Role") == "Docter") ||
-                                 doc.GetValue<string>("Role") == "Nurse" ||
-                                 doc.GetValue<string>("Role") == "SupportStaff")
-                                 && (doc.GetValue<int>("DataFlag") == id));
+                                (doc.GetValue<string>("Role") != "Patient"
+                                 && doc.GetValue<int>("DataFlag") == id)));
                 if (docQuery == null)
                 {
                     return true;

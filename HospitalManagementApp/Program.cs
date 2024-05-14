@@ -2,6 +2,8 @@ using HospitalManagementApp.Data;
 using HospitalManagementApp.Services;
 using HospitalManagementApp.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Diagnostics;
+using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 

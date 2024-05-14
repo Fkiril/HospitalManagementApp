@@ -19,4 +19,5 @@
     {
         <p>This user is not in Admin role</p>
     }
+    <a asp-action="ChangePassword" asp-route-id="@_HttpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value">Change password</a>
 </div>

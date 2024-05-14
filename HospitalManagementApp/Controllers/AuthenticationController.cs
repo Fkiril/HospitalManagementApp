@@ -52,8 +52,8 @@ namespace HospitalManagementApp.Controllers
                 }
                 catch (InvalidDataException ex)
                 {
-                    Console.WriteLine(ex.Message);
-                    return NotFound();
+                    ViewBag.ErrorMessage = ex.Message;
+                    return View();
                 }
 
                 if (user != null)
@@ -87,12 +87,12 @@ namespace HospitalManagementApp.Controllers
                     }
                     else
                     {
-                        ModelState.AddModelError("", "Wrong password!");
+                        ViewBag.ErrorMessage = "Incorrect password!";
                     }
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Invalid email!");
+                    ViewBag.ErrorMessage = "Invalid email!";
                 }
 
             }
@@ -125,7 +125,15 @@ namespace HospitalManagementApp.Controllers
                     DataId = model.DataId
                 };
 
-                await _applicationUserContext.AddUserAsync(user);
+                try
+                {
+                    await _applicationUserContext.AddUserAsync(user);
+                }
+                catch (Exception ex)
+                {
+                    ViewBag.ErrorMessage = ex.Message;
+                    return View();
+                }
 
                 return RedirectToAction("Login", "Authentication");
             }
@@ -154,11 +162,18 @@ namespace HospitalManagementApp.Controllers
 
                     if (_applicationUserContext.UserRegisted((int)id, patientFlag).Result)
                     {
-                        Console.WriteLine("This patient already has an application account!");
-                        return RedirectToAction(nameof(Index));
+                        TempData["ErrorMessage"] = "This patient already has a registed account";
+                        return RedirectToAction(nameof(Index), "Patient");
+                    }
+                    if (patient.Email != null && _applicationUserContext.GetUserByEmailAsync(patient.Email) != null)
+                    {
+                        TempData["ErrorMessage"] = "This patient's email has already registed for an account!";
+                        return RedirectToAction(nameof(Index), "Patient");
                     }
 
+
                     model.UserName = patient.Name;
+                    model.Email = patient.Email;
                     model.DataId = patient.Id;
                     model.Role = "Patient";
                 }
@@ -173,11 +188,12 @@ namespace HospitalManagementApp.Controllers
 
                     if (_applicationUserContext.UserRegisted((int)id, patientFlag).Result)
                     {
-                        Console.WriteLine("This staff already has an application account!");
-                        return RedirectToAction(nameof(Index));
+                        TempData["ErrorMessage"] = "This staff already has a registed account!";
+                        return RedirectToAction(nameof(Index), "Staff");
                     }
 
                     model.UserName = staff.Name;
+                    model.Email = staff.Email;
                     model.DataId = staff.Id;
                     model.Role = staff.HealthCareStaff.ToString();
                 }
@@ -202,7 +218,14 @@ namespace HospitalManagementApp.Controllers
                     DataId = model.DataId
                 };
 
-                await _applicationUserContext.AddUserAsync(user);
+                try
+                {
+                    await _applicationUserContext.AddUserAsync(user);
+                }
+                catch (Exception ex)
+                {
+                    ViewBag.ErrorMessage = ex.Message;
+                }
 
                 if (user.Role == "Patient")
                 {
@@ -262,7 +285,7 @@ namespace HospitalManagementApp.Controllers
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.ToString());
+                    ViewBag.ErrorMessage = ex.Message;
                     return RedirectToAction(nameof(Index));
                 }
             }

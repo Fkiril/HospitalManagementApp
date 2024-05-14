@@ -17,6 +17,9 @@ namespace HospitalManagementApp.Models
 
         [FirestoreProperty]
         public string? docId { get; set; } = string.Empty;
+        [FirestoreProperty]
+        [DataType(DataType.DateTime)]
+        public DateTime PurchaseDate { get; set; } = DateTime.Now;
 
         [FirestoreProperty]
         public List<DrugInfo>? Drug { get; set; }

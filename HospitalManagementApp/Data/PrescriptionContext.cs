@@ -61,6 +61,7 @@ namespace HospitalManagementApp.Data
 
             foreach (Prescription prescription in PrescriptionList)
             {
+                prescription.PurchaseDate = DateTime.SpecifyKind(prescription.PurchaseDate, DateTimeKind.Utc);
                 if (string.IsNullOrEmpty(prescription.docId))
                 {
                     DocumentReference newDocRef = await colRef.AddAsync(prescription);

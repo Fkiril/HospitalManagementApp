@@ -7,17 +7,17 @@
 <h1>List of Prescription</h1>
 
 <p>
-    <a asp-action="Add">Add New Prescription</a>
+    <a asp-action="Add" class="btn btn-primary">Add New Prescription</a>
 </p>
 <div>
-    <a asp-controller="Drugs" asp-action="Index">Back to Drugs</a>
+    <a asp-controller="Drugs" asp-action="Index" class="btn btn-primary">Back to Drugs</a>
 </div>
 @using (Html.BeginForm("Search", "Prescription", FormMethod.Get))
 {
-    <p>
-        Find Prescription: @Html.TextBox("SearchingId", ViewBag.CurrentFilter as int?)
-        <input type="submit" value="Search" />
-    </p>
+    <div class="">
+        Find Prescription: @Html.TextBox("SearchingId", ViewBag.CurrentFilter as int?, new {@class = "form-control"})
+        <input type="submit" value="Search" class="btn btn-info"/>
+    </div>
 }
 
 
@@ -52,11 +52,14 @@
                     @Html.DisplayFor(model => item.Description)
                 </td>
                 <td>
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Remove" asp-route-id="@item.Id">Delete</a>
+                    <a asp-action="Details" class="btn btn-primary" asp-route-id="@item.Id">Details</a> |
+                    <button type="button" class="btn btn-danger btn-delete-pres" value="@item.Id">Delete</button>
                 </td>
             </tr>
         }
     </tbody>
 
 </table>
+@section Scripts {
+    <script src="/js/change_quantity.js"></script>
+}

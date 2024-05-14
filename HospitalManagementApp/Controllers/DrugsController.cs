@@ -1,7 +1,11 @@
-﻿using HospitalManagementApp.Data;
+﻿using Google.Protobuf.WellKnownTypes;
+using HospitalManagementApp.Data;
 using HospitalManagementApp.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.FlowAnalysis.DataFlow;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
 namespace HospitalManagementApp.Controllers
@@ -23,30 +27,50 @@ namespace HospitalManagementApp.Controllers
             }
             else
             {
-                var alldrug = DrugsContext.DrugsList.Where(n => n.Name.Contains(SearchingString)).ToList();
-                return View(alldrug);
+                try
+                {
+                    var alldrug = DrugsContext.DrugsList.Where(n => !string.IsNullOrEmpty(n.Name) ? n.Name.Contains(SearchingString) : true).ToList();
+                    return View(alldrug);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception(ex.Message, ex);
+                }
             }
         }
 
         public async Task<IActionResult> Index()
         {
-            await _context.InitializeDrugsListFromFirestore();
+            try
+            {
+                await _context.InitializeDrugsListFromFirestore();
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
             return View(DrugsContext.DrugsList);
         }
 
         public IActionResult Details(int? id)
         {
+            Drugs? drugs = new();
             if (id == null)
             {
                 return NotFound();
             }
-
-            var drugs = DrugsContext.DrugsList.FirstOrDefault(drugs => drugs.IdOfDrug == id);
-            if (drugs == null)
+            try
             {
-                return NotFound();
+                drugs = DrugsContext.DrugsList.FirstOrDefault(drugs => drugs.IdOfDrug == id);
+                if (drugs == null)
+                {
+                    return NotFound();
+                }
             }
-
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
             return View(drugs);
         }
 
@@ -58,7 +82,7 @@ namespace HospitalManagementApp.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Add(
-            [Bind("IdOfDrug,docId,Name,HisUse,Expiry,Status,Quantity,ReceiptDay")] Drugs drugs)
+            [Bind("IdOfDrug,docId,Name,Status,Quantity,ManufactureDate,ExpirationDate")] Drugs drugs)
         {
             if (ModelState.IsValid)
             {
@@ -68,9 +92,21 @@ namespace HospitalManagementApp.Controllers
                     ModelState.AddModelError(string.Empty, "IdOfDrug already exists.");
                     return View(drugs);
                 }
-                _context.Add(drugs);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    drugs.ReceiptDay = DateTime.Now;
+                    drugs.Status = Status.Available;
+                    _context.Add(drugs);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                catch(Exception ex)
+                {
+                    ModelState.AddModelError("", ex.Message.ToString());
+                    Console.WriteLine("Add_drugcontroler", ex.Message);
+                    return View(drugs);
+                }
+                
             }
             return View();
         }
@@ -82,23 +118,39 @@ namespace HospitalManagementApp.Controllers
                 return false;
             }
 
-            var existingIds = DrugsContext.DrugsList.Select(d => d.IdOfDrug);
-            return existingIds.Contains(idOfDrug);
+            try
+            {
+                var existingIds = DrugsContext.DrugsList.Select(d => d.IdOfDrug);
+                return existingIds.Contains(idOfDrug);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine("IsIdOfDrugExists_drugcontroler", ex.Message);
+            }
+            return false;
         }
 
 
         public IActionResult Edit(int? id)
         {
+            Drugs? drugs = null;
             if (id == null)
             {
                 return NotFound();
             }
 
-            var drugs = DrugsContext.DrugsList
-                .FirstOrDefault(drugs => drugs.IdOfDrug == id);
-            if (drugs == null)
+            try
             {
-                return NotFound();
+                drugs = DrugsContext.DrugsList
+                    .FirstOrDefault(drugs => drugs.IdOfDrug == id);
+                if (drugs == null)
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("IsIdOfDrugExists_drugcontroler", ex.Message);
             }
             return View(drugs);
         }
@@ -107,7 +159,7 @@ namespace HospitalManagementApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(
             int id,
-            [Bind("IdOfDrug,docId,Name,HisUse,Expiry,Status,Quantity,ReceiptDay")] Drugs drugs)
+            [Bind("IdOfDrug,docId,Name,Status,Quantity,ManufactureDate,ExpirationDate")] Drugs drugs)
         {
             if (id != drugs.IdOfDrug)
             {
@@ -121,7 +173,7 @@ namespace HospitalManagementApp.Controllers
                     _context.Update(drugs);
                     await _context.SaveChangesAsync();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     if (!DrugsExists((int)drugs.IdOfDrug))
                     {
@@ -129,15 +181,14 @@ namespace HospitalManagementApp.Controllers
                     }
                     else
                     {
-                        throw;
+                        ModelState.AddModelError("", ex.Message.ToString());
+                        return View(drugs);
                     }
                 }
-
                 return RedirectToAction(nameof(Index));
             }
             return View(drugs);
         }
-
 
         public async Task<IActionResult> Remove(int? id)
         {
@@ -145,18 +196,41 @@ namespace HospitalManagementApp.Controllers
             {
                 return NotFound();
             }
-
-            var drug = DrugsContext.DrugsList.FirstOrDefault(m => m.IdOfDrug == id);
-            if (drug == null)
+            try
             {
-                return NotFound();
-            }
+                var drug = DrugsContext.DrugsList.FirstOrDefault(m => m.IdOfDrug == id);
+                if (drug == null)
+                {
+                    return NotFound();
+                }
 
-            await _context.DeleteAsync(drug.docId);
+                await _context.DeleteAsync(drug.docId ?? "");
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+            
 
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Remove_v2(int? id)
+        {
+            try
+            {
+                var drug = DrugsContext.DrugsList.FirstOrDefault(m => m.IdOfDrug == id);
+                if(drug != null)
+                    await _context.DeleteAsync(drug.docId ?? "");
+            }
+            catch (Exception ex)
+            {
+                return Json("fail");
+                
+            }
+            return Json("ok");
+        }
 
         [HttpPost, ActionName("Remove")]
         [ValidateAntiForgeryToken]
@@ -165,12 +239,20 @@ namespace HospitalManagementApp.Controllers
             var drug = DrugsContext.DrugsList.FirstOrDefault(drug => drug.IdOfDrug == id);
             if (drug != null)
             {
-                DrugsContext.DrugsList.Remove(drug);
-                await _context.DeleteAsync(drug.docId);
+                try
+                {
+                    DrugsContext.DrugsList.Remove(drug);
+                    await _context.DeleteAsync(drug.docId ?? "");
 
-                await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();
 
-                return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception(ex.Message, ex);
+                }
+                
             }
 
             return NotFound();
@@ -179,6 +261,22 @@ namespace HospitalManagementApp.Controllers
         private bool DrugsExists(int id)
         {
             return DrugsContext.DrugsList.Any(drugs => drugs.IdOfDrug == id);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetDrugById(int id)
+        {
+            await _context.InitializeDrugsListFromFirestore();
+            Drugs? drug = null;
+            try
+            {
+                drug = DrugsContext.DrugsList.FirstOrDefault(d => d.IdOfDrug.Equals(id));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+            return Json(drug);
         }
     }
 }

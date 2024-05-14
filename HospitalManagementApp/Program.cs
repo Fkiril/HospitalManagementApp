@@ -12,7 +12,6 @@ builder.Services.AddSingleton<FirestoreDbService>(provider =>
     var projectId = "hospitalmanagementapp-7aa23";
     string rootPath = provider.GetRequiredService<IWebHostEnvironment>().ContentRootPath;
     var jsonFilePath = Path.Combine(rootPath,"" ,"hospitalmanagementapp-7aa23-firebase-adminsdk-gw6ir-355e13d856.json");
-
     Google.Apis.Auth.OAuth2.GoogleCredential credential = Google.Apis.Auth.OAuth2.GoogleCredential.FromFile(jsonFilePath);
     return new FirestoreDbService(projectId, credential);
 });

@@ -6,9 +6,8 @@ namespace HospitalManagementApp.Models
 {
     public enum Status
     {
-        New,
-        Used,
-        Old
+        Available,
+        NotAvailable
     }
 
     [FirestoreData]
@@ -23,11 +22,15 @@ namespace HospitalManagementApp.Models
 
         [FirestoreProperty]
         [Required, Range(0, 9999)]
-        public int? HisUse { get; set; }
-
-        [FirestoreProperty]
-        [Required, Range(0, 9999)]
         public int? Quantity { get; set; }
+        [FirestoreProperty]
+        [Display(Name = "Date of Manufacture")]
+        [DataType(DataType.DateTime)]
+        public DateTime ManufactureDate { get; set; }
+        [FirestoreProperty]
+        [Display(Name = "Expiration Date")]
+        [DataType(DataType.DateTime)]
+        public DateTime ExpirationDate { get; set; }
 
         [FirestoreProperty]
         [Display(Name = "Receipt Of Day")]
@@ -35,14 +38,13 @@ namespace HospitalManagementApp.Models
         public DateTime ReceiptDay { get; set; }
 
         [FirestoreProperty]
-        [Required, Range(1, 9999)]
-        public int? Expiry { get; set; }
-
-        [FirestoreProperty]
         [Required, StringLength(60, MinimumLength = 3)]
         public string? Name { get; set; }
+        [FirestoreProperty]
+        public bool Enable { get; set; } = true;
 
         [FirestoreProperty]
         public Status? Status { get; set; }
+
     }
 }

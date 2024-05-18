@@ -15,6 +15,16 @@
 <p>
     <a asp-action="Add">Add new Staff</a>
 </p>
+
+<form asp-action="FindStaff" method="get">
+    <div>
+        <label for="StaffName">Search Staff by Name:</label>
+        <input type="text" id="StaffName" name="StaffName" />
+        <button type="submit">Search</button>
+    </div>
+</form>
+
+<br />
 <table class="table">
     <thead>
         <tr>

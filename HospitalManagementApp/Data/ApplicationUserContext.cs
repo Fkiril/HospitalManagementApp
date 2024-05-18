@@ -99,7 +99,7 @@ namespace HospitalManagementApp.Data
 
             if (user.UserName == null || user.Email == null || user.Role == null || user.DataId == null)
             {
-                throw new InvalidDataException("Lacking user's data!");
+                throw new InvalidDataException("Can not detect user by this email!");
             }
 
             return user;

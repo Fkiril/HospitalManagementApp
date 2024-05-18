@@ -142,6 +142,7 @@ namespace HospitalManagementApp.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin", AuthenticationSchemes = "Cookies")]
         public IActionResult CreateApplicationUserAccount (int? id, bool patientFlag)
         {
             if (id == null)

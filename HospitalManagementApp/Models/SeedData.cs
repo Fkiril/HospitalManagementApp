@@ -16,13 +16,9 @@ namespace HospitalManagementApp.Models
                 return;
             }
 
-<<<<<<< HEAD
             Console.WriteLine("InitializePatientData");
 
             var patients = new List<Patient>
-=======
-            /*var patients = new List<Patient>
->>>>>>> e43bca8 (Update feature)
             {
                 new Patient
                 {
@@ -89,7 +85,7 @@ namespace HospitalManagementApp.Models
             foreach (var patient in patients)
             {
                 await colRef.Document("patient_" + patient.Id).SetAsync(patient);
-            }*/
+            }
         }
 
         public static async void InitializeApplicationUserData(FirestoreDb firestoreDb)

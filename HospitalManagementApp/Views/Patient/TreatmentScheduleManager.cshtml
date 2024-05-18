@@ -23,6 +23,7 @@
             <th>
                 <strong>End time</strong>
             </th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -50,11 +51,99 @@
                 </tr>
             }
         }
-        <tr>
-            <td>
-                <a asp-action="AddSchedule" asp-route-id="@Model.Id" >Add new schedule</a>
-                <a asp-action="Index">Back to patient list</a>
-            </td>
-        </tr>
     </tbody>
+
+    <br />
+
+    <div>
+        <a asp-action="Index">Back to patient list</a>
+    </div>
+    <div>
+        <a asp-action="AddSchedule" asp-route-id="@Model.Id">Add new schedule</a>
+    </div>
 </table>
+
+
+<h6>Work schedule of patient's in charged doctor</h6>
+<p> Morning: 6AM - 11:30AM   |   Afternoon: 12:30AM - 16:30PM   |   Extra: 16:30PM - 19PM </p>
+<div>
+    @if (ViewBag.Data != null && ViewBag.DayofWeek != null)
+    {
+        string a = "";
+        foreach (var date in ViewBag.Date)
+        {
+            if (date != ViewBag.Date[0]) a += ", ";
+            a += date;
+        }
+        foreach (var shift in ViewBag.DayofWeek)
+        {
+            if (shift != ViewBag.DayofWeek[0]) a += ", ";
+            a += (int)shift;
+        }
+
+        <p class="col-sm-10" style="color:white" id="cal-date">@a</p>
+    }
+</div>
+<hr />
+
+<div class="container">
+    <table class="calendar">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Monday</th>
+                <th>Tuesday</th>
+                <th>Wednesday</th>
+                <th>Thursday</th>
+                <th>Friday</th>
+                <th>Saturday</th>
+                <th>Sunday</th>
+            </tr>
+            <tr>
+                <th></th>
+                <th id="day1">day1</th>
+                <th id="day2">day2</th>
+                <th id="day3">day3</th>
+                <th id="day4">day4</th>
+                <th id="day5">day5</th>
+                <th id="day6">day6</th>
+                <th id="day7">day7</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Morning</td>
+                <td id="a2"></td>
+                <td id="a3"></td>
+                <td id="a4"></td>
+                <td id="a5"></td>
+                <td id="a6"></td>
+                <td id="a7"></td>
+                <td id="a8"></td>
+            </tr>
+            <tr>
+                <td>Afternoon</td>
+                <td id="b2"></td>
+                <td id="b3"></td>
+                <td id="b4"></td>
+                <td id="b5"></td>
+                <td id="b6"></td>
+                <td id="b7"></td>
+                <td id="b8"></td>
+            </tr>
+            <tr>
+                <td>Evening</td>
+                <td id="c2"></td>
+                <td id="c3"></td>
+                <td id="c4"></td>
+                <td id="c5"></td>
+                <td id="c6"></td>
+                <td id="c7"></td>
+                <td id="c8"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script src="~/js/calendar.js">  </script>
+

@@ -28,6 +28,7 @@ namespace HospitalManagementApp.Controllers
         }
 
         // GET: Patient
+        [Authorize(Roles = "Admin, Doctor", AuthenticationSchemes = "Cookies")]
         public async Task<IActionResult> Index()
         {
             if (_httpContextAccessor.HttpContext != null && _httpContextAccessor.HttpContext.User.IsInRole("Patient"))
@@ -68,7 +69,7 @@ namespace HospitalManagementApp.Controllers
             }
         }
 
-        [Authorize(Roles = "Admin, Doctor")]
+        [Authorize(Roles = "Admin, Doctor", AuthenticationSchemes = "Cookies")]
         public IActionResult ShowPatientList(int id)
         {
             var patients = _patientContext.GetPatientsFromStaffId(id).Result;
@@ -111,7 +112,7 @@ namespace HospitalManagementApp.Controllers
         }
 
         // GET: Patient/Details/3
-        [Authorize(Roles = "Admin, Doctor, Patient")]
+        [Authorize(Roles = "Admin, Doctor, Patient", AuthenticationSchemes = "Cookies")]
         public IActionResult Details(int? id)
         {
             if (id == null)
@@ -171,7 +172,7 @@ namespace HospitalManagementApp.Controllers
         }
 
         //GET: Patient/Edit/3
-        [Authorize(Roles = "Admin, Doctor")]
+        [Authorize(Roles = "Admin, Doctor", AuthenticationSchemes = "Cookies")]
         public IActionResult Edit(int? id)
         {
             if (id == null)
@@ -209,7 +210,7 @@ namespace HospitalManagementApp.Controllers
         }
 
         //GET: Patient/Remove/3
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin", AuthenticationSchemes = "Cookies")]
         public IActionResult Remove(int? id)
         {
             if (id == null)
@@ -241,7 +242,7 @@ namespace HospitalManagementApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [Authorize(Roles = "Admin, Doctor")]
+        [Authorize(Roles = "Admin, Doctor", AuthenticationSchemes = "Cookies")]
         public IActionResult TreatmentScheduleManager(int? id)
         {
             if (id == null)
@@ -256,12 +257,10 @@ namespace HospitalManagementApp.Controllers
                 return NotFound();
             }
 
-            //Models.Calendar? docSchedule = _staffContext.GetCalendar(patient.StaffIds);
-
             return View(patient);
         }
 
-        [Authorize(Roles = "Admin, Doctor")]
+        [Authorize(Roles = "Admin, Doctor", AuthenticationSchemes = "Cookies")]
         public IActionResult AddSchedule(int? id)
         {
             if (id == null)
@@ -275,12 +274,12 @@ namespace HospitalManagementApp.Controllers
                 return NotFound();
             }
 
-            //Models.Calendar? docSchedule = _staffContext.GetCalendar(patient.StaffIds);
-            //if (docSchedule != null)
-            //{
-            //    ViewBag.Date = docSchedule.Date;
-            //    ViewBag.DayOfWeek = docSchedule.DayofWeek;
-            //}
+            Models.Calendar? docSchedule = _staffContext.GetCalendar(patient.StaffIds);
+            if (docSchedule != null)
+            {
+                ViewBag.Date = docSchedule.Date;
+                ViewBag.DayOfWeek = docSchedule.DayofWeek;
+            }
 
             ViewBag.PatientId = id;
 
@@ -311,15 +310,15 @@ namespace HospitalManagementApp.Controllers
                     _patientContext.AddTreatmentSchedule(patient, newTreatment, docSchedule);
                     await _patientContext.SaveChangesAsync();
                 }
-                catch (ArgumentException arex)
+                catch (ArgumentException arEx)
                 {
-                    ViewBag.ErrorMessage = arex.Message;
+                    ViewBag.ErrorMessage = arEx.Message;
                     ViewBag.patientId = patientId;
                     return View();
                 }
-                catch (InvalidDataException ex)
+                catch (InvalidDataException invaEx)
                 {
-                    ViewBag.ErrorMessage = ex.Message;
+                    ViewBag.ErrorMessage = invaEx.Message;
                     ViewBag.patientId = patientId;
                     return View();
                 }
@@ -329,7 +328,7 @@ namespace HospitalManagementApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [Authorize(Roles = "Admin, Doctor")]
+        [Authorize(Roles = "Admin, Doctor", AuthenticationSchemes = "Cookies")]
         public IActionResult EditSchedule(int? id, int patientId)
         {
             if (id == null)
@@ -379,7 +378,7 @@ namespace HospitalManagementApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [Authorize(Roles = "Admin, Doctor")]
+        [Authorize(Roles = "Admin, Doctor", AuthenticationSchemes = "Cookies")]
         public IActionResult DeleteSchedule(int? id, int patientId)
         {
             if (id == null)
@@ -425,7 +424,7 @@ namespace HospitalManagementApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [Authorize(Roles = "Admin, Doctor")]
+        [Authorize(Roles = "Admin, Doctor", AuthenticationSchemes = "Cookies")]
         public IActionResult SetTestResult(int? id)
         {
             if (id == null)
@@ -472,7 +471,7 @@ namespace HospitalManagementApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [Authorize(Roles = "Admin, Doctor")]
+        [Authorize(Roles = "Admin, Doctor", AuthenticationSchemes = "Cookies")]
         public IActionResult StaffIdsManager(int? id)
         {
             if (id == null)
@@ -492,13 +491,17 @@ namespace HospitalManagementApp.Controllers
             StaffIdsModel model = new StaffIdsModel { staffIds = patient.StaffIds };
 
             ViewBag.patientId = id;
-            var suitableStaffs = _staffContext.GetSuitableStaffs((SpecialList)patient.TestResult.Type);
-            if (suitableStaffs == null || suitableStaffs.Count == 0)
+            try
             {
-                ViewBag.ErrorMessage = "Can not find any suitable staffs for this patient!";
-                return RedirectToAction(nameof(Index));
+                var suitableStaffs = _staffContext.GetSuitableStaffs((SpecialList)patient.TestResult.Type);
+                suitableStaffs.Sort();
+                ViewBag.suitableStaffs = suitableStaffs;
             }
-            ViewBag.suitableStaffs = new SelectList(suitableStaffs);
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = ex.Message;
+                return RedirectToAction(nameof(Index));
+            } 
 
             return View(model);
         }
@@ -522,7 +525,7 @@ namespace HospitalManagementApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [Authorize(Roles = "Admin, Doctor")]
+        [Authorize(Roles = "Admin, Doctor", AuthenticationSchemes = "Cookies")]
         public IActionResult MedicalHistoryManager(int? id) 
         {
             if (id == null)
@@ -540,7 +543,7 @@ namespace HospitalManagementApp.Controllers
             return View(patient);
         }
 
-        [Authorize(Roles = "Admin, Doctor")]
+        [Authorize(Roles = "Admin, Doctor", AuthenticationSchemes = "Cookies")]
         public IActionResult AddMedicalHistory (int? id)
         {
             if (id == null)

@@ -10,12 +10,12 @@ namespace HospitalManagementApp.Controllers
     [Authorize(Roles = "Admin, Doctor", AuthenticationSchemes = "Cookies")]
     public class PrescriptionController : Controller
     {
-        public readonly PrescriptionContext _presciptionContext;
+        public readonly PrescriptionContext _context;
         public readonly DrugsContext _drugContext;
         private PatientContext _patientContext;
         public PrescriptionController(PrescriptionContext context, DrugsContext drugContext, PatientContext patientContext)
         {
-            _presciptionContext = context;
+            _context = context;
             _drugContext = drugContext;
             _patientContext = patientContext;
         }
@@ -185,8 +185,8 @@ namespace HospitalManagementApp.Controllers
             {
                 try
                 {
-                    _presciptionContext.Update(prescription);
-                    await _presciptionContext.SaveChangesAsync();
+                    _context.Update(prescription);
+                    await _context.SaveChangesAsync();
                 }
                 catch (Exception ex)
                 {

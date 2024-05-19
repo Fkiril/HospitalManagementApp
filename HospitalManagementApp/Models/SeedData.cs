@@ -133,7 +133,7 @@ namespace HospitalManagementApp.Models
                 new Staff
                 {
                     Id = 1,
-                    Name = "Doctor1",
+                    Name = "Philippe Macaire",
                     Gender = Gender.Male,
                     HealthCareStaff = HealthCareStaff.Doctor,
                     DateOfBirth = "09/08/2003",
@@ -147,7 +147,7 @@ namespace HospitalManagementApp.Models
                 new Staff
                 {
                     Id = 2,
-                    Name = "Doctor2",
+                    Name = "Reinel Martin Alvarez Plasencia",
                     Gender = Gender.Female,
                     HealthCareStaff = HealthCareStaff.Doctor,
                     DateOfBirth = "02/04/2001",
@@ -161,7 +161,7 @@ namespace HospitalManagementApp.Models
                 new Staff
                 {
                     Id = 3,
-                    Name = "Doctor3",
+                    Name = "Nguyễn Thanh Liêm",
                     Gender = Gender.Male,
                     HealthCareStaff = HealthCareStaff.Doctor,
                     DateOfBirth = "10/10/2002",
@@ -175,7 +175,7 @@ namespace HospitalManagementApp.Models
                 new Staff
                 {
                     Id = 4,
-                    Name = "Doctor4",
+                    Name = "Võ Thành Nhân",
                     Gender = Gender.Male,
                     HealthCareStaff = HealthCareStaff.Doctor,
                     DateOfBirth = "01/01/2001",
@@ -189,7 +189,7 @@ namespace HospitalManagementApp.Models
                 new Staff
                 {
                     Id = 5,
-                    Name = "Doctor5",
+                    Name = "Phạm Nhật An",
                     Gender = Gender.Male,
                     HealthCareStaff = HealthCareStaff.Doctor,
                     DateOfBirth = "09/08/2003",
@@ -203,7 +203,7 @@ namespace HospitalManagementApp.Models
                 new Staff
                 {
                     Id = 6,
-                    Name = "Doctor6",
+                    Name = "Phan Quỳnh Lan",
                     Gender = Gender.Female,
                     HealthCareStaff = HealthCareStaff.Doctor,
                     DateOfBirth = "02/04/2001",
@@ -217,8 +217,8 @@ namespace HospitalManagementApp.Models
                 new Staff
                 {
                     Id = 7,
-                    Name = "Doctor7",
-                    Gender = Gender.Male,
+                    Name = "Nguyễn Thị Tân Sinh",
+                    Gender = Gender.Female,
                     HealthCareStaff = HealthCareStaff.Doctor,
                     DateOfBirth = "10/10/2002",
                     Email = "doctor7@gmail.com",
@@ -231,7 +231,7 @@ namespace HospitalManagementApp.Models
                 new Staff
                 {
                     Id = 8,
-                    Name = "Doctor8",
+                    Name = "Tôn Thất Trí Dũng",
                     Gender = Gender.Male,
                     HealthCareStaff = HealthCareStaff.Doctor,
                     DateOfBirth = "01/01/2001",
@@ -245,8 +245,8 @@ namespace HospitalManagementApp.Models
                 new Staff
                 {
                     Id = 9,
-                    Name = "Doctor9",
-                    Gender = Gender.Male,
+                    Name = "Quách Thanh Dung",
+                    Gender = Gender.Female,
                     HealthCareStaff = HealthCareStaff.Doctor,
                     DateOfBirth = "09/08/2003",
                     Email = "doctor9@gmail.com",
@@ -259,8 +259,8 @@ namespace HospitalManagementApp.Models
                 new Staff
                 {
                     Id = 10,
-                    Name = "Doctor10",
-                    Gender = Gender.Female,
+                    Name = "Ngô Văn Đoan",
+                    Gender = Gender.Male,
                     HealthCareStaff = HealthCareStaff.Doctor,
                     DateOfBirth = "02/04/2001",
                     Email = "doctoc10@gmail.com",
@@ -273,7 +273,7 @@ namespace HospitalManagementApp.Models
                 new Staff
                 {
                     Id = 11,
-                    Name = "Doctor11",
+                    Name = "Nguyễn Tất Bình",
                     Gender = Gender.Male,
                     HealthCareStaff = HealthCareStaff.Doctor,
                     DateOfBirth = "10/10/2002",
@@ -287,7 +287,7 @@ namespace HospitalManagementApp.Models
                 new Staff
                 {
                     Id = 12,
-                    Name = "Doctor12",
+                    Name = "Nguyễn Văn Quyết",
                     Gender = Gender.Male,
                     HealthCareStaff = HealthCareStaff.Doctor,
                     DateOfBirth = "01/01/2001",
@@ -301,7 +301,7 @@ namespace HospitalManagementApp.Models
                 new Staff
                 {
                     Id = 13,
-                    Name = "Doctor13",
+                    Name = "Đoàn Thị Hồng Hạnh",
                     Gender = Gender.Female,
                     HealthCareStaff = HealthCareStaff.Doctor,
                     DateOfBirth = "02/04/2001",
@@ -315,7 +315,7 @@ namespace HospitalManagementApp.Models
                 new Staff
                 {
                     Id = 14,
-                    Name = "Doctor14",
+                    Name = "Thái Bằng",
                     Gender = Gender.Male,
                     HealthCareStaff = HealthCareStaff.Doctor,
                     DateOfBirth = "10/10/2002",
@@ -329,7 +329,7 @@ namespace HospitalManagementApp.Models
                 new Staff
                 {
                     Id = 15,
-                    Name = "Doctor15",
+                    Name = "Nguyễn Thái Trí",
                     Gender = Gender.Male,
                     HealthCareStaff = HealthCareStaff.Nurse,
                     DateOfBirth = "01/01/2001",
@@ -343,7 +343,7 @@ namespace HospitalManagementApp.Models
                 new Staff
                 {
                     Id = 16,
-                    Name = "Doctor16",
+                    Name = "Lê Trọng Bình",
                     Gender = Gender.Female,
                     HealthCareStaff = HealthCareStaff.Nurse,
                     DateOfBirth = "02/04/2001",
@@ -357,7 +357,7 @@ namespace HospitalManagementApp.Models
                 new Staff
                 {
                     Id = 17,
-                    Name = "Doctor17",
+                    Name = "Đoàn Trung Hiệp",
                     Gender = Gender.Male,
                     HealthCareStaff = HealthCareStaff.Doctor,
                     DateOfBirth = "10/10/2002",
@@ -371,7 +371,7 @@ namespace HospitalManagementApp.Models
                 new Staff
                 {
                     Id = 18,
-                    Name = "Doctor18",
+                    Name = "Bùi Tiến Đạt",
                     Gender = Gender.Male,
                     HealthCareStaff = HealthCareStaff.Doctor,
                     DateOfBirth = "01/01/2001",
@@ -385,7 +385,7 @@ namespace HospitalManagementApp.Models
                 new Staff
                 {
                     Id = 19,
-                    Name = "Doctor19",
+                    Name = "Phạm Thị Thùy Nhung",
                     Gender = Gender.Female,
                     HealthCareStaff = HealthCareStaff.Nurse,
                     DateOfBirth = "02/04/1980",
@@ -399,7 +399,7 @@ namespace HospitalManagementApp.Models
                 new Staff
                 {
                     Id = 20,
-                    Name = "Doctor14",
+                    Name = "Bùi Minh Đức",
                     Gender = Gender.Male,
                     HealthCareStaff = HealthCareStaff.Doctor,
                     DateOfBirth = "10/10/1979",
@@ -413,7 +413,7 @@ namespace HospitalManagementApp.Models
                 new Staff
                 {
                     Id = 21,
-                    Name = "Doctor21",
+                    Name = "Nguyễn Thanh Hưng",
                     Gender = Gender.Male,
                     HealthCareStaff = HealthCareStaff.Doctor,
                     DateOfBirth = "01/01/1988",
@@ -427,7 +427,7 @@ namespace HospitalManagementApp.Models
                 new Staff
                 {
                     Id = 22,
-                    Name = "Doctor22",
+                    Name = "Huỳnh Thoại Loan",
                     Gender = Gender.Female,
                     HealthCareStaff = HealthCareStaff.Doctor,
                     DateOfBirth = "02/04/1981",
@@ -441,7 +441,7 @@ namespace HospitalManagementApp.Models
                 new Staff
                 {
                     Id = 23,
-                    Name = "Doctor23",
+                    Name = "Đoàn Xuân Sinh",
                     Gender = Gender.Male,
                     HealthCareStaff = HealthCareStaff.Doctor,
                     DateOfBirth = "10/10/1979",
@@ -455,7 +455,7 @@ namespace HospitalManagementApp.Models
                 new Staff
                 {
                     Id = 24,
-                    Name = "Doctor24",
+                    Name = "Nguyễn Việt Anh",
                     Gender = Gender.Male,
                     HealthCareStaff = HealthCareStaff.Doctor,
                     DateOfBirth = "01/01/1986",
@@ -469,7 +469,7 @@ namespace HospitalManagementApp.Models
                 new Staff
                 {
                     Id = 25,
-                    Name = "Doctor25",
+                    Name = "Nguyễn Thị Hoàn",
                     Gender = Gender.Female,
                     HealthCareStaff = HealthCareStaff.Nurse,
                     DateOfBirth = "02/04/1981",
@@ -483,7 +483,7 @@ namespace HospitalManagementApp.Models
                 new Staff
                 {
                     Id = 26,
-                    Name = "Doctor26",
+                    Name = "Nguyễn Đăng Tuân",
                     Gender = Gender.Male,
                     HealthCareStaff = HealthCareStaff.Doctor,
                     DateOfBirth = "10/10/1970",
@@ -497,7 +497,7 @@ namespace HospitalManagementApp.Models
                 new Staff
                 {
                     Id = 27,
-                    Name = "Doctor27",
+                    Name = "Trần Như Tú",
                     Gender = Gender.Male,
                     HealthCareStaff = HealthCareStaff.Doctor,
                     DateOfBirth = "01/01/1985",
@@ -511,7 +511,7 @@ namespace HospitalManagementApp.Models
                 new Staff
                 {
                     Id = 28,
-                    Name = "Doctor28",
+                    Name = "Trần Liên Anh",
                     Gender = Gender.Female,
                     HealthCareStaff = HealthCareStaff.Nurse,
                     DateOfBirth = "10/10/1990",
@@ -525,7 +525,7 @@ namespace HospitalManagementApp.Models
                 new Staff
                 {
                     Id = 29,
-                    Name = "Doctor29",
+                    Name = "Khổng Tiến Đạt",
                     Gender = Gender.Male,
                     HealthCareStaff = HealthCareStaff.Doctor,
                     DateOfBirth = "01/01/1991",
@@ -539,7 +539,7 @@ namespace HospitalManagementApp.Models
                 new Staff
                 {
                     Id = 30,
-                    Name = "Doctor30",
+                    Name = "Trần Thị Linh Chi",
                     Gender = Gender.Female,
                     HealthCareStaff = HealthCareStaff.Doctor,
                     DateOfBirth = "02/04/1992",
@@ -553,7 +553,7 @@ namespace HospitalManagementApp.Models
                 new Staff
                 {
                     Id = 31,
-                    Name = "Doctor31",
+                    Name = "Lê Hữu Đồng",
                     Gender = Gender.Female,
                     HealthCareStaff = HealthCareStaff.Nurse,
                     DateOfBirth = "10/10/1990",
@@ -567,7 +567,7 @@ namespace HospitalManagementApp.Models
                 new Staff
                 {
                     Id = 32,
-                    Name = "Doctor32",
+                    Name = "Lê Viết Cường",
                     Gender = Gender.Male,
                     HealthCareStaff = HealthCareStaff.Doctor,
                     DateOfBirth = "01/01/1991",
@@ -581,7 +581,7 @@ namespace HospitalManagementApp.Models
                 new Staff
                 {
                     Id = 33,
-                    Name = "Doctor33",
+                    Name = "Trần Hữu Tuấn",
                     Gender = Gender.Female,
                     HealthCareStaff = HealthCareStaff.Doctor,
                     DateOfBirth = "02/04/1992",
@@ -595,7 +595,7 @@ namespace HospitalManagementApp.Models
                 new Staff
                 {
                     Id = 35,
-                    Name = "Nurse",
+                    Name = "Phùng Tuyết Lan",
                     Gender = Gender.Female,
                     HealthCareStaff = HealthCareStaff.Nurse,
                     DateOfBirth = "04/02/2004",
@@ -609,7 +609,7 @@ namespace HospitalManagementApp.Models
                 new Staff
                 {
                     Id = 36,
-                    Name = "SupportStaff",
+                    Name = " Bùi Thu Hương",
                     Gender = Gender.Female,
                     HealthCareStaff = HealthCareStaff.SupportStaff,
                     DateOfBirth = "04/02/2001",

@@ -1,4 +1,8 @@
-﻿@model ICollection<HospitalManagementApp.Models.Staff>
+﻿﻿@using System.Security.Claims
+@model ICollection<HospitalManagementApp.Models.Staff>
+@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@inject IHttpContextAccessor _HttpContextAccessor
 
 @{
     ViewData["Title"] = "Index";
@@ -106,10 +110,13 @@
                     <div class="dropdown">
                         <button class="dropbtn">Action</button>
                         <div class="dropdown-content">
-                            <a href="#">Edit</a>
-                            <a href="#">Details</a>
-                            <a href="#">Remove</a>
-                            <a href="#">ShowPatient</a>
+                            <a href="/Staff/Edit/@item.Id">Edit</a>
+                            <a href="/Staff/Details/@item.Id">Details</a>
+                            <a href="/Staff/Remove/@item.Id">Remove</a>
+                            @if (_HttpContextAccessor.HttpContext?.User.IsInRole("Admin") is true)
+                            {
+                                <a href="/Authentication/CreateApplicationUserAccount/@item.Id?patientFlag=true">Create account</a>
+                            }
                         </div>
                     </div>
                 </td>

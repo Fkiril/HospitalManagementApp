@@ -393,5 +393,12 @@ namespace HospitalManagementApp.Data
 
             return patientList;
         }
+
+        public Patient? GetPatientById(int id)
+        {
+            var patient = PatientList.FirstOrDefault(x => x.Id == id);
+
+            return patient;
+        }
     }
 }

@@ -43,6 +43,39 @@
     </div>
 </div>
 
+@if (ViewBag.Date != null && ViewBag.DayOfWeek != null)
+{
+    <div>
+        <table>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Monday</th>
+                    <th>Tuesday</th>
+                    <th>Wednesday</th>
+                    <th>Thursday</th>
+                    <th>Friday</th>
+                    <th>Saturday</th>
+                    <th>Sunday</th>
+                </tr>
+                <tr>
+                    <th></th>
+                    @foreach (var date in ViewBag.Date)
+                    {
+                        <th>@date</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    
+                </tr>
+            </tbody>
+        </table>
+    </div>
+}
+
+
 <div>
     <a asp-action="TreatmentScheduleManager" asp-route-id="@ViewBag.patientId">Back to treatment schedule manager</a>
 </div>

@@ -20,6 +20,7 @@
             <th>
                 <strong>End date</strong>
             </th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -38,7 +39,6 @@
                         @history.EndDate
                     </td>
                     <td>
-                        @* <a asp-action="DeleteMedicalHistory" asp-route-patientId="@Model.Id" asp-route-startDate="@history.StartDate">Delete this medical history</a> *@
                         <form asp-action="DeleteMedicalHistory" asp-route-patientId="@Model.Id" asp-route-startDate="@history.StartDate">
                             <input type="hidden" asp-for="Id" />
                             <input type="submit" value="Delete" class="btn btn-danger" />
@@ -47,11 +47,11 @@
                 </tr>
             }
         }
-        <tr>
-            <td>
-                <a asp-action="AddMedicalHistory" asp-route-id="@Model.Id">Add new medical history</a>
-                <a asp-action="Index">Back to patients list</a>
-            </td>
-        </tr>
     </tbody>
+    <div>
+        <a asp-action="AddMedicalHistory" asp-route-id="@Model.Id">Add new medical history</a>
+    </div>
+    <div>
+        <a asp-action="Index">Back to patients list</a>
+    </div>
 </table>

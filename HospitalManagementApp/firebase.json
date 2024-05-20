@@ -1,0 +1,16 @@
+{
+  "hosting": {
+    "public": "./HospitalManagementApp/bin/Release/net8.0/publish",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}

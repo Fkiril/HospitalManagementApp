@@ -7,7 +7,7 @@
 <h1>Drugs Management</h1>
 
 <p>
-    <a asp-action="Add">Add New Drug</a>
+    <a asp-action="Add" class="btn btn-primary">Add New Drug</a>
 </p>
 
 
@@ -32,12 +32,6 @@
                 @Html.DisplayNameFor(model => model.FirstOrDefault().Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.FirstOrDefault().Expiry)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FirstOrDefault().HisUse)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.FirstOrDefault().Status)
             </th>
             <th>
@@ -45,6 +39,12 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.FirstOrDefault().ReceiptDay)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().ManufactureDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().ExpirationDate)
             </th>
             <th></th>
         </tr>
@@ -61,12 +61,6 @@
                     @Html.DisplayFor(model => item.Name)
                 </td>
                 <td>
-                    @Html.DisplayFor(model => item.Expiry)
-                </td>
-                <td>
-                    @Html.DisplayFor(model => item.HisUse)
-                </td>
-                <td>
                     @Html.DisplayFor(model => item.Status)
                 </td>
                 <td>
@@ -76,9 +70,15 @@
                     @Html.DisplayFor(model => item.ReceiptDay)
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.IdOfDrug">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.IdOfDrug">Details</a> |
-                    <a asp-action="Remove" asp-route-id="@item.IdOfDrug">Delete</a>
+                    @Html.DisplayFor(model => item.ManufactureDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.ExpirationDate)
+                </td>
+                <td>
+                    <a asp-action="Edit" class="btn btn-primary" asp-route-id="@item.IdOfDrug">Edit</a> |
+                    <a asp-action="Details" class="btn btn-primary" asp-route-id="@item.IdOfDrug">Details</a> |
+                    <button type="button" class="btn btn-danger btn-delete-drug" value="@item.IdOfDrug">Delete</button>
                 </td>
             </tr>
         }

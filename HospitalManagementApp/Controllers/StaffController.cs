@@ -311,6 +311,25 @@ namespace HospitalManagementApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public IActionResult FindStaff(string StaffName)
+        {
+            if (string.IsNullOrWhiteSpace(StaffName))
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                var staffList = StaffContext.StaffList.Where(s => s.Name.Contains(StaffName)).ToList();
+                if (staffList.Any())
+                {
+                    return View("Index", staffList); 
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+        }
 
     }
 }

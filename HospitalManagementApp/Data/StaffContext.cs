@@ -5,8 +5,10 @@ using HospitalManagementApp.Models;
 using HospitalManagementApp.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore.Metadata;
 using System;
 using System.Linq;
+using static Google.Protobuf.WellKnownTypes.Field.Types;
 
 namespace HospitalManagementApp.Data
 {
@@ -224,10 +226,13 @@ namespace HospitalManagementApp.Data
             {
                 if (staff != null && staff.SpecialList != null && (SpecialList)staff.SpecialList == specialList)
                 {
-                    ids.Add(staff.Id);
+                    ids.Add((int)staff.Id);
                 }
             }
-
+            if (ids.Count == 0)
+            {
+                throw new Exception("Can not find any suitable staffs for this patient!");
+            }
             return ids;
         }
     }

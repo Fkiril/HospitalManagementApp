@@ -1,6 +1,8 @@
 ﻿using Google.Cloud.Firestore;
 using HospitalManagementApp.Models;
 using HospitalManagementApp.Services;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 
 namespace HospitalManagementApp.Data
 {
@@ -34,14 +36,7 @@ namespace HospitalManagementApp.Data
         {
             if (await IsIdUnique(user.Id))
             {
-                try
-                {
-                    await GetDocumentReferenceWithId(user.Id).SetAsync(user).ConfigureAwait(false);
-                }
-                catch (Exception)
-                {
-                    Console.Write("Can not add new data into FirestoreDb");
-                }
+                await GetDocumentReferenceWithId(user.Id).SetAsync(user).ConfigureAwait(false);
             }
             else
             {
@@ -102,7 +97,58 @@ namespace HospitalManagementApp.Data
                 user = docQuery.ConvertTo<ApplicationUser>();
             }
 
+            if (user.UserName == null || user.Email == null || user.Role == null || user.DataId == null)
+            {
+                throw new InvalidDataException("Can not detect user by this email!");
+            }
+
             return user;
+        }
+
+        public async Task ChancePassWordAsync(string id, string newPassword)
+        {
+            var docQuery = await GetDocumentReferenceWithId(id).GetSnapshotAsync();
+
+            if (docQuery != null)
+            {
+                var user = docQuery.ConvertTo<ApplicationUser>();
+                
+                user.Password = newPassword;
+
+                await GetDocumentReferenceWithId(id).SetAsync(user);
+            }
+            else
+            {
+                throw new InvalidDataException("Can not find suitable Application Account!");
+            }
+        }
+
+        public async Task<bool> UserRegisted(int id, bool patientFlag)
+        {
+            CollectionReference colRef = GetCollectionReference();
+            QuerySnapshot query = await colRef.GetSnapshotAsync();
+
+            if (patientFlag)
+            {
+                var docQuery = query.Documents.FirstOrDefault(doc => doc.GetValue<string>("Role") == "Patient" &&
+                                                                     doc.GetValue<int>("DataId") == id);
+                if (docQuery != null)
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                var docQuery = query.Documents.FirstOrDefault(doc => (
+                                (doc.GetValue<string>("Role") != "Patient"
+                                 && doc.GetValue<int>("DataId") == id)));
+                if (docQuery == null)
+                {
+                    return true;
+                }
+            };
+
+            return false;
         }
     }
 }

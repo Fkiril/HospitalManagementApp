@@ -7,11 +7,48 @@
 <h3>Set staff in charge of this patient!</h3>
 <br />
 
-@using (Html.BeginForm("UpdateStaffIds", "Patient", new { patientId = ViewBag.patientId }, FormMethod.Post))
-{
-    @Html.ListBoxFor(model => model.staffIds, (SelectList)ViewBag.suitableStaffs)
-    <input type="submit" value="Save" />
-}
+<style>
+    table {
+        width: 50%;
+    }
+</style>
+
+<form asp-action="UpdateStaffIds" method="post" asp-route-patientId="@ViewBag.patientId">
+    <div>
+        <table>
+            <thead>
+                Current Staff IDs
+            </thead>
+            <tbody>
+                @foreach (var staffId in Model.staffIds)
+                {
+                <td>@staffId</td>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <table>
+            <thead>
+                Select Suitable Staff IDs
+            </thead>
+            <tbody>
+                <tr>
+                    @foreach (var staff in ViewBag.suitableStaffs)
+                    {
+                        bool isChecked = Model.staffIds.Contains(staff);
+                        <td>
+                            <input type="checkbox" id="@staff" name="staffIds" value="@staff" @(isChecked ? "checked" : "")>
+                            <label for="@staff">@staff</label>
+                        </td>
+                    }
+                </tr>
+            </tbody>
+        </table>
+
+        <button type ="submit" value="Save">Save</button>
+    </div>
+</form>
 
 <div>
     <a asp-action="Index">Back to patients list</a>

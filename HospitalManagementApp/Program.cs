@@ -2,6 +2,8 @@ using HospitalManagementApp.Data;
 using HospitalManagementApp.Services;
 using HospitalManagementApp.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Diagnostics;
+using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,7 +12,6 @@ builder.Services.AddSingleton<FirestoreDbService>(provider =>
     var projectId = "hospitalmanagementapp-7aa23";
     string rootPath = provider.GetRequiredService<IWebHostEnvironment>().ContentRootPath;
     var jsonFilePath = Path.Combine(rootPath,"" ,"hospitalmanagementapp-7aa23-firebase-adminsdk-gw6ir-355e13d856.json");
-
     Google.Apis.Auth.OAuth2.GoogleCredential credential = Google.Apis.Auth.OAuth2.GoogleCredential.FromFile(jsonFilePath);
     return new FirestoreDbService(projectId, credential);
 });
@@ -48,7 +49,6 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
 builder.Services.AddHttpContextAccessor();
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
@@ -57,7 +57,7 @@ using (var scope = app.Services.CreateScope())
 {
     var firestoreDbService = scope.ServiceProvider.GetService<FirestoreDbService>();
     if (firestoreDbService != null)
-    {
+    {   
         SeedData.InitializeApplicationUserData(firestoreDbService.GetFirestoreDb());
         SeedData.InitializePatientData(firestoreDbService.GetFirestoreDb());
         SeedData.InitializeStaffData(firestoreDbService.GetFirestoreDb());
@@ -79,11 +79,9 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -97,6 +95,6 @@ app.UseAuthentication();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Equipment}/{action=Index}/{id?}");
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();

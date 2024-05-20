@@ -27,22 +27,6 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.HisUse)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.HisUse)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Expiry)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Expiry)
-        </dd>
-
-        <dt>
             @Html.DisplayNameFor(model => model.Status)
         </dt>
 
@@ -65,14 +49,27 @@
         <dd>
             @Html.DisplayFor(model => model.ReceiptDay)
         </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ManufactureDate)
+        </dt>
 
+        <dd>
+            @Html.DisplayFor(model => model.ManufactureDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ExpirationDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ExpirationDate)
+        </dd>
     </dl>
 </div>
 
 
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" class="btn btn-primary">Back to List</a>
 </div>
 
 @section Scripts {

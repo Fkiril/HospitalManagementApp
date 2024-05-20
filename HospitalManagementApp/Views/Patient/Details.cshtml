@@ -4,118 +4,120 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Patient Management</h1>
+<h3>Patient information</h3>
 
-<table class="table">
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+</style>
+
+<table>
     <thead>
         <tr>
-            <th>
-                <strong>Id number</strong>
-            </th>
-            <th>
-                <strong>Full name</strong>
-            </th>
-            <th>
-                <strong>Gender</strong>
-            </th>
-            <th>
-                <strong>Date of birth</strong>
-            </th>
-            <th>
-                <strong>Address</strong>
-            </th>
-            <th>
-                <strong>Phone number</strong>
-            </th>
-            <th>
-                <strong>Staff Id</strong>
-            </th>
-            <th>
-                <strong>Status</strong>
-            </th>
-            <th>
-                <strong>Medical history</strong>
-            </th>
-            <th>
-                <strong>Test result</strong>
-            </th>
-            <th>
-                <strong>Treatment schedules</strong>
-            </th>
-            <th></th>
+            <th>Id number</th>
+            <th>Full name</th>
+            <th>Gender</th>
+            <th>Date of birth</th>
+            <th>Address</th>
+            <th>Phone number</th>
+            <th>Staff Id</th>
+            <th>Status</th>
+            <th>Test result</th>
         </tr>
     </thead>
 
     <tbody>
         <tr>
+            <td>@Html.DisplayFor(model => model.Id)</td>
+            <td>@Html.DisplayFor(model => model.Name)</td>
+            <td>@Html.DisplayFor(model => model.Gender)</td>
+            <td>@Html.DisplayFor(model => model.DateOfBirth)</td>
+            <td>@Html.DisplayFor(model => model.Address)</td>
+            <td>@Html.DisplayFor(model => model.PhoneNum)</td>
             <td>
-                @Html.DisplayFor(model => model.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(model => model.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(model => model.Gender)
-            </td>
-            <td>
-                @Html.DisplayFor(model => model.DateOfBirth)
-            </td>
-            <td>
-                @Html.DisplayFor(model => model.Address)
-            </td>
-            <td>
-                @Html.DisplayFor(model => model.PhoneNum)
-            </td>
-            <td>
-                @if (Model.StaffIds is not null)
+                @if (Model.StaffIds != null)
+                {
                     @Html.Raw(string.Join(", ", Model.StaffIds))
-
-
+                }
             </td>
-            <td>
-                @Html.DisplayFor(model => model.Status)
-            </td>
-            <td>
-                <table>
-                    @if (Model.MedicalHistory is not null) foreach (var history in Model.MedicalHistory)
-                    {
-                        <tr>
-                            <td><strong>Disease: </strong>  @history.Disease</td>
-                            <td><strong>Start date: </strong>@history.StartDate</td>
-                            <td><strong>End date: </strong>@history.EndDate</td>
-                        </tr>
-                    }
-                </table>
-            </td>
-            <td>
+            <td>@Html.DisplayFor(model => model.Status)</td>
+            <td colspan="9">
                 <table>
                     <tr>
-                        @if (Model.TestResult is not null)
+                        @if (Model.TestResult != null)
                         {
-                            <td><strong>Disease: </strong>@Model.TestResult.Disease</td>
-                            <td><strong>Type: </strong>@Model.TestResult.Type</td>
-                            <td><strong>Start Date: </strong>@Model.TestResult.StartDate</td>
+                            <td><strong>Disease:</strong> @Model.TestResult.Disease</td>
+                            <td><strong>Type:</strong> @Model.TestResult.Type</td>
+                            <td><strong>Start Date:</strong> @Model.TestResult.StartDate</td>
                         }
                     </tr>
                 </table>
             </td>
-            <td>
+            
+        </tr>
+        <tr>
+            <td colspan="11">
                 <table>
-                    @if (Model.TreatmentSchedule is not null) foreach (var schedule in Model.TreatmentSchedule)
+                    <thead>
+                        <strong>
+                            Medical history
+                        </strong>
+                    </thead>
+                    @if (Model.MedicalHistory != null)
                     {
-                        <tr>
-                            <td><strong>Date: </strong>@schedule.Date</td>
-                            <td><strong>Start time: </strong>@schedule.StartTime</td>
-                            <td><strong>End time: </strong>@schedule.EndTime</td>
-                        </tr>
+                        foreach (var history in Model.MedicalHistory)
+                        {
+                            <tr>
+                                <td><strong>Disease:</strong> @history.Disease</td>
+                                <td><strong>Start date:</strong> @history.StartDate</td>
+                                <td><strong>End date:</strong> @history.EndDate</td>
+                            </tr>
+                        }
+                    }
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="11">
+                <table>
+                    <thead>
+                        <strong>
+                            Treatment schedule
+                        </strong>
+                    </thead>
+                    @if (Model.TreatmentSchedule != null)
+                    {
+                        foreach (var schedule in Model.TreatmentSchedule)
+                        {
+                            <tr>
+                                <td><strong>Date:</strong> @schedule.Date</td>
+                                <td><strong>Start time:</strong> @schedule.StartTime</td>
+                                <td><strong>End time:</strong> @schedule.EndTime</td>
+                            </tr>
+                        }
                     }
                 </table>
             </td>
         </tr>
     </tbody>
-
-    <div>
-        <a asp-action="Index">Back to patients list</a>
-    </div>
-
 </table>
+<br />
+<div>
+    <a asp-action="Index">Back to patients list</a>
+</div>

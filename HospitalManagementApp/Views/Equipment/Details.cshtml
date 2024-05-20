@@ -1,0 +1,44 @@
+﻿@model HospitalManagementApp.Models.Equipment
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Equipment Management</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <strong>Schedule</strong>
+            </th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr>
+            <td>
+                @if (Model.History != null)
+                {
+                    @foreach (var date in Model.History)
+                    {
+                        string datePart = date.Substring(0, 10);
+                        string timePart = date.Substring(11, 8);
+                        <tr>
+                            <td>@datePart @timePart</td>
+                        </tr>
+                    }
+                }
+                else {
+                    <tr>
+                        <strong>No schedule yet</strong>
+                    </tr>
+                }
+            </td>
+        </tr>
+    </tbody>
+
+    <a asp-action="Index">Back to patients list</a>
+
+</table>
+

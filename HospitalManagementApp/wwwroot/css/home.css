@@ -1,0 +1,10 @@
+﻿body {
+    background-image: url(/img/home.png);
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+}
+h4{
+    text-align: left;
+}

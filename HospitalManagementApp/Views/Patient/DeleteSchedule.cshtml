@@ -1,0 +1,45 @@
+﻿@model HospitalManagementApp.Models.TreatmentScheduleEle
+@{
+    ViewData["Title"] = "DeleteSchedule";
+}
+
+<h3>Delete patient's treatment schedule</h3>
+<br />
+<h3>Are you sure you want to delete this treatment schedule?</h3>
+
+<div>
+    <h4>Treatment Schedule</h4>
+    <br />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Id)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Id)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Date)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Date)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.StartTime)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.StartTime)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.EndTime)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.EndTime)
+        </dd>
+    </dl>
+
+    <form asp-action="DeleteSchedule" asp-route-patientId="@ViewBag.patientId">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <a asp-action="TreatmentScheduleManager" asp-route-id="@ViewBag.patientId">Back to treatment schedule manager</a>
+    </form>
+</div>

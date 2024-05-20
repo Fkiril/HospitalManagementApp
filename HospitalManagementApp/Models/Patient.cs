@@ -1,6 +1,5 @@
 ﻿using Google.Cloud.Firestore;
 using System.ComponentModel.DataAnnotations;
-using System.Runtime.CompilerServices;
 
 namespace HospitalManagementApp.Models
 {
@@ -10,16 +9,18 @@ namespace HospitalManagementApp.Models
         Female,
         Other
     }
+    public enum PatientStatus
+    {
+        Ill,
+        Healed
+    }
 
     [FirestoreData]    
     public class Patient
     {
         [FirestoreProperty]
-        [Required, Range(1,9999)]
+        [Key, Required, Range(1,9999)]
         public int? Id { get; set; }
-
-        [FirestoreProperty]
-        public string? docId { get; set; } = string.Empty;
 
         [FirestoreProperty]
         [Required, StringLength(60, MinimumLength = 3)]
@@ -31,27 +32,193 @@ namespace HospitalManagementApp.Models
 
         [FirestoreProperty]
         [Display(Name = "Date Of Birth")]
-        [DataType(DataType.DateTime)]
-        public DateTime DateOfBirth { get; set; }
+        [RegularExpression(@"^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[012])/[0-9]{4}$", ErrorMessage = "Invalid date format. Please use the format dd/mm/yyyy.")]
+        public string? DateOfBirth { get; set; }
 
         [FirestoreProperty]
         public string? Address { get; set; }
 
         [FirestoreProperty]
-        [RegularExpression(@"^0\d{9}$"), StringLength(10)]
+        [RegularExpression(@"^0\d{9}$", ErrorMessage = "Invalid phone number format!"), StringLength(10)]
         public string? PhoneNum { get; set; }
 
+        [FirestoreProperty]
+        [RegularExpression(@"^[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$", ErrorMessage = "Invalid email format!")]
+        public string? Email {  get; set; }
+            
         // Need some classes to implement these field
+        [FirestoreProperty(ConverterType = typeof(MedicalHistoryConverter))]
+        public List<MedicalHistoryEle>? MedicalHistory { get; set; }
+        [FirestoreProperty(ConverterType = typeof(TestResultConverter))]
+        public TestResult? TestResult { get; set; }
+
+        [FirestoreProperty(ConverterType = typeof(TreatmentScheduleConverter))]
+        public List<TreatmentScheduleEle>? TreatmentSchedule { get; set; }
+
         [FirestoreProperty]
-        public string? MedicalHistory { get; set; }
+        public int? PrescriptionId { get; set; }
+
         [FirestoreProperty]
-        public string? TestResult { get; set; }
+        public List<int>? StaffIds { get; set; }
+
         [FirestoreProperty]
-        public string? TreatmentSchedule { get; set; }
+        public PatientStatus? Status { get; set; }
+
+        public bool? Changed { get; set; }
+    }
+
+    public class TestResult
+    {
         [FirestoreProperty]
-        public string? Status { get; set; }
+        [Required]
+        public string? Disease { get; set; }
         [FirestoreProperty]
-        public bool? Edited { get; set; } = true;
+        [Required]
+        public SpecialList? Type { get; set; }
+        [FirestoreProperty]
+        [Required]
+        public string? StartDate { get; set; }
+    }
+
+    public class TestResultConverter : IFirestoreConverter<TestResult>
+    {
+        public object? ToFirestore(TestResult value)
+        {
+            if (value == null) return null;
+            return new Dictionary<string, object>
+            {
+                { "Disease", value.Disease?? new object()},
+                { "Type", value.Type?? new object()},
+                { "StartDate", value.StartDate?? new object()}
+            };
+        }
+        public TestResult FromFirestore(object value)
+        {
+            var dict = value as Dictionary<string, object>;
+            if (dict == null) return new TestResult();
+            return new TestResult
+            {
+                Disease = (string)dict["Disease"],
+                Type = (SpecialList)(int)(long)(dict["Type"]),
+                StartDate = (string)dict["StartDate"]
+            };
+        }
+    }
+
+    public class MedicalHistoryEle
+    {
+        [FirestoreProperty]
+        [Required]
+        public string? Disease { get; set; }
+        [FirestoreProperty]
+        [RegularExpression(@"^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[012])/[0-9]{4}$", ErrorMessage = "Invalid date format. Please use the format dd/mm/yyyy.")]
+        public string? StartDate { get; set; }
+        [FirestoreProperty]
+        [Required]
+        [RegularExpression(@"^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[012])/[0-9]{4}$", ErrorMessage = "Invalid date format. Please use the format dd/mm/yyyy.")]
+        public string? EndDate { get; set; }
+    }
+
+    public class MedicalHistoryConverter : IFirestoreConverter<List<MedicalHistoryEle>>
+    {
+        public object MedicalHistoryEleToFirestore(MedicalHistoryEle value)
+        {
+            return new Dictionary<string, object>
+            {
+                { "Disease", value.Disease?? new object() },
+                { "StartDate", value.StartDate?? new object()},
+                { "EndDate", value.EndDate?? new object()}
+            };
+        }
+        public MedicalHistoryEle MedicalHistoryEleFromFirestore(object value)
+        {
+            var dict = value as Dictionary<string, object> ?? throw new ArgumentException("Expected a dictionary");
+            return new MedicalHistoryEle
+            {
+                Disease = (string)dict["Disease"],
+                StartDate = (string)dict["StartDate"],
+                EndDate = (string)dict["EndDate"]
+            };
+        }
+
+        public object? ToFirestore(List<MedicalHistoryEle> value)
+        {
+            if (value == null) return null;
+
+            return value.Select(m => MedicalHistoryEleToFirestore(m)).ToList();
+        }
+        public List<MedicalHistoryEle> FromFirestore(object value)
+        {
+            var list = value as List<object>;
+            if (list == null) return new List<MedicalHistoryEle>()
+                    ;
+            return list.Select(o => MedicalHistoryEleFromFirestore(o)).ToList();
+        }
+    }
+
+    public class TreatmentScheduleEle
+    {
+        [FirestoreProperty]
+        [Required]
+        [RegularExpression(@"^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[012])/[0-9]{4}$", ErrorMessage = "Invalid date format. Please use the format dd/mm/yyyy.")]
+        public string? Date { get; set; }
+
+        [FirestoreProperty]
+        [Required]
+        [RegularExpression(@"^(0[0-9]|1[0-9]|2[0-3]):([0-5][0-9])", ErrorMessage = "Invalid time format. Please use the format hh:mm")]
+        public string? StartTime { get; set; }
+
+        [FirestoreProperty]
+        [Required]
+        [RegularExpression(@"^(0[0-9]|1[0-9]|2[0-3]):([0-5][0-9])", ErrorMessage = "Invalid time format. Please use the format hh:mm")]
+        public string? EndTime { get; set; }
+
+        [FirestoreProperty]
+
+        [Key, Required]
+        public int? Id { get; set; }
+    }
+
+
+    public class TreatmentScheduleConverter : IFirestoreConverter<List<TreatmentScheduleEle>>
+    {
+        public object TreatmentScheduleEleToFirestore(TreatmentScheduleEle value)
+        {
+            return new Dictionary<string, object>
+            {
+                { "Date", value.Date?? new object() },
+                { "StartTime", value.StartTime?? new object() },
+                { "EndTime", value.EndTime?? new object() },
+                { "Id", value.Id?? new object() }
+            };
+        }
+        public TreatmentScheduleEle TreatmentScheduleEleFromFirestore(object value)
+        {
+            var dict = value as Dictionary<string, object> ?? throw new ArgumentException("Expected a dictionary");
+            return new TreatmentScheduleEle
+            {
+                Date = (string)dict["Date"],
+                StartTime = (string)dict["StartTime"],
+                EndTime = (string)dict["EndTime"],
+                Id = (int?)(long)dict["Id"]
+            };
+        }
+
+        public object? ToFirestore(List<TreatmentScheduleEle> value)
+        {
+            if (value == null) return null;
+
+            return value.Select(t => TreatmentScheduleEleToFirestore(t)).ToList();
+        }
+
+        public List<TreatmentScheduleEle> FromFirestore(object value)
+        {
+            var list = value as List<object>;
+            if (list == null) return new List<TreatmentScheduleEle>();
+
+            return list.Select(o => TreatmentScheduleEleFromFirestore(o)).ToList();
+        }
+
     }
 }
 

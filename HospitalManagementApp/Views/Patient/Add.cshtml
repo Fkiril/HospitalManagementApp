@@ -4,63 +4,54 @@
     ViewData["Title"] = "Add";
 }
 
-<h1>Add new patient</h1>
+<h3>Add new patient with basic information</h3>
 
 <h4>Patient</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Add" method="post">
+        <form asp-action="Add" method="post" asp-route-patientId="@ViewBag.PatientId" asp-route-newTreatment="@Model">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Id" class="control-label"></label>
-                <input asp-for="Id" class="form-control" />
-                <span asp-validation-for="Id" class="text-danger"></span>
+                <label asp-for="@Model.Id" class="control-label"></label>
+                <input asp-for="@Model.Id" class="form-control" />
+                <span asp-validation-for="@Model.Id" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+                <label asp-for="@Model.Name" class="control-label"></label>
+                <input asp-for="@Model.Name" class="form-control" />
+                <span asp-validation-for="@Model.Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Gender" class="control-label"></label>
-                <input asp-for="Gender" class="form-control" />
-                <span asp-validation-for="Gender" class="text-danger"></span>
+                <label asp-for="@Model.Gender" class="control-label"></label>
+                <select asp-for="@Model.Gender" class="form-control">
+                    <option value="">Select Gender</option>
+                    @foreach (var gender in Enum.GetValues(typeof(Gender)))
+                    {
+                        <option value="@gender">@gender</option>
+                    }
+                </select>
+                <span asp-validation-for="@Model.Gender" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="DateOfBirth" class="control-label"></label>
-                <input asp-for="DateOfBirth" class="form-control" />
-                <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                <label asp-for="@Model.DateOfBirth" class="control-label"></label>
+                <input asp-for="@Model.DateOfBirth" class="form-control" />
+                <span asp-validation-for="@Model.DateOfBirth" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Address" class="control-label"></label>
-                <input asp-for="Address" class="form-control" />
-                <span asp-validation-for="Address" class="text-danger"></span>
+                <label asp-for="@Model.Address" class="control-label"></label>
+                <input asp-for="@Model.Address" class="form-control" />
+                <span asp-validation-for="@Model.Address" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="PhoneNum" class="control-label"></label>
-                <input asp-for="PhoneNum" class="form-control" />
-                <span asp-validation-for="PhoneNum" class="text-danger"></span>
+                <label asp-for="@Model.PhoneNum" class="control-label"></label>
+                <input asp-for="@Model.PhoneNum" class="form-control" />
+                <span asp-validation-for="@Model.PhoneNum" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="MedicalHistory" class="control-label"></label>
-                <input asp-for="MedicalHistory" class="form-control" />
-                <span asp-validation-for="MedicalHistory" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TestResult" class="control-label"></label>
-                <input asp-for="TestResult" class="form-control" />
-                <span asp-validation-for="TestResult" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TreatmentSchedule" class="control-label"></label>
-                <input asp-for="TreatmentSchedule" class="form-control" />
-                <span asp-validation-for="TreatmentSchedule" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
-                <input asp-for="Status" class="form-control" />
-                <span asp-validation-for="Status" class="text-danger"></span>
+                <label asp-for="@Model.Email" class="control-label"></label>
+                <input asp-for="@Model.Email" class="form-control" />
+                <span asp-validation-for="@Model.Email" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Add" class="btn btn-primary" />

@@ -1,0 +1,15 @@
+﻿@model HospitalManagementApp.Models.Staff
+
+@{
+    ViewData["Title"] = "RemoveCalendar";
+}
+
+<h1>Delete</h1>
+
+<h3>Are you sure you want to remove all staff's calendar?</h3>
+
+    <form asp-action="RemoveCalendar">
+        <input type="submit" value="Remove" class="btn btn-danger" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>

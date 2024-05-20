@@ -12,7 +12,6 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Hospital Management Application</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -23,15 +22,55 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Patient" asp-action="Index">Patient</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Staff" asp-action="Index">Staff</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                     </ul>
+                    <partial name="_LoginPartial" />
                 </div>
             </div>
         </nav>
     </header>
     <div class="container">
         <main role="main" class="pb-3">
+
+            <div id="errorModal" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <p id="errorMessage"></p>
+                </div>
+            </div>
+
+            <script>
+                function showErrorModal(message) {
+                    document.getElementById("errorMessage").innerText = message;
+                    var modal = document.getElementById("errorModal");
+                    modal.style.display = "block";
+
+                    document.body.style.pointerEvents = "none";
+                }
+
+                var closeBtn = document.getElementsByClassName("close")[0];
+                closeBtn.onclick = function () {
+                    var modal = document.getElementById("errorModal");
+                    modal.style.display = "none";
+
+                    document.body.style.pointerEvents = "auto";
+                }
+            </script>
+
+            @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+            {
+                <script>
+                    showErrorModal('@ViewBag.ErrorMessage');
+                </script>
+            }
+
             @RenderBody()
         </main>
     </div>
@@ -45,5 +84,33 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-analytics.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyA9uJ4iVaI4z0iVDVsFWPbvrK1KOfxfjSU",
+            authDomain: "hospitalmanagementapp-7aa23.firebaseapp.com",
+            projectId: "hospitalmanagementapp-7aa23",
+            storageBucket: "hospitalmanagementapp-7aa23.appspot.com",
+            messagingSenderId: "478988309505",
+            appId: "1:478988309505:web:d0eded0163ead85b1a9c00",
+            measurementId: "G-RWNHDKX988"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+    </script>
+
+    <system.webServer>
+        <security>
+            <authentication>
+                <anonymousAuthentication enabled="true" />
+                <windowsAuthentication enabled="false" />
+            </authentication>
+        </security>
+    </system.webServer>
+
 </body>
 </html>

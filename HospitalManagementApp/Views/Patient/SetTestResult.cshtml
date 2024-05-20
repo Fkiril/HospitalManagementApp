@@ -1,0 +1,43 @@
+﻿@model HospitalManagementApp.Models.TestResult
+
+@{
+    ViewData["Title"] = "SetTestResult";
+}
+
+<h3>Set new test result!</h3>
+<br />
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="SetTestResult" method="post" asp-route-patientId="@ViewBag.patientId" asp-route-result="@Model">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="@Model.Disease" class="control-label"></label>
+                <input asp-for="@Model.Disease" class="form-control" />
+                <span asp-validation-for="@Model.Disease" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Type" class="control-label"></label>
+                <select asp-for="@Model.Type" class="form-control">
+                    @foreach (var item in Enum.GetValues(typeof(SpecialList)))
+                    {
+                        <option value="@item">@item.ToString()</option>
+                    }
+                </select>
+                <span asp-validation-for="@Model.Type" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.StartDate" class="control-label"></label>
+                <input asp-for="@Model.StartDate" value="@DateTime.Now.ToString("dd/MM/yyyy")" class="form-control" />
+                <span asp-validation-for="@Model.StartDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Set" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to patients list</a>
+</div>

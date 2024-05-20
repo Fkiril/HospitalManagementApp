@@ -1,0 +1,136 @@
+﻿﻿@using System.Security.Claims
+@model ICollection<HospitalManagementApp.Models.Staff>
+@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@inject IHttpContextAccessor _HttpContextAccessor
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Staff Management</h1>
+
+<p>
+    <a asp-action="CreateCalendar">Create calendar for all staff</a>
+</p>
+<p>
+    <a asp-action="RemoveCalendar">Remove calendar of all staff</a>
+</p>
+<p>
+    <a asp-action="Add">Add new Staff</a>
+</p>
+
+<form asp-action="FindStaff" method="get">
+    <div>
+        <label for="StaffName">Search Staff by Name:</label>
+        <input type="text" id="StaffName" name="StaffName" />
+        <button type="submit">Search</button>
+    </div>
+</form>
+
+<br />
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Gender)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().HealthCareStaff)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().DateOfBirth)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().PhoneNum)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Degree)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().SpecialList)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Department)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().WorkSchedule)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(model => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.Gender)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.HealthCareStaff)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.DateOfBirth)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.PhoneNum)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.Degree)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.SpecialList)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.Department)
+                </td>
+                <td>
+                    <a asp-action="Calendar" asp-route-id="@item.Id">Calendar</a>
+                </td>
+                <td>
+                    <div class="dropdown">
+                        <button class="dropbtn" style="position: relative;">Action</button>
+                        <div class="dropdown-content" style="position: absolute;right: 0;">
+                            <a href="/Staff/Edit/@item.Id">Edit</a>
+                            @if (item.HealthCareStaff != HealthCareStaff.SupportStaff)
+                            {
+                                <a asp-action="ShowPatientList" asp-controller="Patient" asp-route-id="@item.Id">Show Patient</a>
+                            }
+                            else
+                            {
+                                <a asp-action="Index" asp-controller="Equipment">Equipment Management</a>
+                                <a asp-action="Index" asp-controller="Drugs">Drugs Management</a>
+                            }
+                            <a href="/Staff/Details/@item.Id">Details</a>
+                            <a href="/Staff/Remove/@item.Id">Remove</a>
+                            @if (_HttpContextAccessor.HttpContext?.User.IsInRole("Admin") is true)
+                            {
+                                <a href="/Authentication/CreateApplicationUserAccount/@item.Id?patientFlag=false">Create account</a>
+                            }
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>

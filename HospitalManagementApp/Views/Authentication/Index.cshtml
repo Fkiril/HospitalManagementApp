@@ -1,0 +1,16 @@
+﻿﻿@using System.Security.Claims
+@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@inject IHttpContextAccessor _HttpContextAccessor
+
+@{
+    ViewData["Title"] = "Authentication Index";
+}
+
+<div class="text-center">
+    <h1>Authentication information</h1>
+    <p>User's name: @_HttpContextAccessor.HttpContext?.User.Identity?.Name</p>
+    <p>User's role: @_HttpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.Role)?.Value</p>
+  
+    <a asp-action="ChangePassword" asp-route-id="@_HttpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value">Change password</a>
+</div>

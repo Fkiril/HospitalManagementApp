@@ -1,0 +1,67 @@
+﻿@model HospitalManagementApp.Models.Prescription
+
+@{
+    ViewData["Title"] = "Add";
+    string error = TempData["error"] as string;
+    List<Patient> listPatient = ViewBag.PatientList as List<Patient>;
+}
+
+<h1>Add New Prescription</h1>
+
+<h4>Prescription</h4>
+<div>
+    <a asp-controller="Drugs" asp-action="Index" class="btn btn-primary">Back to Drugs</a>
+</div>
+<div>
+    <a asp-action="List" class="btn btn-primary">List of Prescriptions</a>
+</div>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <h3>Prescription Info</h3>
+        <div class="text-danger">@error</div>
+        <form asp-action="Add" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Id" class="control-label"></label>
+                <input asp-for="Id" class="form-control" />
+                <span asp-validation-for="Id" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IdOfPatient" class="control-label"></label>
+                @* <input asp-for="IdOfPatient" class="form-control" /> *@
+                @if(listPatient != null && listPatient.Count > 0)
+                {
+                    <select name="IdOfPatient" class="form-select">
+                        @foreach (Patient pat in ViewBag.PatientList)
+                        {
+                            <option value="@pat.Id">@pat.Name</option>
+                        }
+                    </select>
+                }
+                else
+                {
+                    <span>Not have patient <a href="/Patient/Add">Add patient</a></span>
+                }
+                <span asp-validation-for="IdOfPatient" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Next" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

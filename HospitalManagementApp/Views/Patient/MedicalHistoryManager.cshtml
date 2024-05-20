@@ -1,0 +1,57 @@
+﻿@model HospitalManagementApp.Models.Patient
+
+@{
+    ViewData["Title"] = "Medical history manager";
+}
+
+<h4>Patient's medical history</h4>
+
+<hr />
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <strong>Disease</strong>
+            </th>
+            <th>
+                <strong>Start date</strong>
+            </th>
+            <th>
+                <strong>End date</strong>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.MedicalHistory != null)
+        {
+            foreach (var history in Model.MedicalHistory)
+            {
+                <tr>
+                    <td>
+                        @history.Disease
+                    </td>
+                    <td>
+                        @history.StartDate
+                    </td>
+                    <td>
+                        @history.EndDate
+                    </td>
+                    <td>
+                        <form asp-action="DeleteMedicalHistory" asp-route-patientId="@Model.Id" asp-route-startDate="@history.StartDate">
+                            <input type="hidden" asp-for="Id" />
+                            <input type="submit" value="Delete" class="btn btn-danger" />
+                        </form>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+    <div>
+        <a asp-action="AddMedicalHistory" asp-route-id="@Model.Id">Add new medical history</a>
+    </div>
+    <div>
+        <a asp-action="Index">Back to patients list</a>
+    </div>
+</table>

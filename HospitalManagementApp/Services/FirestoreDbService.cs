@@ -5,21 +5,26 @@ namespace HospitalManagementApp.Services
 {
     public class FirestoreDbService
     {
-        private FirestoreDb _db;
 
-        public FirestoreDbService(string projectId, string jsonCreadentials)
+        private FirestoreDb firestoreDb;
+        public FirestoreDbService(string projectId, Google.Apis.Auth.OAuth2.GoogleCredential credential)
+
         {
-            _db = new FirestoreDbBuilder
+            firestoreDb = new FirestoreDbBuilder
             {
                 ProjectId = projectId,
-                JsonCredentials = jsonCreadentials,
+
+                Credential = credential,
+
                 EmulatorDetection = EmulatorDetection.EmulatorOrProduction
             }.Build();
         }
 
         public FirestoreDb GetFirestoreDb()
         {
-            return _db;
+            return firestoreDb;
         }
+
+
     }
 }

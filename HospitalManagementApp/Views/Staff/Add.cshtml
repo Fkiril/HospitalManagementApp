@@ -1,0 +1,104 @@
+﻿@model HospitalManagementApp.Models.Staff
+
+@{
+    ViewData["Title"] = "Add";
+}
+
+<h1>Add new staff</h1>
+
+<h4>Staff</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Add" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Id" class="control-label"></label>
+                <input asp-for="Id" class="form-control" />
+                <span asp-validation-for="Id" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Gender" class="control-label"></label>
+                <select asp-for="@Model.Gender" class="form-control">
+                    <option value="">Select Gender</option>
+                    @foreach (var gender in Enum.GetValues(typeof(Gender)))
+                    {
+                        <option value="@gender">@gender</option>
+                    }
+                </select>
+                <span asp-validation-for="@Model.Gender" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.HealthCareStaff" class="control-label"></label>
+                <select asp-for="@Model.HealthCareStaff" class="form-control">
+                    <option value="">Select HealthCareStaff</option>
+                    @foreach (var hcare in Enum.GetValues(typeof(HealthCareStaff)))
+                    {
+                        <option value="@hcare">@hcare</option>
+                    }
+                </select>
+                <span asp-validation-for="@Model.HealthCareStaff" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DateOfBirth" class="control-label"></label>
+                <input asp-for="DateOfBirth" class="form-control" />
+                <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PhoneNum" class="control-label"></label>
+                <input asp-for="PhoneNum" class="form-control" />
+                <span asp-validation-for="PhoneNum" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Degree" class="control-label"></label>
+                <input asp-for="Degree" class="form-control" />
+                <span asp-validation-for="Degree" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.SpecialList" class="control-label"></label>
+                <select asp-for="@Model.SpecialList" class="form-control">
+                    <option value="">Select SpecialList</option>
+                    @foreach (var gender in Enum.GetValues(typeof(SpecialList)))
+                    {
+                        <option value="@gender">@gender</option>
+                    }
+                </select>
+                <span asp-validation-for="@Model.SpecialList" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Department" class="control-label"></label>
+                <select asp-for="@Model.Department" class="form-control">
+                    <option value="">Select Department</option>
+                    @foreach (var gender in Enum.GetValues(typeof(Department)))
+                    {
+                        <option value="@gender">@gender</option>
+                    }
+                </select>
+                <span asp-validation-for="@Model.Department" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Add" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

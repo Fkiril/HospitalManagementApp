@@ -34,7 +34,7 @@ namespace HospitalManagementApp.Models
         XQuang
     }
 
-    public enum Deparment
+    public enum Department
     {
         NoiKhoa,
         NgoaiKhoa,
@@ -81,7 +81,7 @@ namespace HospitalManagementApp.Models
         [FirestoreProperty]
         public SpecialList? SpecialList { get; set; }
         [FirestoreProperty]
-        public Deparment Department { get; set; }
+        public Department Department { get; set; }
         [FirestoreProperty(ConverterType = typeof(CalendarListConverter))]
         public Calendar? WorkSchedule { get; set; }
 

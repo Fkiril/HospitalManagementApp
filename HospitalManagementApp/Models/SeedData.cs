@@ -141,7 +141,7 @@ namespace HospitalManagementApp.Models
                     PhoneNum = "0769421007",
                     Degree = "Bachelor of Medicine",
                     SpecialList = SpecialList.TimMach,
-                    Department = Deparment.NoiKhoa,
+                    Department = Department.NoiKhoa,
                     WorkSchedule = null
                 },
                 new Staff
@@ -155,7 +155,7 @@ namespace HospitalManagementApp.Models
                     PhoneNum = "0987651234",
                     Degree = "Bachelor of Medicine",
                     SpecialList = SpecialList.TimMach,
-                    Department = Deparment.NoiKhoa,
+                    Department = Department.NoiKhoa,
                     WorkSchedule = null
                 },
                 new Staff
@@ -169,7 +169,7 @@ namespace HospitalManagementApp.Models
                     PhoneNum = "0123459876",
                     Degree = "Bachelor of Medicine",
                     SpecialList = SpecialList.TimMach,
-                    Department = Deparment.NoiKhoa,
+                    Department = Department.NoiKhoa,
                     WorkSchedule = null
                 },
                 new Staff
@@ -183,7 +183,7 @@ namespace HospitalManagementApp.Models
                     PhoneNum = "0234561798",
                     Degree = "Bachelor of Medicine",
                     SpecialList = SpecialList.NoiTiet,
-                    Department = Deparment.NoiKhoa,
+                    Department = Department.NoiKhoa,
                     WorkSchedule = null
                 },
                 new Staff
@@ -197,7 +197,7 @@ namespace HospitalManagementApp.Models
                     PhoneNum = "0769421007",
                     Degree = "Bachelor of Medicine",
                     SpecialList = SpecialList.NoiTiet,
-                    Department = Deparment.NoiKhoa,
+                    Department = Department.NoiKhoa,
                     WorkSchedule = null
                 },
                 new Staff
@@ -211,7 +211,7 @@ namespace HospitalManagementApp.Models
                     PhoneNum = "0987651234",
                     Degree = "Bachelor of Medicine",
                     SpecialList = SpecialList.NoiTiet,
-                    Department = Deparment.NoiKhoa,
+                    Department = Department.NoiKhoa,
                     WorkSchedule = null
                 },
                 new Staff
@@ -225,7 +225,7 @@ namespace HospitalManagementApp.Models
                     PhoneNum = "0123459876",
                     Degree = "Bachelor of Medicine",
                     SpecialList = SpecialList.TieuHoa,
-                    Department = Deparment.NoiKhoa,
+                    Department = Department.NoiKhoa,
                     WorkSchedule = null
                 },
                 new Staff
@@ -239,7 +239,7 @@ namespace HospitalManagementApp.Models
                     PhoneNum = "0234561798",
                     Degree = "Bachelor of Medicine",
                     SpecialList = SpecialList.TieuHoa,
-                    Department = Deparment.NoiKhoa,
+                    Department = Department.NoiKhoa,
                     WorkSchedule = null
                 },
                 new Staff
@@ -253,7 +253,7 @@ namespace HospitalManagementApp.Models
                     PhoneNum = "0769421007",
                     Degree = "Bachelor of Medicine",
                     SpecialList = SpecialList.TieuHoa,
-                    Department = Deparment.NoiKhoa,
+                    Department = Department.NoiKhoa,
                     WorkSchedule = null
                 },
                 new Staff
@@ -267,7 +267,7 @@ namespace HospitalManagementApp.Models
                     PhoneNum = "0987651234",
                     Degree = "Bachelor of Medicine",
                     SpecialList = SpecialList.HoHap,
-                    Department = Deparment.NoiKhoa,
+                    Department = Department.NoiKhoa,
                     WorkSchedule = null
                 },
                 new Staff
@@ -281,7 +281,7 @@ namespace HospitalManagementApp.Models
                     PhoneNum = "0123459876",
                     Degree = "Bachelor of Medicine",
                     SpecialList = SpecialList.HoHap,
-                    Department = Deparment.NoiKhoa,
+                    Department = Department.NoiKhoa,
                     WorkSchedule = null
                 },
                 new Staff
@@ -295,7 +295,7 @@ namespace HospitalManagementApp.Models
                     PhoneNum = "0234561798",
                     Degree = "Bachelor of Medicine",
                     SpecialList = SpecialList.HoHap,
-                    Department = Deparment.NoiKhoa,
+                    Department = Department.NoiKhoa,
                     WorkSchedule = null
                 },
                 new Staff
@@ -309,7 +309,7 @@ namespace HospitalManagementApp.Models
                     PhoneNum = "0987651234",
                     Degree = "Bachelor of Medicine",
                     SpecialList = SpecialList.Mat,
-                    Department = Deparment.NgoaiKhoa,
+                    Department = Department.NgoaiKhoa,
                     WorkSchedule = null
                 },
                 new Staff
@@ -323,7 +323,7 @@ namespace HospitalManagementApp.Models
                     PhoneNum = "0123459876",
                     Degree = "Bachelor of Medicine",
                     SpecialList = SpecialList.Mat,
-                    Department = Deparment.NgoaiKhoa,
+                    Department = Department.NgoaiKhoa,
                     WorkSchedule = null
                 },
                 new Staff
@@ -337,7 +337,7 @@ namespace HospitalManagementApp.Models
                     PhoneNum = "0234561798",
                     Degree = "Bachelor of Medicine",
                     SpecialList = SpecialList.Mat,
-                    Department = Deparment.NgoaiKhoa,
+                    Department = Department.NgoaiKhoa,
                     WorkSchedule = null
                 },
                 new Staff
@@ -351,7 +351,7 @@ namespace HospitalManagementApp.Models
                     PhoneNum = "0987651234",
                     Degree = "Bachelor of Medicine",
                     SpecialList = SpecialList.TaiMuiHong,
-                    Department = Deparment.NgoaiKhoa,
+                    Department = Department.NgoaiKhoa,
                     WorkSchedule = null
                 },
                 new Staff
@@ -365,7 +365,7 @@ namespace HospitalManagementApp.Models
                     PhoneNum = "0123459876",
                     Degree = "Bachelor of Medicine",
                     SpecialList = SpecialList.TaiMuiHong,
-                    Department = Deparment.NgoaiKhoa,
+                    Department = Department.NgoaiKhoa,
                     WorkSchedule = null
                 },
                 new Staff
@@ -379,7 +379,7 @@ namespace HospitalManagementApp.Models
                     PhoneNum = "0234561798",
                     Degree = "Bachelor of Medicine",
                     SpecialList = SpecialList.TaiMuiHong,
-                    Department = Deparment.NgoaiKhoa,
+                    Department = Department.NgoaiKhoa,
                     WorkSchedule = null
                 },
                 new Staff
@@ -393,7 +393,7 @@ namespace HospitalManagementApp.Models
                     PhoneNum = "0987651234",
                     Degree = "Associate Professor",
                     SpecialList = SpecialList.NgoaiChinhHinh,
-                    Department = Deparment.NgoaiKhoa,
+                    Department = Department.NgoaiKhoa,
                     WorkSchedule = null
                 },
                 new Staff
@@ -407,7 +407,7 @@ namespace HospitalManagementApp.Models
                     PhoneNum = "0123459876",
                     Degree = "Associate Professor",
                     SpecialList = SpecialList.NgoaiChinhHinh,
-                    Department = Deparment.NgoaiKhoa,
+                    Department = Department.NgoaiKhoa,
                     WorkSchedule = null
                 },
                 new Staff
@@ -421,7 +421,7 @@ namespace HospitalManagementApp.Models
                     PhoneNum = "0234561798",
                     Degree = "Associate Professor",
                     SpecialList = SpecialList.NgoaiChinhHinh,
-                    Department = Deparment.NgoaiKhoa,
+                    Department = Department.NgoaiKhoa,
                     WorkSchedule = null
                 },
                 new Staff
@@ -435,7 +435,7 @@ namespace HospitalManagementApp.Models
                     PhoneNum = "0987651234",
                     Degree = "Associate Professor",
                     SpecialList = SpecialList.XQuang,
-                    Department = Deparment.ChanDoan,
+                    Department = Department.ChanDoan,
                     WorkSchedule = null
                 },
                 new Staff
@@ -449,7 +449,7 @@ namespace HospitalManagementApp.Models
                     PhoneNum = "0123459876",
                     Degree = "Associate Professor",
                     SpecialList = SpecialList.XQuang,
-                    Department = Deparment.ChanDoan,
+                    Department = Department.ChanDoan,
                     WorkSchedule = null
                 },
                 new Staff
@@ -463,7 +463,7 @@ namespace HospitalManagementApp.Models
                     PhoneNum = "0234561798",
                     Degree = "Associate Professor",
                     SpecialList = SpecialList.XQuang,
-                    Department = Deparment.ChanDoan,
+                    Department = Department.ChanDoan,
                     WorkSchedule = null
                 },
                 new Staff
@@ -477,7 +477,7 @@ namespace HospitalManagementApp.Models
                     PhoneNum = "0987651234",
                     Degree = "Associate Professor",
                     SpecialList = SpecialList.PhuKhoa,
-                    Department = Deparment.SanPhu,
+                    Department = Department.SanPhu,
                     WorkSchedule = null
                 },
                 new Staff
@@ -491,7 +491,7 @@ namespace HospitalManagementApp.Models
                     PhoneNum = "0123459876",
                     Degree = "Professor",
                     SpecialList = SpecialList.PhuKhoa,
-                    Department = Deparment.SanPhu,
+                    Department = Department.SanPhu,
                     WorkSchedule = null
                 },
                 new Staff
@@ -505,7 +505,7 @@ namespace HospitalManagementApp.Models
                     PhoneNum = "0234561798",
                     Degree = "Associate Professor",
                     SpecialList = SpecialList.PhuKhoa,
-                    Department = Deparment.SanPhu,
+                    Department = Department.SanPhu,
                     WorkSchedule = null
                 },
                 new Staff
@@ -519,7 +519,7 @@ namespace HospitalManagementApp.Models
                     PhoneNum = "0123459876",
                     Degree = "Doctor of Medicine",
                     SpecialList = SpecialList.ThaiNhi,
-                    Department = Deparment.SanPhu,
+                    Department = Department.SanPhu,
                     WorkSchedule = null
                 },
                 new Staff
@@ -533,7 +533,7 @@ namespace HospitalManagementApp.Models
                     PhoneNum = "0234561798",
                     Degree = "Doctor of Medicine",
                     SpecialList = SpecialList.ThaiNhi,
-                    Department = Deparment.SanPhu,
+                    Department = Department.SanPhu,
                     WorkSchedule = null
                 },
                 new Staff
@@ -547,7 +547,7 @@ namespace HospitalManagementApp.Models
                     PhoneNum = "0987651234",
                     Degree = "Doctor of Medicine",
                     SpecialList = SpecialList.ThaiNhi,
-                    Department = Deparment.SanPhu,
+                    Department = Department.SanPhu,
                     WorkSchedule = null
                 },
                 new Staff
@@ -561,7 +561,7 @@ namespace HospitalManagementApp.Models
                     PhoneNum = "0123459876",
                     Degree = "Doctor of Medicine",
                     SpecialList = SpecialList.SinhDuc,
-                    Department = Deparment.SanPhu,
+                    Department = Department.SanPhu,
                     WorkSchedule = null
                 },
                 new Staff
@@ -575,7 +575,7 @@ namespace HospitalManagementApp.Models
                     PhoneNum = "0234561798",
                     Degree = "Doctor of Medicine",
                     SpecialList = SpecialList.SinhDuc,
-                    Department = Deparment.SanPhu,
+                    Department = Department.SanPhu,
                     WorkSchedule = null
                 },
                 new Staff
@@ -589,7 +589,7 @@ namespace HospitalManagementApp.Models
                     PhoneNum = "0987651234",
                     Degree = "Doctor of Medicine",
                     SpecialList = SpecialList.SinhDuc,
-                    Department = Deparment.SanPhu,
+                    Department = Department.SanPhu,
                     WorkSchedule = null
                 },
                 new Staff
@@ -603,7 +603,7 @@ namespace HospitalManagementApp.Models
                     PhoneNum = "0987654312",
                     Degree = "Bachelor of Medicine",
                     SpecialList = SpecialList.TieuHoa,
-                    Department = Deparment.NoiKhoa,
+                    Department = Department.NoiKhoa,
                     WorkSchedule = null
                 },
                 new Staff
@@ -617,7 +617,7 @@ namespace HospitalManagementApp.Models
                     PhoneNum = "0231456978",
                     Degree = "Bachelor of Medicine",
                     SpecialList = null,
-                    Department = Deparment.QuanLy,
+                    Department = Department.QuanLy,
                     WorkSchedule = null
                 }
             };

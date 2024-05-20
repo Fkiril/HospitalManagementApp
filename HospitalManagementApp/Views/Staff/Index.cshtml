@@ -111,7 +111,14 @@
                         <button class="dropbtn" style="position: relative;">Action</button>
                         <div class="dropdown-content" style="position: absolute;right: 0;">
                             <a href="/Staff/Edit/@item.Id">Edit</a>
-                            <a asp-action="ShowPatientList" asp-controller="Patient" asp-route-id="@item.Id">Show Patient</a>
+                            @if (item.HealthCareStaff != HealthCareStaff.SupportStaff)
+                            {
+                                <a asp-action="ShowPatientList" asp-controller="Patient" asp-route-id="@item.Id">Show Patient</a>
+                            }
+                            else {
+                                <a asp-action="Index" asp-controller="Equipment">Equipment Management</a>
+                                <a asp-action="Index" asp-controller="Drugs">Drugs Management</a>
+                            }
                             <a href="/Staff/Details/@item.Id">Details</a>
                             <a href="/Staff/Remove/@item.Id">Remove</a>
                             @if (_HttpContextAccessor.HttpContext?.User.IsInRole("Admin") is true)

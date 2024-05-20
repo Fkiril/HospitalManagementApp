@@ -68,7 +68,7 @@
             <th></th>
         </tr>
     </thead>
-    
+
     <tbody>
         @foreach (var item in Model)
         {
@@ -107,7 +107,7 @@
                     <a asp-action="Calendar" asp-route-id="@item.Id">Calendar</a>
                 </td>
                 <td>
-                    <div class="dropdown" >
+                    <div class="dropdown">
                         <button class="dropbtn" style="position: relative;">Action</button>
                         <div class="dropdown-content" style="position: absolute;right: 0;">
                             <a href="/Staff/Edit/@item.Id">Edit</a>
@@ -115,7 +115,8 @@
                             {
                                 <a asp-action="ShowPatientList" asp-controller="Patient" asp-route-id="@item.Id">Show Patient</a>
                             }
-                            else {
+                            else
+                            {
                                 <a asp-action="Index" asp-controller="Equipment">Equipment Management</a>
                                 <a asp-action="Index" asp-controller="Drugs">Drugs Management</a>
                             }
@@ -131,5 +132,5 @@
             </tr>
         }
     </tbody>
-    
+
 </table>

@@ -25,6 +25,7 @@ namespace HospitalManagementApp.Controllers
             _pcontext = pcontext;
         }
 
+        [Authorize(Roles = "Admin", AuthenticationSchemes = "Cookies")]
         // GET: Staff
         public async Task<IActionResult> Index()
         {
@@ -32,6 +33,7 @@ namespace HospitalManagementApp.Controllers
             return View(StaffContext.StaffList);
         }
 
+        [Authorize(Roles = "Admin, Doctor,Nurse, SupportStaff", AuthenticationSchemes = "Cookies")]
         // GET: Staff/Details/3
         public IActionResult Details(int? id)
         {
@@ -49,6 +51,7 @@ namespace HospitalManagementApp.Controllers
             return View(staff);
         }
 
+        [Authorize(Roles = "Admin", AuthenticationSchemes = "Cookies")]
         // GET: Staff/Add
         public IActionResult Add()
         {
@@ -68,6 +71,7 @@ namespace HospitalManagementApp.Controllers
             return View();
         }
 
+        [Authorize(Roles = "Admin", AuthenticationSchemes = "Cookies")]
         //GET: Staff/Edit/3
         public IActionResult Edit(int? id)
         {
@@ -132,6 +136,7 @@ namespace HospitalManagementApp.Controllers
             return View(staff);
         }
 
+        [Authorize(Roles = "Admin", AuthenticationSchemes = "Cookies")]
         //GET: Staff/Remove/3
         public IActionResult Remove(int? id)
         {
@@ -163,7 +168,7 @@ namespace HospitalManagementApp.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
+        [Authorize(Roles = "Admin", AuthenticationSchemes = "Cookies")]
         public IActionResult RemoveCalendar()
         {
             if (StaffContext.StaffList == null)
@@ -178,7 +183,7 @@ namespace HospitalManagementApp.Controllers
             
         }
 
-
+        [Authorize(Roles = "Admin", AuthenticationSchemes = "Cookies")]
         [HttpPost, ActionName("RemoveCalendar")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RemoveCalendarConfirmed()
@@ -209,6 +214,7 @@ namespace HospitalManagementApp.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin, Doctor,Nurse", AuthenticationSchemes = "Cookies")]
         public IActionResult ShowPatient(int id)
         {
             var staff = StaffContext.StaffList
@@ -311,6 +317,7 @@ namespace HospitalManagementApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize(Roles = "Admin", AuthenticationSchemes = "Cookies")]
         public IActionResult FindStaff(string StaffName)
         {
             if (string.IsNullOrWhiteSpace(StaffName))

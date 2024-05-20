@@ -10,7 +10,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace HospitalManagementApp.Controllers
 {
-    [Authorize(Roles = "Admin, Doctor", AuthenticationSchemes = "Cookies")]
+    [Authorize(Roles = "Admin, Doctor, SupportStaff", AuthenticationSchemes = "Cookies")]
     public class DrugsController : Controller
     {
         public readonly DrugsContext _context;

@@ -1,41 +1,75 @@
 using Microsoft.AspNetCore.Mvc;
-using Google.Cloud.Firestore;
 using HospitalManagementApp.Data;
 using HospitalManagementApp.Models;
-using System;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Google.Api;
-using System.Net.WebSockets;
-using System.Collections.ObjectModel;
-using Google.Cloud.Firestore.V1;
+using System.Security.Claims;
+using System.Security.Cryptography;
 
 
 namespace HospitalManagementApp.Controllers
 {
-    [Authorize(Roles = "Admin, Doctor", AuthenticationSchemes = "Cookies")]
+    [Authorize(Roles = "Admin, Doctor, Nurse, SupportStaff", AuthenticationSchemes = "Cookies")]
     public class StaffController : Controller
     {
+        public readonly PatientContext _patientContext;
         public readonly StaffContext _context;
-        public readonly PatientContext _pcontext;
-
-        public StaffController(StaffContext context, PatientContext pcontext)
+        public readonly IHttpContextAccessor _httpContextAccessor;
+        public StaffController(PatientContext patientContext,
+                                StaffContext staffContext,
+                                IHttpContextAccessor httpContextAccessor)
         {
-            _context = context;
-            _pcontext = pcontext;
+            _patientContext = patientContext;
+            _context = staffContext;
+            _httpContextAccessor = httpContextAccessor;
         }
 
-        [Authorize(Roles = "Admin", AuthenticationSchemes = "Cookies")]
+        [Authorize(Roles = "Admin, Doctor, Nurse, SupportStaff", AuthenticationSchemes = "Cookies")]
         // GET: Staff
         public async Task<IActionResult> Index()
         {
+            if (_httpContextAccessor.HttpContext != null && _httpContextAccessor.HttpContext.User.IsInRole("Admin"))
+            {
+                await _context.InitializeStaffListFromFirestore();
+                return View(StaffContext.StaffList);
+            }
+            else
+            {
+                int sId;
+                var userDataClaim = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.UserData);
+                if (userDataClaim != null)
+                {
+                    sId = Convert.ToInt32(userDataClaim.Value);
+                    var staff = _context.GetStaffWithId(sId);
+
+                    if (staff != null)
+                    {
+                        return RedirectToAction(nameof(Details), new { id = sId });
+                    }
+                }
+            }
+
             if (TempData["ErrorMessage"] != null && TempData["ErrorMessage"] as string != null)
             {
                 ViewBag.ErrorMessage = TempData["ErrorMessage"] as string;
             }
 
-            await _context.InitializeStaffListFromFirestore();
-            return View(StaffContext.StaffList);
+            if (TempData["StaffList"] == null)
+            {
+                await _context.InitializeStaffListFromFirestore();
+                return View(StaffContext.StaffList);
+            }
+            else
+            {
+                var ids = TempData["StaffIdList"] as List<int>;
+                ICollection<Staff> staffList = _context.GetStaffListFromIdList(ids);
+                if (staffList != null)
+                {
+                    return View(staffList);
+                }
+                return View(null);
+            }
+
         }
 
         [Authorize(Roles = "Admin, Doctor,Nurse, SupportStaff", AuthenticationSchemes = "Cookies")]

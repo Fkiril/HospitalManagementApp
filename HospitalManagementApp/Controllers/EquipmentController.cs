@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace HospitalManagementApp.Controllers
 {
-    [Authorize(Roles = "Admin", AuthenticationSchemes = "Cookies")]
+    [Authorize(Roles = "Admin, SupportStaff", AuthenticationSchemes = "Cookies")]
     public class EquipmentController : Controller
     {
         public readonly EquipmentContext _context;

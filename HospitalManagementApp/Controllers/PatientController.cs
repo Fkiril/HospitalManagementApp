@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace HospitalManagementApp.Controllers
 {
-    [Authorize(Roles = "Admin, Doctor, Patient", AuthenticationSchemes = "Cookies")]
+    [Authorize(Roles = "Admin, Doctor, Nurse, Patient", AuthenticationSchemes = "Cookies")]
     public class PatientController : Controller
     {
         public readonly PatientContext _patientContext;
@@ -28,7 +28,7 @@ namespace HospitalManagementApp.Controllers
         }
 
         // GET: Patient
-        [Authorize(Roles = "Admin, Doctor, Patient", AuthenticationSchemes = "Cookies")]
+        [Authorize(Roles = "Admin, Doctor, Nurse, Patient", AuthenticationSchemes = "Cookies")]
         public async Task<IActionResult> Index()
         {
             if (_httpContextAccessor.HttpContext != null && _httpContextAccessor.HttpContext.User.IsInRole("Patient"))
@@ -46,7 +46,7 @@ namespace HospitalManagementApp.Controllers
                     }
                 }
             }
-            else if (_httpContextAccessor.HttpContext != null && _httpContextAccessor.HttpContext.User.IsInRole("Doctor"))
+            else if (_httpContextAccessor.HttpContext != null && (_httpContextAccessor.HttpContext.User.IsInRole("Doctor") || _httpContextAccessor.HttpContext.User.IsInRole("Nurse")))
             {
                 int pId;
                 var userDataClaim = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.UserData);
@@ -86,7 +86,7 @@ namespace HospitalManagementApp.Controllers
             }
         }
 
-        [Authorize(Roles = "Admin, Doctor", AuthenticationSchemes = "Cookies")]
+        [Authorize(Roles = "Admin, Doctor, Nurse", AuthenticationSchemes = "Cookies")]
         public IActionResult ShowPatientList(int id)
         {
             var idList = _patientContext.GetPatientIdListFromStaffId(id);
@@ -128,7 +128,7 @@ namespace HospitalManagementApp.Controllers
         }
 
         // GET: Patient/Details/3
-        [Authorize(Roles = "Admin, Doctor, Patient", AuthenticationSchemes = "Cookies")]
+        [Authorize(Roles = "Admin, Doctor, Nurse, Patient", AuthenticationSchemes = "Cookies")]
         public IActionResult Details(int? id)
         {
             if (id == null)
@@ -258,7 +258,7 @@ namespace HospitalManagementApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [Authorize(Roles = "Admin, Doctor", AuthenticationSchemes = "Cookies")]
+        [Authorize(Roles = "Admin, Doctor, Nurse", AuthenticationSchemes = "Cookies")]
         public IActionResult TreatmentScheduleManager(int? id)
         {
             if (id == null)

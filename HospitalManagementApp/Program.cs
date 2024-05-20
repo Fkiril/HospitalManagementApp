@@ -68,14 +68,14 @@ using (var scope = app.Services.CreateScope())
         var staffContext = scope.ServiceProvider.GetService<StaffContext>();
         if (staffContext != null) await staffContext.InitializeStaffListFromFirestore();
 
-        var drugContext = scope.ServiceProvider.GetService<DrugsContext>();
-        if (drugContext != null) await drugContext.InitializeDrugsListFromFirestore();
+        //var drugContext = scope.ServiceProvider.GetService<DrugsContext>();
+        //if (drugContext != null) await drugContext.InitializeDrugsListFromFirestore();
 
-        var prescriptionContext = scope.ServiceProvider.GetService<PrescriptionContext>();
-        if (prescriptionContext != null) await prescriptionContext.InitializePrescriptionListFromFirestore();
+        //var prescriptionContext = scope.ServiceProvider.GetService<PrescriptionContext>();
+        //if (prescriptionContext != null) await prescriptionContext.InitializePrescriptionListFromFirestore();
 
-        var equitmentContext = scope.ServiceProvider.GetService<EquipmentContext>();
-        if (equitmentContext != null) await equitmentContext.InitializeEquipmentListFromFirestore();
+        //var equitmentContext = scope.ServiceProvider.GetService<EquipmentContext>();
+        //if (equitmentContext != null) await equitmentContext.InitializeEquipmentListFromFirestore();
     }
 }
 

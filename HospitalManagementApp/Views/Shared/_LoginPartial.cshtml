@@ -4,7 +4,7 @@
 @inject IHttpContextAccessor _HttpContextAccessor
 
 <ul class="navbar-nav">
-    @if (_HttpContextAccessor.HttpContext.User.Identity.IsAuthenticated && _HttpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.Role)?.Value != null)
+    @if (_HttpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
 {
     <li class="nav-item">
         <a id="manage" class="nav-link text-dark" asp-area="" asp-controller="Authentication" asp-action="Index" title="Manage">Hello @_HttpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.Name)?.Value </a>

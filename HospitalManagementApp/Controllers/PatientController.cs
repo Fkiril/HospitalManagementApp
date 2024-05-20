@@ -60,10 +60,10 @@ namespace HospitalManagementApp.Controllers
             else
             {
                 var ids = TempData["PatientIdList"] as List<int>;
-                ICollection<Patient> patients = _patientContext.GetPatientListFromIds(ids).Result;
-                if (patients != null)
+                ICollection<Patient> patientList = _patientContext.GetPatientListFromIdList(ids);
+                if (patientList != null)
                 {
-                    return View(patients);
+                    return View(patientList);
                 }
                 return View(null);
             }
@@ -72,16 +72,15 @@ namespace HospitalManagementApp.Controllers
         [Authorize(Roles = "Admin, Doctor", AuthenticationSchemes = "Cookies")]
         public IActionResult ShowPatientList(int id)
         {
-            var patients = _patientContext.GetPatientsFromStaffId(id).Result;
-            var ids = _patientContext.FromPatientListToIds(patients);
+            var idList = _patientContext.GetPatientIdListFromStaffId(id);
 
-            if (ids == null || ids.Count == 0)
+            if (idList == null || idList.Count == 0)
             {
                 return NotFound();
             }
             else
             {
-                TempData["PatientIdList"] = ids;
+                TempData["PatientIdList"] = idList;
 
                 return RedirectToAction(nameof(Index));
             }

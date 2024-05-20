@@ -340,40 +340,23 @@ namespace HospitalManagementApp.Data
             }
         }
 
-        public async Task<List<Patient>?> GetPatientsFromStaffId(int staffId)
-        {
-            List<Patient>? patientList = new List<Patient>();
 
-            foreach (var patient in PatientList)
-            {
-                if (patient != null && patient.StaffIds != null && patient.StaffIds.Contains(staffId) && patient.Changed != true)
-                {
-                    patientList.Add(patient);
-                }
-                else if (patient != null && patient.Changed == true)
-                {
-                    await SaveChangesAsync();
-                }
-            }
-
-            return patientList;
-        }
-
-        public List<int> FromPatientListToIds(List<Patient>? patients)
+        public List<int> GetPatientIdListFromStaffId(int staffId)
         {
             List<int> ids = new List<int>();
 
-            if (patients == null) return ids;
-
-            foreach (var patient in patients)
+            foreach (var patient in PatientList)
             {
-                if (patient != null && patient.Id != null)
-                    ids.Add((int)patient.Id);
+                if (patient != null && patient.Id != null && patient.StaffIds != null && patient.StaffIds.Contains(staffId))
+                {
+                    ids.Add((int) patient.Id);
+                }
             }
+
             return ids;
         }
 
-        public async Task<ICollection<Patient>> GetPatientListFromIds(List<int>? ids)
+        public ICollection<Patient> GetPatientListFromIdList(List<int>? ids)
         {
             ICollection<Patient> patientList = [];
 
@@ -384,10 +367,7 @@ namespace HospitalManagementApp.Data
                 var patient = PatientList.FirstOrDefault(x => x.Id == id);
                 if (patient != null)
                 {
-                    if (patient.Changed != true)
-                        patientList.Add(patient);
-                    else 
-                        await SaveChangesAsync();
+                    patientList.Add(patient);
                 }
             }
 

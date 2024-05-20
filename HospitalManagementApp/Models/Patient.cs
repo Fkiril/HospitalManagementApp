@@ -174,6 +174,7 @@ namespace HospitalManagementApp.Models
         public string? EndTime { get; set; }
 
         [FirestoreProperty]
+
         [Key, Required]
         public int? Id { get; set; }
     }
@@ -217,6 +218,7 @@ namespace HospitalManagementApp.Models
 
             return list.Select(o => TreatmentScheduleEleFromFirestore(o)).ToList();
         }
+
     }
 }
 

@@ -84,6 +84,7 @@ namespace HospitalManagementApp.Models
 
             foreach (var patient in patients)
             {
+
                 await colRef.Document("patient_" + patient.Id).SetAsync(patient);
             }
         }
@@ -623,6 +624,7 @@ namespace HospitalManagementApp.Models
             };
             foreach (var staff in staffs) {
                 await colRef.Document("staff_" + staff.Id).SetAsync(staff);
+
             }
         }
     }

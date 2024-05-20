@@ -10,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton<FirestoreDbService>(provider =>
 {
     var projectId = "hospitalmanagementapp-7aa23";
+
     string rootPath = provider.GetRequiredService<IWebHostEnvironment>().ContentRootPath;
     var jsonFilePath = Path.Combine(rootPath,"" ,"hospitalmanagementapp-7aa23-firebase-adminsdk-gw6ir-355e13d856.json");
     Google.Apis.Auth.OAuth2.GoogleCredential credential = Google.Apis.Auth.OAuth2.GoogleCredential.FromFile(jsonFilePath);
@@ -19,6 +20,7 @@ builder.Services.AddSingleton<PatientContext>(sp =>
 {
     var firestoreDbService = sp.GetRequiredService<FirestoreDbService>();
     return new PatientContext(firestoreDbService, null);
+
 });
 
 builder.Services.AddSingleton<ApplicationUserContext>();

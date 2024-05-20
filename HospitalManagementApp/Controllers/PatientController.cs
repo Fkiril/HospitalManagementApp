@@ -154,7 +154,9 @@ namespace HospitalManagementApp.Controllers
         //POST: Patient/Add
         [HttpPost]
         [ValidateAntiForgeryToken]
+
         public async Task<IActionResult> Add (Patient patient)
+
         {
             if (ModelState.IsValid)
             {
@@ -208,7 +210,9 @@ namespace HospitalManagementApp.Controllers
         //POST: Patient/Edit/3
         [HttpPost]
         [ValidateAntiForgeryToken]
+
         public async Task<IActionResult> Edit(int id, Patient patient)
+
         {
             if (id != patient.Id)
             {
@@ -251,8 +255,10 @@ namespace HospitalManagementApp.Controllers
                 .FirstOrDefault(patient => patient.Id == id);
             if (patient != null)
             {
-                PatientContext.PatientList.Remove(patient);
+                _context.Remove(patient);
+                await _context.SaveChangesAsync();
             }
+
 
             await _patientContext.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
@@ -545,6 +551,7 @@ namespace HospitalManagementApp.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
+
             return RedirectToAction(nameof(Index));
         }
 

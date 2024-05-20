@@ -45,16 +45,20 @@ namespace HospitalManagementApp.Data
             CollectionReference colRef = _firestoreDb.Collection(colName);
             QuerySnapshot snapshot = await colRef.GetSnapshotAsync();
 
+
             List<string> idsInCloud = [];
+
             foreach (DocumentSnapshot docSnapshot in snapshot.Documents)
             {
                 idsInCloud.Add(docSnapshot.Id);
             }
+
             List<string> idsInList = [];
             foreach (Patient patient in PatientList)
             {
                 if (patient != null)
                     idsInList.Add(docId + patient.Id);
+
             }
             IEnumerable<string> idsToDelete = idsInCloud.Except(idsInList);
             
@@ -66,11 +70,13 @@ namespace HospitalManagementApp.Data
 
             foreach (Patient patient in PatientList)
             {
+
                 if (patient.Changed == true)
                 {
                     await colRef.Document(docId + patient.Id).SetAsync(patient);
                     patient.Changed = false;
                 }
+
             }
         }
 
@@ -103,6 +109,7 @@ namespace HospitalManagementApp.Data
             {
                 if (p.Id == patient.Id)
                 {
+
                     if (patient.Name != null) p.Name = patient.Name;
                     if (patient.Gender != null) p.Gender = patient.Gender;
                     if (patient.DateOfBirth != null) p.DateOfBirth = patient.DateOfBirth;
@@ -115,10 +122,12 @@ namespace HospitalManagementApp.Data
                     if (patient.Status is not null) p.Status = patient.Status;
 
                     p.Changed = true;
+
                     break;
                 }
             }
         }
+
 
         public void AddTreatmentSchedule(Patient patient,
             TreatmentScheduleEle newTreatment,
@@ -407,6 +416,7 @@ namespace HospitalManagementApp.Data
             var patient = PatientList.FirstOrDefault(x => x.Id == id);
 
             return patient;
+
         }
     }
 }

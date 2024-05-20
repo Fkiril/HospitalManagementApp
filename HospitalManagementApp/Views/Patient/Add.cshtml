@@ -49,6 +49,11 @@
                 <span asp-validation-for="@Model.PhoneNum" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="@Model.Email" class="control-label"></label>
+                <input asp-for="@Model.Email" class="form-control" />
+                <span asp-validation-for="@Model.Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Add" class="btn btn-primary" />
             </div>
         </form>

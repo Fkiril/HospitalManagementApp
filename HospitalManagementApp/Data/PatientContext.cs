@@ -108,6 +108,7 @@ namespace HospitalManagementApp.Data
                     if (patient.DateOfBirth != null) p.DateOfBirth = patient.DateOfBirth;
                     if (patient.Address != null) p.Address = patient.Address;
                     if (patient.PhoneNum != null) p.PhoneNum = patient.PhoneNum;
+                    if (patient.Email != null) p.Email = patient.Email;
                     if (patient.MedicalHistory != null) p.MedicalHistory = patient.MedicalHistory;
                     if (patient.TestResult != null) p.TestResult = patient.TestResult;
                     if (patient.TreatmentSchedule != null) p.TreatmentSchedule = patient.TreatmentSchedule;

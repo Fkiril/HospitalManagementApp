@@ -48,6 +48,11 @@
                 <input asp-for="@Model.PhoneNum" class="form-control" />
                 <span asp-validation-for="@Model.PhoneNum" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                <label asp-for="@Model.Email" value="Phone number" class="control-label"></label>
+                <input asp-for="@Model.Email" class="form-control" />
+                <span asp-validation-for="@Model.Email" class="text-danger"></span>
+            </div>
             <div class="form-group" hidden>
                 <label asp-for="@Model.MedicalHistory" value="Medical history" class="control-label"></label>
                 

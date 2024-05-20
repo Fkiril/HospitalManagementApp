@@ -88,7 +88,7 @@ namespace HospitalManagementApp.Data
         {
             CollectionReference colRef = GetCollectionReference();
             QuerySnapshot query = await colRef.GetSnapshotAsync();
-            var docQuery = query.Documents.FirstOrDefault(doc => doc.GetValue<string>("Email") ==  email);
+            var docQuery = query.Documents.FirstOrDefault(doc => doc.GetValue<string>("Email") == email);
 
             ApplicationUser user = new();
 

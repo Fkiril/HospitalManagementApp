@@ -51,6 +51,9 @@
                 <strong>Phone number</strong>
             </th>
             <th>
+                <strong>Email</strong>
+            </th>
+            <th>
                 <strong>Staff Id</strong>
             </th>
             <th>
@@ -81,6 +84,9 @@
                 </td>
                 <td>
                     @Html.DisplayFor(model => item.PhoneNum)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.Email)
                 </td>
                 <td>
                     @if(item.StaffIds is not null) @Html.Raw(string.Join(", ", item.StaffIds))

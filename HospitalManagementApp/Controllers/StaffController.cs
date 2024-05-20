@@ -29,6 +29,11 @@ namespace HospitalManagementApp.Controllers
         // GET: Staff
         public async Task<IActionResult> Index()
         {
+            if (TempData["ErrorMessage"] != null && TempData["ErrorMessage"] as string != null)
+            {
+                ViewBag.ErrorMessage = TempData["ErrorMessage"] as string;
+            }
+
             await _context.InitializeStaffListFromFirestore();
             return View(StaffContext.StaffList);
         }

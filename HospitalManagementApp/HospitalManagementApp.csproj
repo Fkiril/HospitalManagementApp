@@ -7,6 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove=".firebase\**" />
+    <Compile Remove=".github\**" />
+    <Content Remove=".firebase\**" />
+    <Content Remove=".github\**" />
+    <EmbeddedResource Remove=".firebase\**" />
+    <EmbeddedResource Remove=".github\**" />
+    <None Remove=".firebase\**" />
+    <None Remove=".github\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Google.Cloud.Firestore" Version="3.6.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.3" />
@@ -27,12 +38,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include=".firebase\hosting.cHVibGlj.cache" />
-    <None Include=".firebase\hosting.SG9zcGl0YWxNYW5hZ2VtZW50QXBwXGJpblxSZWxlYXNlXG5ldDguMFxwdWJsaXNo.cache" />
-    <None Include=".firebase\hosting.YmluXFJlbGVhc2VcbmV0OC4wXHB1Ymxpc2g.cache" />
-    <None Include=".github\workflows\firebase-deploy.yml" />
-    <None Include=".github\workflows\firebase-hosting-merge.yml" />
-    <None Include=".github\workflows\firebase-hosting-pull-request.yml" />
     <None Include="Views\Equipment\Add.cshtml" />
     <None Include="Views\Equipment\AddSchedule.cshtml" />
     <None Include="Views\Equipment\Edit.cshtml" />

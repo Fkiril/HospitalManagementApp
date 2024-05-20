@@ -36,7 +36,7 @@ namespace HospitalManagementApp.Data
         {
             if (await IsIdUnique(user.Id))
             {
-                await GetDocumentReferenceWithId(user.Id).SetAsync(user).ConfigureAwait(false);
+                await GetDocumentReferenceWithId(user.Id).SetAsync(user);
             }
             else
             {
@@ -48,7 +48,7 @@ namespace HospitalManagementApp.Data
         {
             try
             {
-                await GetDocumentReferenceWithId(user.Id).DeleteAsync().ConfigureAwait(false);
+                await GetDocumentReferenceWithId(user.Id).DeleteAsync();
             }
             catch (Exception)
             {
@@ -60,7 +60,7 @@ namespace HospitalManagementApp.Data
         {
             try
             {
-                await GetDocumentReferenceWithId(user.Id).SetAsync(user).ConfigureAwait(false);
+                await GetDocumentReferenceWithId(user.Id).SetAsync(user);
             }
             catch (Exception)
             {
@@ -88,7 +88,7 @@ namespace HospitalManagementApp.Data
         {
             CollectionReference colRef = GetCollectionReference();
             QuerySnapshot query = await colRef.GetSnapshotAsync();
-            var docQuery = query.Documents.FirstOrDefault(doc => doc.GetValue<string>("Email") ==  email);
+            var docQuery = query.Documents.FirstOrDefault(doc => doc.GetValue<string>("Email") == email);
 
             ApplicationUser user = new();
 
@@ -142,7 +142,7 @@ namespace HospitalManagementApp.Data
                 var docQuery = query.Documents.FirstOrDefault(doc => (
                                 (doc.GetValue<string>("Role") != "Patient"
                                  && doc.GetValue<int>("DataId") == id)));
-                if (docQuery == null)
+                if (docQuery != null)
                 {
                     return true;
                 }

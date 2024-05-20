@@ -68,7 +68,7 @@
             <th></th>
         </tr>
     </thead>
-    
+
     <tbody>
         @foreach (var item in Model)
         {
@@ -107,15 +107,24 @@
                     <a asp-action="Calendar" asp-route-id="@item.Id">Calendar</a>
                 </td>
                 <td>
-                    <div class="dropdown" >
+                    <div class="dropdown">
                         <button class="dropbtn" style="position: relative;">Action</button>
                         <div class="dropdown-content" style="position: absolute;right: 0;">
                             <a href="/Staff/Edit/@item.Id">Edit</a>
+                            @if (item.HealthCareStaff != HealthCareStaff.SupportStaff)
+                            {
+                                <a asp-action="ShowPatientList" asp-controller="Patient" asp-route-id="@item.Id">Show Patient</a>
+                            }
+                            else
+                            {
+                                <a asp-action="Index" asp-controller="Equipment">Equipment Management</a>
+                                <a asp-action="Index" asp-controller="Drugs">Drugs Management</a>
+                            }
                             <a href="/Staff/Details/@item.Id">Details</a>
                             <a href="/Staff/Remove/@item.Id">Remove</a>
                             @if (_HttpContextAccessor.HttpContext?.User.IsInRole("Admin") is true)
                             {
-                                <a href="/Authentication/CreateApplicationUserAccount/@item.Id?patientFlag=true">Create account</a>
+                                <a href="/Authentication/CreateApplicationUserAccount/@item.Id?patientFlag=false">Create account</a>
                             }
                         </div>
                     </div>
@@ -123,5 +132,5 @@
             </tr>
         }
     </tbody>
-    
+
 </table>

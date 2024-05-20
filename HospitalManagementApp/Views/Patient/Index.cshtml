@@ -51,6 +51,9 @@
                 <strong>Phone number</strong>
             </th>
             <th>
+                <strong>Email</strong>
+            </th>
+            <th>
                 <strong>Staff Id</strong>
             </th>
             <th>
@@ -83,6 +86,9 @@
                     @Html.DisplayFor(model => item.PhoneNum)
                 </td>
                 <td>
+                    @Html.DisplayFor(model => item.Email)
+                </td>
+                <td>
                     @if(item.StaffIds is not null) @Html.Raw(string.Join(", ", item.StaffIds))
                 </td>
                 <td>
@@ -91,7 +97,7 @@
                 <td>
                     <div class="dropdown">
                         <button class="dropbtn">Choose an action</button>
-                        <div class="dropdown-cdotontent">
+                        <div class="dropdown-content">
                             <a href="/Patient/Edit/@item.Id">Edit</a>
                             <a href="/Patient/Details/@item.Id">Details</a>
                             <a href="/Patient/Remove/@item.Id">Remove</a>

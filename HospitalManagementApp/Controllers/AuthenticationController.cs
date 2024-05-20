@@ -143,7 +143,7 @@ namespace HospitalManagementApp.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin", AuthenticationSchemes = "Cookies")]
-        public IActionResult CreateApplicationUserAccount (int? id, bool patientFlag)
+        public async Task<IActionResult> CreateApplicationUserAccount (int? id, bool patientFlag)
         {
             if (id == null)
             {
@@ -166,13 +166,25 @@ namespace HospitalManagementApp.Controllers
                         TempData["ErrorMessage"] = "This patient already has a registed account";
                         return RedirectToAction(nameof(Index), "Patient");
                     }
-                    if (patient.Email != null && _applicationUserContext.GetUserByEmailAsync(patient.Email) != null)
+
+                    if (patient.Email != null)
                     {
-                        TempData["ErrorMessage"] = "This patient's email has already registed for an account!";
-                        return RedirectToAction(nameof(Index), "Patient");
+                        ApplicationUser? user = null;
+                        try
+                        {
+                            user = await _applicationUserContext.GetUserByEmailAsync(patient.Email);
+                        }
+                        catch (InvalidDataException)
+                        {
+                            
+                        }
+                        if (user != null)
+                        {
+                            TempData["ErrorMessage"] = "This email is already registed for an account!";
+                            return RedirectToAction(nameof(Index), "Patient");
+                        }
                     }
-
-
+                    
                     model.UserName = patient.Name;
                     model.Email = patient.Email;
                     model.DataId = patient.Id;
@@ -191,6 +203,23 @@ namespace HospitalManagementApp.Controllers
                     {
                         TempData["ErrorMessage"] = "This staff already has a registed account!";
                         return RedirectToAction(nameof(Index), "Staff");
+                    }
+                    if (staff.Email != null)
+                    {
+                        ApplicationUser? user = null;
+                        try
+                        {
+                            user = await _applicationUserContext.GetUserByEmailAsync(staff.Email);
+                        }
+                        catch (InvalidDataException)
+                        {
+
+                        }
+                        if (user != null)
+                        {
+                            TempData["ErrorMessage"] = "This email is already registed for an account!";
+                            return RedirectToAction(nameof(Index), "Staff");
+                        }
                     }
 
                     model.UserName = staff.Name;
@@ -226,6 +255,7 @@ namespace HospitalManagementApp.Controllers
                 catch (Exception ex)
                 {
                     ViewBag.ErrorMessage = ex.Message;
+                    return View();
                 }
 
                 if (user.Role == "Patient")

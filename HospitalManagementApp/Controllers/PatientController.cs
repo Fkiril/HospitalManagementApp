@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace HospitalManagementApp.Controllers
 {
-    [Authorize(Roles = "Admin, Doctor, Patient", AuthenticationSchemes = "Cookies")]
+    [Authorize(Roles = "Admin, Doctor, Nurse, Patient", AuthenticationSchemes = "Cookies")]
     public class PatientController : Controller
     {
         public readonly PatientContext _patientContext;
@@ -28,7 +28,7 @@ namespace HospitalManagementApp.Controllers
         }
 
         // GET: Patient
-        [Authorize(Roles = "Admin, Doctor", AuthenticationSchemes = "Cookies")]
+        [Authorize(Roles = "Admin, Doctor, Nurse, Patient", AuthenticationSchemes = "Cookies")]
         public async Task<IActionResult> Index()
         {
             if (_httpContextAccessor.HttpContext != null && _httpContextAccessor.HttpContext.User.IsInRole("Patient"))
@@ -46,6 +46,23 @@ namespace HospitalManagementApp.Controllers
                     }
                 }
             }
+            else if (_httpContextAccessor.HttpContext != null && (_httpContextAccessor.HttpContext.User.IsInRole("Doctor") || _httpContextAccessor.HttpContext.User.IsInRole("Nurse")))
+            {
+                int pId;
+                var userDataClaim = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.UserData);
+                if (userDataClaim != null)
+                {
+                    pId = Convert.ToInt32(userDataClaim.Value);
+                    var ids = _patientContext.GetPatientIdListFromStaffId(pId);
+
+                    ICollection<Patient> patientList = _patientContext.GetPatientListFromIdList(ids);
+                    if (patientList != null)
+                    {
+                        return View(patientList);
+                    }
+                    return View(null);
+                }
+            }
 
             if (TempData["ErrorMessage"] != null && TempData["ErrorMessage"] as string != null)
             {
@@ -60,28 +77,27 @@ namespace HospitalManagementApp.Controllers
             else
             {
                 var ids = TempData["PatientIdList"] as List<int>;
-                ICollection<Patient> patients = _patientContext.GetPatientListFromIds(ids).Result;
-                if (patients != null)
+                ICollection<Patient> patientList = _patientContext.GetPatientListFromIdList(ids);
+                if (patientList != null)
                 {
-                    return View(patients);
+                    return View(patientList);
                 }
                 return View(null);
             }
         }
 
-        [Authorize(Roles = "Admin, Doctor", AuthenticationSchemes = "Cookies")]
+        [Authorize(Roles = "Admin, Doctor, Nurse", AuthenticationSchemes = "Cookies")]
         public IActionResult ShowPatientList(int id)
         {
-            var patients = _patientContext.GetPatientsFromStaffId(id).Result;
-            var ids = _patientContext.FromPatientListToIds(patients);
+            var idList = _patientContext.GetPatientIdListFromStaffId(id);
 
-            if (ids == null || ids.Count == 0)
+            if (idList == null || idList.Count == 0)
             {
                 return NotFound();
             }
             else
             {
-                TempData["PatientIdList"] = ids;
+                TempData["PatientIdList"] = idList;
 
                 return RedirectToAction(nameof(Index));
             }
@@ -112,7 +128,7 @@ namespace HospitalManagementApp.Controllers
         }
 
         // GET: Patient/Details/3
-        [Authorize(Roles = "Admin, Doctor, Patient", AuthenticationSchemes = "Cookies")]
+        [Authorize(Roles = "Admin, Doctor, Nurse, Patient", AuthenticationSchemes = "Cookies")]
         public IActionResult Details(int? id)
         {
             if (id == null)
@@ -242,7 +258,7 @@ namespace HospitalManagementApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [Authorize(Roles = "Admin, Doctor", AuthenticationSchemes = "Cookies")]
+        [Authorize(Roles = "Admin, Doctor, Nurse", AuthenticationSchemes = "Cookies")]
         public IActionResult TreatmentScheduleManager(int? id)
         {
             if (id == null)

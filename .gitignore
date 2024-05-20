@@ -20,7 +20,7 @@ mono_crash.*
 [Dd]ebug/
 [Dd]ebugPublic/
 ## [Rr]elease/
-net8.0/*
+net8.0/
 !net8.0/publish/
 [Rr]eleases/
 x64/

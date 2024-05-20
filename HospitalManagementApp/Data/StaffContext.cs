@@ -235,5 +235,30 @@ namespace HospitalManagementApp.Data
             }
             return ids;
         }
+
+        public Staff? GetStaffWithId(int id)
+        {
+            Staff staff = StaffList.FirstOrDefault(s => s.Id == id);
+
+            return staff;
+        }
+
+        public ICollection<Staff> GetStaffListFromIdList(List<int>? ids)
+        {
+            ICollection<Staff> staffList = [];
+
+            if (ids == null) return staffList;
+
+            foreach (var id in ids)
+            {
+                var staff = StaffList.FirstOrDefault(x => x.Id == id);
+                if (staff != null)
+                {
+                    staffList.Add(staff);
+                }
+            }
+
+            return staffList;
+        }
     }
 }

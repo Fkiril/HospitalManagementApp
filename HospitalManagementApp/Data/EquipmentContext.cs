@@ -25,6 +25,8 @@ namespace HospitalManagementApp.Data
             UpdateSchedule();
             UpdateCount("InitFirestore");
 
+            
+
             Console.WriteLine("InitializeEquipmentListFromFirestore");
             if (EquipmentList.Count != 0)
             {
@@ -41,6 +43,8 @@ namespace HospitalManagementApp.Data
                 equipment.changed = false;
                 EquipmentList.Add(equipment);
             }
+            // sort index number
+            EquipmentList = EquipmentList.OrderBy(equipment => equipment.Id).ToList();
 
             UpdateSchedule();
             UpdateCount("InitFirestore");
@@ -93,15 +97,14 @@ namespace HospitalManagementApp.Data
         }
         public void Add(Equipment equipment)
         {
-            if (IsIdUnique(equipment.Id))
-            {
-                equipment.changed = true;
-                EquipmentList.Add(equipment);       
-            }
-            else
-            {
-                throw new Exception("This equipment id is not unique!");
-            }
+            equipment.Id = EquipmentList.Last().Id + 1;
+            Console.WriteLine(equipment.Id);
+            
+            equipment.changed = true;
+            EquipmentList.Add(equipment);
+
+            return;
+            throw new Exception("This equipment id is not unique!");
         }
         public void Update(Equipment equipment)
         {

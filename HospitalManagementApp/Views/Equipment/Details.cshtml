@@ -12,9 +12,6 @@
             <th>
                 <strong>Schedule</strong>
             </th>
-            <th>
-                <strong>JSON String</strong>
-            </th>
         </tr>
     </thead>
 
@@ -25,8 +22,10 @@
                 {
                     @foreach (var date in Model.History)
                     {
+                        string datePart = date.Substring(0, 10);
+                        string timePart = date.Substring(11, 8);
                         <tr>
-                            <td>@date</td>
+                            <td>@datePart @timePart</td>
                         </tr>
                     }
                 }
@@ -35,9 +34,6 @@
                         <strong>No schedule yet</strong>
                     </tr>
                 }
-            </td>
-            <td>
-                @Model.historyString
             </td>
         </tr>
     </tbody>

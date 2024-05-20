@@ -142,7 +142,7 @@ namespace HospitalManagementApp.Data
                 var docQuery = query.Documents.FirstOrDefault(doc => (
                                 (doc.GetValue<string>("Role") != "Patient"
                                  && doc.GetValue<int>("DataId") == id)));
-                if (docQuery == null)
+                if (docQuery != null)
                 {
                     return true;
                 }

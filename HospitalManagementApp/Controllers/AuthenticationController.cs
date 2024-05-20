@@ -255,6 +255,7 @@ namespace HospitalManagementApp.Controllers
                 catch (Exception ex)
                 {
                     ViewBag.ErrorMessage = ex.Message;
+                    return View();
                 }
 
                 if (user.Role == "Patient")

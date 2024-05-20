@@ -28,7 +28,7 @@ namespace HospitalManagementApp.Controllers
         }
 
         // GET: Patient
-        [Authorize(Roles = "Admin, Doctor", AuthenticationSchemes = "Cookies")]
+        [Authorize(Roles = "Admin, Doctor, Patient", AuthenticationSchemes = "Cookies")]
         public async Task<IActionResult> Index()
         {
             if (_httpContextAccessor.HttpContext != null && _httpContextAccessor.HttpContext.User.IsInRole("Patient"))
@@ -44,6 +44,23 @@ namespace HospitalManagementApp.Controllers
                     {
                         return RedirectToAction(nameof(Details), new { id = pId });
                     }
+                }
+            }
+            else if (_httpContextAccessor.HttpContext != null && _httpContextAccessor.HttpContext.User.IsInRole("Doctor"))
+            {
+                int pId;
+                var userDataClaim = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.UserData);
+                if (userDataClaim != null)
+                {
+                    pId = Convert.ToInt32(userDataClaim.Value);
+                    var ids = _patientContext.GetPatientIdListFromStaffId(pId);
+
+                    ICollection<Patient> patientList = _patientContext.GetPatientListFromIdList(ids);
+                    if (patientList != null)
+                    {
+                        return View(patientList);
+                    }
+                    return View(null);
                 }
             }
 

@@ -65,8 +65,8 @@ using (var scope = app.Services.CreateScope())
         var patientContext = scope.ServiceProvider.GetService<PatientContext>();
         if (patientContext != null) await patientContext.InitializePatientListFromFirestore();
 
-        //var staffContext = scope.ServiceProvider.GetService<StaffContext>();
-        //if (staffContext != null) await staffContext.InitializeStaffListFromFirestore();
+        var staffContext = scope.ServiceProvider.GetService<StaffContext>();
+        if (staffContext != null) await staffContext.InitializeStaffListFromFirestore();
 
         //var drugContext = scope.ServiceProvider.GetService<DrugsContext>();
         //if (drugContext != null) await drugContext.InitializeDrugsListFromFirestore();

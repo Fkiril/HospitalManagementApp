@@ -273,6 +273,13 @@ namespace HospitalManagementApp.Controllers
                 return NotFound();
             }
 
+            Models.Calendar? docSchedule = _staffContext.GetCalendar(patient.StaffIds);
+            if (docSchedule != null)
+            {
+                ViewBag.Date = docSchedule.Date;
+                ViewBag.DayOfWeek = docSchedule.DayofWeek;
+            }
+
             return View(patient);
         }
 
@@ -515,7 +522,7 @@ namespace HospitalManagementApp.Controllers
             }
             catch (Exception ex)
             {
-                ViewBag.ErrorMessage = ex.Message;
+                TempData["ErrorMessage"] = ex.Message;
                 return RedirectToAction(nameof(Index));
             } 
 

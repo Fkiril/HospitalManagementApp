@@ -224,44 +224,71 @@ namespace HospitalManagementApp.Data
 
             else
             {
-                Console.WriteLine("Check doctor schedule");
                 var pDate = DateTime.ParseExact(pSchedule.Date, "dd/MM/yyyy", CultureInfo.InvariantCulture);
                 var dStartDate = DateTime.ParseExact(docSchedule.Date[0], "dd/MM/yyyy", CultureInfo.InvariantCulture);
                 var dEndDate = DateTime.ParseExact(docSchedule.Date[6], "dd/MM/yyyy", CultureInfo.InvariantCulture);
-
                 if (pDate < dStartDate || pDate > dEndDate) return false;
-
+                
                 for (int idx = 0; idx < 7; idx++)
                 {
                     if (docSchedule.Date[idx] == pSchedule.Date)
                     {
-                        if (docSchedule.DayofWeek is null || docSchedule.DayofWeek.Count < 7) return false;
-
                         TimeSpan dStartTime = pStartTime, dEndTime = pEndTime;
-                        switch (docSchedule.DayofWeek[idx])
+                        if (docSchedule.DayofWeek.Count == 0) 
                         {
-                            case Shift.Morning: //07:00 -> 14:00
-                                {
-                                    dStartTime = TimeSpan.Parse("07:00");
-                                    dEndTime = TimeSpan.Parse("14:00");
-                                    break;
-                                }
+                            switch (docSchedule.Date[idx + 7])
+                            {
+                                case "0":
+                                    {
+                                        dStartTime = TimeSpan.Parse("06:00");
+                                        dEndTime = TimeSpan.Parse("11:30");
+                                        break;
+                                    }
 
-                            case Shift.Afternoon: //14:00 -> 22:00
-                                {
-                                    dStartTime = TimeSpan.Parse("14:00");
-                                    dEndTime = TimeSpan.Parse("22:00");
-                                    break;
-                                }
-                            case Shift.Evening: //22:00 -> 07:00
-                                {
-                                    dStartTime = TimeSpan.Parse("22:00");
-                                    dEndTime = TimeSpan.Parse("07:00");
-                                    break;
-                                }
+                                case "1":
+                                    {
+                                        dStartTime = TimeSpan.Parse("12:30");
+                                        dEndTime = TimeSpan.Parse("16:30");
+                                        break;
+                                    }
+                                case "2":
+                                    {
+                                        dStartTime = TimeSpan.Parse("16:30");
+                                        dEndTime = TimeSpan.Parse("19:00");
+                                        break;
+                                    }
+                            }
+                            if (pStartTime < dStartTime || pEndTime > dEndTime) return false;
+
                         }
+                        else
+                        {
+                            switch (docSchedule.DayofWeek[idx])
+                            {
+                                case Shift.Morning:
+                                    {
+                                        dStartTime = TimeSpan.Parse("06:00");
+                                        dEndTime = TimeSpan.Parse("11:30");
+                                        break;
+                                    }
 
-                        if (pStartTime < dStartTime || pEndTime > dEndTime) return false;
+                                case Shift.Afternoon:
+                                    {
+                                        dStartTime = TimeSpan.Parse("12:30");
+                                        dEndTime = TimeSpan.Parse("16:30");
+                                        break;
+                                    }
+                                case Shift.Evening:
+                                    {
+                                        dStartTime = TimeSpan.Parse("16:30");
+                                        dEndTime = TimeSpan.Parse("19:00");
+                                        break;
+                                    }
+                            }
+                            Console.WriteLine(dStartTime.ToString() + " " + dEndTime.ToString());
+                            if (pStartTime < dStartTime || pEndTime > dEndTime) return false;
+
+                        }
                     }
                 }
             }

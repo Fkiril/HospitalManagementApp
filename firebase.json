@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "./HospitalManagementApp/bin/Release/net8.0/publish",
+    "public": ".\\bin\\Release\\net8.0\\publish",
     "ignore": [
       "firebase.json",
       "**/.*",

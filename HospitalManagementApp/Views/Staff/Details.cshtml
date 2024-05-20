@@ -76,20 +76,28 @@
         <dd class="col-sm-10">
             <a asp-action="Calendar" asp-route-id=@Html.ValueFor(model => model.Id)>Calendar</a>
         </dd>
-        <dt class="col-sm-2">
-            Show Patient
-        </dt>
-        <dd class="col-sm-10">
-            @if (Model.HealthCareStaff != HealthCareStaff.SupportStaff)
-            {
+        
+        @if (Model.HealthCareStaff != HealthCareStaff.SupportStaff)
+        {
+            <dt class="col-sm-2">
+                Show Patient
+            </dt>
+
+            <dd class="col-sm-10">
                 <a asp-action="ShowPatientList" asp-controller="Patient" asp-route-id="@Model.Id">Show Patient</a>
-            }
-            else
-            {
+            </dd>
+        }
+        else
+        {
+            <dt class="col-sm-2">
+                Management
+            </dt>
+
+            <dd class="col-sm-10">
                 <a asp-action="Index" asp-controller="Equipment">Equipment Management</a>
                 <a asp-action="Index" asp-controller="Drugs">Drugs Management</a>
-            }
-        </dd>
+            </dd>
+        }
     </dl>
 </div>
 <div>

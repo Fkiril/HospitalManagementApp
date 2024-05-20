@@ -216,7 +216,6 @@ namespace HospitalManagementApp.Data
             TimeSpan pStartTime = TimeSpan.Parse(pSchedule.StartTime);
             TimeSpan pEndTime = TimeSpan.Parse(pSchedule.EndTime);
             if (pStartTime >  pEndTime) return false;
-            Console.WriteLine(pStartTime.ToString() + " " + pEndTime.ToString());
 
             if (docSchedule == null || 
                 docSchedule.DayofWeek == null || 
@@ -225,18 +224,15 @@ namespace HospitalManagementApp.Data
 
             else
             {
-                Console.WriteLine("Check doctor schedule");
                 var pDate = DateTime.ParseExact(pSchedule.Date, "dd/MM/yyyy", CultureInfo.InvariantCulture);
                 var dStartDate = DateTime.ParseExact(docSchedule.Date[0], "dd/MM/yyyy", CultureInfo.InvariantCulture);
                 var dEndDate = DateTime.ParseExact(docSchedule.Date[6], "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                Console.WriteLine(pDate.ToString() + " " + dStartDate.ToString() + " " + dEndDate.ToString());
                 if (pDate < dStartDate || pDate > dEndDate) return false;
                 
                 for (int idx = 0; idx < 7; idx++)
                 {
                     if (docSchedule.Date[idx] == pSchedule.Date)
                     {
-                        Console.WriteLine("checkkkkkk");
                         TimeSpan dStartTime = pStartTime, dEndTime = pEndTime;
                         if (docSchedule.DayofWeek.Count == 0) 
                         {
@@ -262,7 +258,6 @@ namespace HospitalManagementApp.Data
                                         break;
                                     }
                             }
-                            Console.WriteLine(dStartTime.ToString() + " " + dEndTime.ToString());
                             if (pStartTime < dStartTime || pEndTime > dEndTime) return false;
 
                         }

@@ -63,11 +63,11 @@ namespace HospitalManagementApp.Controllers
                         var identity = new ClaimsIdentity(
                             new[]
                             {
-                                new Claim(ClaimTypes.Name, user.UserName),
-                                new Claim(ClaimTypes.Email, user.Email),
+                                new Claim(ClaimTypes.Name, user.UserName?? String.Empty),
+                                new Claim(ClaimTypes.Email, user.Email?? String.Empty),
                                 new Claim(ClaimTypes.NameIdentifier, user.Id),
-                                new Claim(ClaimTypes.Role, user.Role),
-                                new Claim(ClaimTypes.UserData, user.DataId.ToString())
+                                new Claim(ClaimTypes.Role, user.Role ?? String.Empty),
+                                new Claim(ClaimTypes.UserData, user.DataId.ToString()?? String.Empty)
                             },
                             CookieAuthenticationDefaults.AuthenticationScheme
                             );

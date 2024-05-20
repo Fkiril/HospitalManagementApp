@@ -49,7 +49,6 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
 builder.Services.AddHttpContextAccessor();
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
@@ -58,7 +57,7 @@ using (var scope = app.Services.CreateScope())
 {
     var firestoreDbService = scope.ServiceProvider.GetService<FirestoreDbService>();
     if (firestoreDbService != null)
-    {
+    {   
         SeedData.InitializeApplicationUserData(firestoreDbService.GetFirestoreDb());
         SeedData.InitializePatientData(firestoreDbService.GetFirestoreDb());
         SeedData.InitializeStaffData(firestoreDbService.GetFirestoreDb());
@@ -80,11 +79,9 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
